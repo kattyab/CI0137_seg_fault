@@ -89,7 +89,7 @@ nav a:hover {
 /* HERO SECTION */
 .hero {
   background:
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/background.png');
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('@/assets/images/background.png');
   height: 50vh;
   display: flex;
   flex-direction: column;
@@ -114,6 +114,23 @@ nav a:hover {
 .cta:hover {
   background: #f0f0f0;
   transition: background 0.3s;
+}
+
+.cta-secondary {
+  background: #333;
+  color: #fff;
+}
+
+.cta-secondary:hover {
+  background: #1f1f1f;
+}
+
+.cart-actions .cart-action-link,
+.cart-actions .cart-action-btn {
+  flex: 1;
+  margin-top: 0;
+  text-align: center;
+  text-decoration: none;
 }
 
 .ghost-btn {
