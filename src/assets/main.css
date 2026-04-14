@@ -58,6 +58,7 @@ nav a {
   color: #fff;
   text-decoration: none;
   padding: 0.5rem 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   border-radius: 5px;
   transition: background 0.3s;
@@ -83,6 +84,7 @@ nav a:hover {
   background: #fff;
   color: #ff6b35;
   padding: 0.5rem 1rem;
+  font-size: 1.02rem;
   font-weight: 700;
   border-radius: 5px;
   text-decoration: none;
