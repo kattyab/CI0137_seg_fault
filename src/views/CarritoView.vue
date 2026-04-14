@@ -154,7 +154,9 @@ const closeIfOverlay = (event: MouseEvent) => {
         </div>
 
         <div class="cart-actions" style="display: flex; gap: 1rem">
-          <RouterLink to="/" class="cta cta-secondary cart-action-link">Continuar Comprando</RouterLink>
+          <RouterLink to="/" class="cta cta-secondary cart-action-link"
+            >Continuar Comprando</RouterLink
+          >
           <button class="cta cart-action-btn" type="button">Proceder al Pago</button>
         </div>
       </div>

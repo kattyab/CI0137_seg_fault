@@ -49,7 +49,9 @@ const handleSubmit = () => {
             />
             <label for="terminos" style="margin: 0"
               >Aceptar
-              <RouterLink to="/privacidad" style="color: #ff6b35">términos y condiciones</RouterLink></label
+              <RouterLink to="/privacidad" style="color: #ff6b35"
+                >términos y condiciones</RouterLink
+              ></label
             >
           </div>
           <button class="cta" type="submit" style="width: 100%">Crear Cuenta</button>
