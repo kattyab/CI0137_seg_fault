@@ -39,13 +39,19 @@ header {
   flex-shrink: 0;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
+.logo-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  max-width: 180px;
+  width: 220px;
+  min-width: 170px;
+}
+
+.logo-img {
+  width: 100%;
+  height: 52px;
+  object-fit: contain;
+  object-position: left center;
+  display: block;
 }
 
 nav ul {
