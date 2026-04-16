@@ -19,7 +19,7 @@ const cartItems = ref<CartItem[]>([
   {
     id: 2,
     product: 'Air Jordan 1 Low SE Black',
-    quantity: 1,
+    quantity: 2,
     price: 70000,
   },
 ])
@@ -74,8 +74,8 @@ const closeIfOverlay = (event: MouseEvent) => {
             <tr style="background: #f0f0f0; border-bottom: 2px solid #ff6b35">
               <th style="padding: 1rem; text-align: left">Producto</th>
               <th style="padding: 1rem; text-align: center">Cantidad</th>
-              <th style="padding: 1rem; text-align: right">Precio</th>
-              <th style="padding: 1rem; text-align: right">Total</th>
+              <th style="padding: 1rem; text-align: right">Precio Unitario</th>
+              <th style="padding: 1rem; text-align: right">Importe</th>
               <th style="padding: 1rem; text-align: center">Quitar</th>
             </tr>
           </thead>
@@ -154,10 +154,8 @@ const closeIfOverlay = (event: MouseEvent) => {
         </div>
 
         <div class="cart-actions" style="display: flex; gap: 1rem">
-          <RouterLink to="/" class="cta cta-secondary cart-action-link"
-            >Continuar Comprando</RouterLink
-          >
-          <button class="cta cart-action-btn" type="button">Proceder al Pago</button>
+          <RouterLink to="/" class="cta cart-action-link">Continuar Comprando</RouterLink>
+          <button class="cta cta-buy cart-action-btn" type="button">Proceder al Pago</button>
         </div>
       </div>
     </section>

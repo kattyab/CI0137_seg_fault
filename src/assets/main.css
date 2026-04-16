@@ -228,12 +228,12 @@ nav a:hover {
   transition: background 0.3s;
 }
 
-.cta-secondary {
+.cta-buy {
   background: #333;
   color: #fff;
 }
 
-.cta-secondary:hover {
+.cta-buy:hover {
   background: #1f1f1f;
 }
 
