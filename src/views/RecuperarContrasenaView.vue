@@ -27,7 +27,9 @@ const handleSubmit = () => {
             <label for="email">Correo Electrónico:</label>
             <input type="email" id="email" name="email" required />
           </div>
-          <button class="cta" type="submit" style="width: 100%">Enviar Enlace de Recuperación</button>
+          <button class="cta" type="submit" style="width: 100%">
+            Enviar Enlace de Recuperación
+          </button>
         </form>
 
         <div
@@ -40,7 +42,9 @@ const handleSubmit = () => {
         >
           <p style="margin-bottom: 0.5rem">
             ¿No tienes cuenta?
-            <RouterLink to="/registro" style="color: #ff6b35; text-decoration: none; font-weight: bold"
+            <RouterLink
+              to="/registro"
+              style="color: #ff6b35; text-decoration: none; font-weight: bold"
               >Regístrate aquí</RouterLink
             >
           </p>

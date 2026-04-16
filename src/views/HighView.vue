@@ -19,7 +19,10 @@
             </div>
             <div class="thumbs">
               <label for="1retroHighOG-1" class="thumb"
-                ><img src="@/assets/images/high/1retroHighOG/gray.png" alt="1" style="height: 200px"
+                ><img
+                  src="@/assets/images/high/1retroHighOG/gray.png"
+                  alt="1"
+                  style="height: 200px"
               /></label>
               <label for="1retroHighOG-2" class="thumb"
                 ><img
@@ -42,7 +45,9 @@
           <div class="product-detail">
             <div class="color-slider">
               <div class="slides" style="height: 350px">
-                <div class="slide"><img src="@/assets/images/high/9retro/black.png" alt="Color 1" /></div>
+                <div class="slide">
+                  <img src="@/assets/images/high/9retro/black.png" alt="Color 1" />
+                </div>
               </div>
             </div>
             <div class="thumbs">

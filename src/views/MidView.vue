@@ -76,7 +76,10 @@
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
-                  <img src="@/assets/images/mid/1midSEEdge/pink-light brown-black.png" alt="Color 1" />
+                  <img
+                    src="@/assets/images/mid/1midSEEdge/pink-light brown-black.png"
+                    alt="Color 1"
+                  />
                 </div>
               </div>
             </div>
