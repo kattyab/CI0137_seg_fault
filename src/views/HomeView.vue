@@ -134,7 +134,6 @@ const handleSubmit = () => {
           <p>Muy buena atención, resolvieron mis dudas en minutos.</p>
           <div class="comment-meta">Sofía P. · Soporte</div>
         </div>
-        via the Vue CLI and is easily configurable in projects
       </div>
       <form class="comment-form" @submit.prevent="handleSubmit">
         <div class="form-group">
