@@ -49,7 +49,9 @@ const handleSubmit = () => {
         >
           <p style="margin-bottom: 1rem">
             ¿No tienes cuenta?
-            <RouterLink to="/registro" style="color: #ff6b35; text-decoration: none; font-weight: bold"
+            <RouterLink
+              to="/registro"
+              style="color: #ff6b35; text-decoration: none; font-weight: bold"
               >Regístrate aquí</RouterLink
             >
           </p>

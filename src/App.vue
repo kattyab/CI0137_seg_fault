@@ -4,8 +4,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <div class="logo">
-      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" />
+    <div class="logo-wrapper">
+      <img alt="Logo principal" class="logo-img" src="@/assets/logo.png" />
     </div>
     <nav>
       <ul>
@@ -33,7 +33,7 @@ import { RouterLink, RouterView } from 'vue-router'
       </ul>
     </nav>
     <div class="search-login">
-      <input type="search" placeholder="Buscar Sneakers...">
+      <input type="search" placeholder="Buscar Sneakers..." />
       <RouterLink to="/login" class="login-link">Iniciar Sesión</RouterLink>
     </div>
   </header>
@@ -44,8 +44,10 @@ import { RouterLink, RouterView } from 'vue-router'
 
   <footer>
     <p>Contacto: +506 1234-5678 | charliessneakers@cr.com | Santo Domingo, Heredia</p>
-    <p><RouterLink to="/contacto">Contacto</RouterLink> | <RouterLink to="/privacidad">Aviso de Privacidad</RouterLink> | © 2026
-      Charlie's Sneakers</p>
+    <p>
+      <RouterLink to="/contacto">Contacto</RouterLink> |
+      <RouterLink to="/privacidad">Aviso de Privacidad</RouterLink> | © 2026 Charlie's Sneakers
+    </p>
   </footer>
 </template>
 

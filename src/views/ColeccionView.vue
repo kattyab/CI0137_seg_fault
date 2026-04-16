@@ -107,7 +107,9 @@
                 ><img src="@/assets/images/collection/spizikeG/gray.png" alt="Gray"
               /></label>
               <label for="spizikeg-2" class="thumb"
-                ><img src="@/assets/images/collection/spizikeG/white-red-green.png" alt="White Red Green"
+                ><img
+                  src="@/assets/images/collection/spizikeG/white-red-green.png"
+                  alt="White Red Green"
               /></label>
             </div>
             <div class="card-content">
