@@ -96,6 +96,12 @@ nav a:hover {
   text-decoration: none;
 }
 
+.login-link:hover {
+  background: #fff1eb;
+  color: #d94f22;
+  border-color: #d94f22;
+}
+
 /* HERO SECTION */
 .hero {
   background:
@@ -216,7 +222,7 @@ nav a:hover {
   background: #fff;
   color: #ff6b35;
   padding: 1rem 2rem;
-  border: none;
+  border: 2px solid #ff6b35;
   font-size: 1.2rem;
   border-radius: 5px;
   cursor: pointer;
