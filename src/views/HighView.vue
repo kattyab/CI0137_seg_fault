@@ -11,7 +11,7 @@
         <div class="card">
           <div class="product-detail">
             <div class="color-slider">
-              <div class="slides" style="height: 350px">
+              <div class="slides">
                 <div class="slide">
                   <img src="@/assets/images/high/1retroHighOG/gray.png" alt="Color 1" />
                 </div>
@@ -19,17 +19,10 @@
             </div>
             <div class="thumbs">
               <label for="1retroHighOG-1" class="thumb"
-                ><img
-                  src="@/assets/images/high/1retroHighOG/gray.png"
-                  alt="1"
-                  style="height: 200px"
-              /></label>
+                ><img src="@/assets/images/high/1retroHighOG/gray.png" alt="1"/></label>
               <label for="1retroHighOG-2" class="thumb"
                 ><img
-                  src="@/assets/images/high/1retroHighOG/light blue-light brown.png"
-                  alt="2"
-                  style="height: 200px"
-              /></label>
+                  src="@/assets/images/high/1retroHighOG/light blue-light brown.png" alt="2"/></label>
             </div>
             <div class="card-content">
               <h3>Air Jordan 1 Retro High OG</h3>
@@ -44,19 +37,15 @@
         <div class="card">
           <div class="product-detail">
             <div class="color-slider">
-              <div class="slides" style="height: 350px">
-                <div class="slide">
-                  <img src="@/assets/images/high/9retro/black.png" alt="Color 1" />
-                </div>
+              <div class="slides">
+                <div class="slide"><img src="@/assets/images/high/9retro/black.png" alt="Color 1"/></div>
               </div>
             </div>
             <div class="thumbs">
               <label for="9retro-1" class="thumb"
-                ><img src="@/assets/images/high/9retro/black.png" alt="1" style="height: 200px"
-              /></label>
+                ><img src="@/assets/images/high/9retro/black.png" alt="1"/></label>
               <label for="9retro-2" class="thumb"
-                ><img src="@/assets/images/high/9retro/brown.png" alt="2" style="height: 200px"
-              /></label>
+                ><img src="@/assets/images/high/9retro/brown.png" alt="2"/></label>
             </div>
             <div class="card-content">
               <h3>Air Jordan 1 Retro High 9</h3>
