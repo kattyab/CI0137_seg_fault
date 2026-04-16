@@ -8,10 +8,19 @@ const handleSubmit = () => {
 
 <template>
   <main>
-    <section class="hero">
-      <h1>¡Los Mejores Estenis Air Jordan!</h1>
-      <p>Etapa tenis de alta calidad en Charlie's Sneakers</p>
-      <h1>Explora Ahora</h1>
+    <section class="hero hero-home">
+      <p class="hero-kicker">Lanzamientos 2026</p>
+      <h1>
+        Hablá con tu estilo.<br />
+      </h1>
+      <p class="hero-subtitle">
+        <strong>Air Jordan originales</strong>
+        <span class="hero-dot">•</span>
+        <strong>Ediciones limitadas</strong>
+        <span class="hero-dot">•</span>
+        <strong>Envios rapidos en todo Costa Rica</strong>
+      </p>
+      <RouterLink class="cta hero-cta" to="/coleccion">Comprar Coleccion</RouterLink>
     </section>
 
     <section class="categorias">
@@ -124,7 +133,7 @@ const handleSubmit = () => {
         <div class="comment-card">
           <p>Muy buena atención, resolvieron mis dudas en minutos.</p>
           <div class="comment-meta">Sofía P. · Soporte</div>
-        </div> via the Vue CLI and is easily configurable in projects
+        </div>
       </div>
       <form class="comment-form" @submit.prevent="handleSubmit">
         <div class="form-group">

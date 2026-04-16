@@ -42,7 +42,9 @@
           <div class="product-detail">
             <div class="color-slider">
               <div class="slides">
-                <div class="slide"><img src="@/assets/images/low/1lowG/gray.png" alt="Color 1" /></div>
+                <div class="slide">
+                  <img src="@/assets/images/low/1lowG/gray.png" alt="Color 1" />
+                </div>
               </div>
             </div>
             <div class="thumbs">
@@ -70,7 +72,9 @@
           <div class="product-detail">
             <div class="color-slider">
               <div class="slides">
-                <div class="slide"><img src="@/assets/images/low/1lowSE/black.png" alt="Color 1" /></div>
+                <div class="slide">
+                  <img src="@/assets/images/low/1lowSE/black.png" alt="Color 1" />
+                </div>
               </div>
             </div>
             <div class="thumbs">
