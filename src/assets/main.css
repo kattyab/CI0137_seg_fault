@@ -266,6 +266,150 @@ nav a:hover {
   background: #fff1eb;
 }
 
+/* CARRUSEL */
+.carrusel {
+  margin-top: 2rem;
+}
+
+.carrusel h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.carrusel-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 3.25rem;
+  display: block;
+  margin-top: 1rem;
+}
+
+.carrusel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: #ff6b35;
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  z-index: 3;
+}
+
+.carrusel-arrow:hover {
+  background: #d94f22;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+}
+
+.carrusel-arrow:first-child {
+  left: 0.75rem;
+}
+
+.carrusel-arrow:last-child {
+  right: 0.75rem;
+}
+
+.carrusel-track {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.carrusel-item {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  align-items: stretch;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateX(20px);
+  padding: 0;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+}
+
+.carrusel-item.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.carrusel-media {
+  background: linear-gradient(180deg, #efefef 0%, #d9d9d9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.carrusel-item img {
+  width: 100%;
+  height: 100%;
+  max-height: 360px;
+  object-fit: contain;
+}
+
+.carrusel-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+  color: #222;
+}
+
+.carrusel-kicker {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: #ff6b35;
+  font-weight: 800;
+}
+
+.carrusel-content h3 {
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+  line-height: 1.15;
+}
+
+.carrusel-subtitle {
+  color: #585858;
+  font-size: 1rem;
+}
+
+.carrusel-price {
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+
+.carrusel-models {
+  color: #666;
+}
+
+.carrusel-cta {
+  margin-top: 0.45rem;
+  align-self: flex-start;
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.7rem 1.15rem;
+  font-weight: 700;
+}
+
 /* CATEGORÍAS Y GRID */
 .categorias {
   padding: 3rem 2rem;
@@ -602,5 +746,57 @@ footer a:hover {
 
   .hero-home .hero-line-nowrap {
     white-space: normal;
+  }
+
+  .carrusel-container {
+    padding: 0 0.75rem;
+  }
+
+  .carrusel-track {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .carrusel-item {
+    position: static;
+    inset: auto;
+    display: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    pointer-events: none;
+    grid-template-columns: 1fr;
+    grid-template-rows: 250px auto;
+  }
+
+  .carrusel-item.active {
+    display: grid;
+    pointer-events: auto;
+  }
+
+  .carrusel-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 1.35rem;
+  }
+
+  .carrusel-arrow:first-child {
+    left: 0.25rem;
+  }
+
+  .carrusel-arrow:last-child {
+    right: 0.25rem;
+  }
+
+  .carrusel-media {
+    padding: 1rem;
+  }
+
+  .carrusel-item img {
+    max-height: 220px;
+  }
+
+  .carrusel-content {
+    padding: 1.25rem;
   }
 }
