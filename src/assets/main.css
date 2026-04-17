@@ -1,5 +1,14 @@
 @import './base.css';
 
+:root {
+  --primary-color: #ff6b35;
+  --primary-color-hover: #9f4f22;
+  --main-text-color: #333;
+  --secondary-text-color: #666;
+  --background-color: #f9f9f9;
+  --card-and-section-background: #fff;
+}
+
 /* RESET Y ESTILOS GLOBALES */
 * {
   margin: 0;
@@ -10,8 +19,8 @@
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background: #f9f9f9;
+  color: var(--main-text-color);
+  background: var(--background-color);
   min-height: 100vh;
 }
 
@@ -27,8 +36,8 @@ body {
 
 /* HEADER Y NAVEGACIÓN */
 header {
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -61,7 +70,7 @@ nav ul {
 }
 
 nav a {
-  color: #fff;
+  color: var(--card-and-section-background);
   text-decoration: none;
   padding: 0.5rem 1rem;
   font-size: 1.05rem;
@@ -88,8 +97,8 @@ nav a:hover {
 }
 
 .login-link {
-  background: #fff;
-  color: #ff6b35;
+  background: var(--card-and-section-background);
+  color: var(--primary-color);
   padding: 0.5rem 1rem;
   font-size: 1.02rem;
   font-weight: 700;
@@ -115,7 +124,7 @@ nav a:hover {
   justify-content: center;
   gap: 0.85rem;
   padding: 1.5rem;
-  color: #fff;
+  color: var(--card-and-section-background);
   text-align: center;
 }
 
@@ -207,8 +216,8 @@ nav a:hover {
 .hero-home .hero-cta {
   align-self: center;
   margin-top: 0.4rem;
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   text-decoration: none;
   display: inline-block;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
@@ -220,10 +229,10 @@ nav a:hover {
 
 /* BOTONES */
 .cta {
-  background: #fff;
-  color: #ff6b35;
+  background: var(--card-and-section-background);
+  color: var(--primary-color);
   padding: 1rem 2rem;
-  border: 2px solid #ff6b35;
+  border: 2px solid var(--primary-color);
   font-size: 1.2rem;
   border-radius: 5px;
   cursor: pointer;
@@ -236,8 +245,8 @@ nav a:hover {
 }
 
 .cta-buy {
-  background: #333;
-  color: #fff;
+  background: var(--main-text-color);
+  color: var(--card-and-section-background);
 }
 
 .cta-buy:hover {
@@ -254,8 +263,8 @@ nav a:hover {
 
 .ghost-btn {
   background: transparent;
-  border: 2px solid #ff6b35;
-  color: #ff6b35;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
   padding: 0.85rem 1.75rem;
   border-radius: 5px;
   cursor: pointer;
@@ -264,6 +273,150 @@ nav a:hover {
 
 .ghost-btn:hover {
   background: #fff1eb;
+}
+
+/* CARRUSEL */
+.carrusel {
+  margin-top: 2rem;
+}
+
+.carrusel h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.carrusel-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 3.25rem;
+  display: block;
+  margin-top: 1rem;
+}
+
+.carrusel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  z-index: 3;
+}
+
+.carrusel-arrow:hover {
+  background: #d94f22;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+}
+
+.carrusel-arrow:first-child {
+  left: 0.75rem;
+}
+
+.carrusel-arrow:last-child {
+  right: 0.75rem;
+}
+
+.carrusel-track {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.carrusel-item {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  align-items: stretch;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateX(20px);
+  padding: 0;
+  background: var(--card-and-section-background);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+}
+
+.carrusel-item.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.carrusel-media {
+  background: linear-gradient(180deg, #efefef 0%, #d9d9d9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.carrusel-item img {
+  width: 100%;
+  height: 100%;
+  max-height: 360px;
+  object-fit: contain;
+}
+
+.carrusel-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+  color: #222;
+}
+
+.carrusel-kicker {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+.carrusel-content h3 {
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+  line-height: 1.15;
+}
+
+.carrusel-subtitle {
+  color: #585858;
+  font-size: 1rem;
+}
+
+.carrusel-price {
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+
+.carrusel-models {
+  color: var(--secondary-text-color);
+}
+
+.carrusel-cta {
+  margin-top: 0.45rem;
+  align-self: flex-start;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
+  border-radius: 8px;
+  padding: 0.7rem 1.15rem;
+  font-weight: 700;
 }
 
 /* CATEGORÍAS Y GRID */
@@ -287,7 +440,7 @@ nav a:hover {
 
 /* CARDS */
 .card {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   height: auto;
   justify-content: center;
@@ -311,6 +464,10 @@ nav a:hover {
   text-align: center;
 }
 
+.product-detail .card-content {
+  padding: 0.75rem 1.5rem;
+}
+
 .card-link {
   display: block;
   text-decoration: none;
@@ -318,9 +475,13 @@ nav a:hover {
 }
 
 .card-content span {
-  color: #ff6b35;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: bold;
+}
+
+.product-detail .card-content h3 {
+  margin-top: 0.75rem;
 }
 
 /* PRODUCTO - DETALLE Y GALERÍA */
@@ -395,7 +556,7 @@ nav a:hover {
 }
 
 .faq-list details {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1rem 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -422,7 +583,7 @@ nav a:hover {
 }
 
 .forum-card {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -433,8 +594,8 @@ nav a:hover {
   margin-top: 0.75rem;
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   font-size: 0.85rem;
 }
 
@@ -447,7 +608,7 @@ nav a:hover {
 }
 
 .comment-card {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -455,12 +616,12 @@ nav a:hover {
 
 .comment-meta {
   margin-top: 0.75rem;
-  color: #666;
+  color: var(--secondary-text-color);
   font-size: 0.9rem;
 }
 
 .comment-form {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -495,7 +656,7 @@ nav a:hover {
 .remove-btn {
   background: transparent;
   border: none;
-  color: #ff6b35;
+  color: var(--primary-color);
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
@@ -525,7 +686,7 @@ nav a:hover {
 }
 
 .modal {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 2rem;
   width: min(420px, 100%);
@@ -543,15 +704,15 @@ nav a:hover {
 
 /* FOOTER */
 footer {
-  background: #333;
-  color: #fff;
+  background: var(--main-text-color);
+  color: var(--card-and-section-background);
   text-align: center;
   padding: 2rem;
   flex-shrink: 0;
 }
 
 footer a {
-  color: #ff6b35;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
@@ -602,5 +763,57 @@ footer a:hover {
 
   .hero-home .hero-line-nowrap {
     white-space: normal;
+  }
+
+  .carrusel-container {
+    padding: 0 0.75rem;
+  }
+
+  .carrusel-track {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .carrusel-item {
+    position: static;
+    inset: auto;
+    display: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    pointer-events: none;
+    grid-template-columns: 1fr;
+    grid-template-rows: 250px auto;
+  }
+
+  .carrusel-item.active {
+    display: grid;
+    pointer-events: auto;
+  }
+
+  .carrusel-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 1.35rem;
+  }
+
+  .carrusel-arrow:first-child {
+    left: 0.25rem;
+  }
+
+  .carrusel-arrow:last-child {
+    right: 0.25rem;
+  }
+
+  .carrusel-media {
+    padding: 1rem;
+  }
+
+  .carrusel-item img {
+    max-height: 220px;
+  }
+
+  .carrusel-content {
+    padding: 1.25rem;
   }
 }

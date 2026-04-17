@@ -1,8 +1,63 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+
+import lowImage from '@/assets/images/low/1lowG/gray.png'
+import midImage from '@/assets/images/mid/1midSEEdge/pink-light brown-black.png'
+import highImage from '@/assets/images/high/1retroHighOG/light blue-light brown.png'
+import collectionImage from '@/assets/images/collection/3retroSailandJadeAura/image.png'
 
 const handleSubmit = () => {
   window.alert('Formulario enviado.')
+}
+
+const carouselItems = [
+  {
+    to: '/low',
+    image: lowImage,
+    alt: 'Air Jordan Low',
+    title: 'Air Jordan Low',
+    subtitle: 'Ligero y versatil para uso diario.',
+    price: 'Desde ₡60,000',
+    models: '4 modelos disponibles',
+  },
+  {
+    to: '/mid',
+    image: midImage,
+    alt: 'Air Jordan Mid',
+    title: 'Air Jordan Mid',
+    subtitle: 'Balance ideal entre soporte y estilo urbano.',
+    price: 'Desde ₡70,000',
+    models: '3 modelos disponibles',
+  },
+  {
+    to: '/high',
+    image: highImage,
+    alt: 'Air Jordan High',
+    title: 'Air Jordan High',
+    subtitle: 'Silueta clásica con presencia premium.',
+    price: 'Desde ₡80,000',
+    models: '2 modelos disponibles',
+  },
+  {
+    to: '/coleccion',
+    image: collectionImage,
+    alt: 'Colección',
+    title: 'Colección Especial',
+    subtitle: 'Lanzamientos limitados para coleccionistas.',
+    price: 'Ediciones limitadas',
+    models: '4 modelos disponibles',
+  },
+]
+
+const currentSlide = ref(0)
+
+const nextSlide = () => {
+  currentSlide.value = (currentSlide.value + 1) % carouselItems.length
+}
+
+const prevSlide = () => {
+  currentSlide.value = (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
 }
 </script>
 
@@ -21,6 +76,41 @@ const handleSubmit = () => {
         <strong>Envios rapidos en todo Costa Rica</strong>
       </p>
       <RouterLink class="cta hero-cta" to="/coleccion">Comprar Coleccion</RouterLink>
+    </section>
+
+    <section class="carrusel carrusel-home">
+      <h2>Lanzamientos Recientes</h2>
+      <div class="carrusel-container">
+        <button class="carrusel-arrow" type="button" aria-label="Imagen anterior" @click="prevSlide">
+          &#10094;
+        </button>
+        <div class="carrusel-track">
+          <RouterLink
+            v-for="(item, index) in carouselItems"
+            :key="item.to"
+            :to="item.to"
+            class="carrusel-item"
+            :class="{ active: index === currentSlide }"
+            :data-index="index"
+            :aria-hidden="index !== currentSlide"
+          >
+            <div class="carrusel-media">
+              <img :src="item.image" :alt="item.alt" />
+            </div>
+            <div class="carrusel-content">
+              <p class="carrusel-kicker">Lanzamiento destacado</p>
+              <h3>{{ item.title }}</h3>
+              <p class="carrusel-subtitle">{{ item.subtitle }}</p>
+              <p class="carrusel-price">{{ item.price }}</p>
+              <p class="carrusel-models">{{ item.models }}</p>
+              <span class="carrusel-cta">Ver detalles</span>
+            </div>
+          </RouterLink>
+        </div>
+        <button class="carrusel-arrow" type="button" aria-label="Siguiente imagen" @click="nextSlide">
+          &#10095;
+        </button>
+      </div>
     </section>
 
     <section class="categorias">
