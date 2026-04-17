@@ -1,5 +1,14 @@
 @import './base.css';
 
+:root {
+  --primary-color: #ff6b35;
+  --primary-color-hover: #9f4f22;
+  --main-text-color: #333;
+  --secondary-text-color: #666;
+  --background-color: #f9f9f9;
+  --card-and-section-background: #fff;
+}
+
 /* RESET Y ESTILOS GLOBALES */
 * {
   margin: 0;
@@ -10,8 +19,8 @@
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background: #f9f9f9;
+  color: var(--main-text-color);
+  background: var(--background-color);
   min-height: 100vh;
 }
 
@@ -27,8 +36,8 @@ body {
 
 /* HEADER Y NAVEGACIÓN */
 header {
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -61,7 +70,7 @@ nav ul {
 }
 
 nav a {
-  color: #fff;
+  color: var(--card-and-section-background);
   text-decoration: none;
   padding: 0.5rem 1rem;
   font-size: 1.05rem;
@@ -88,8 +97,8 @@ nav a:hover {
 }
 
 .login-link {
-  background: #fff;
-  color: #ff6b35;
+  background: var(--card-and-section-background);
+  color: var(--primary-color);
   padding: 0.5rem 1rem;
   font-size: 1.02rem;
   font-weight: 700;
@@ -115,7 +124,7 @@ nav a:hover {
   justify-content: center;
   gap: 0.85rem;
   padding: 1.5rem;
-  color: #fff;
+  color: var(--card-and-section-background);
   text-align: center;
 }
 
@@ -207,8 +216,8 @@ nav a:hover {
 .hero-home .hero-cta {
   align-self: center;
   margin-top: 0.4rem;
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   text-decoration: none;
   display: inline-block;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
@@ -220,10 +229,10 @@ nav a:hover {
 
 /* BOTONES */
 .cta {
-  background: #fff;
-  color: #ff6b35;
+  background: var(--card-and-section-background);
+  color: var(--primary-color);
   padding: 1rem 2rem;
-  border: 2px solid #ff6b35;
+  border: 2px solid var(--primary-color);
   font-size: 1.2rem;
   border-radius: 5px;
   cursor: pointer;
@@ -236,8 +245,8 @@ nav a:hover {
 }
 
 .cta-buy {
-  background: #333;
-  color: #fff;
+  background: var(--main-text-color);
+  color: var(--card-and-section-background);
 }
 
 .cta-buy:hover {
@@ -254,8 +263,8 @@ nav a:hover {
 
 .ghost-btn {
   background: transparent;
-  border: 2px solid #ff6b35;
-  color: #ff6b35;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
   padding: 0.85rem 1.75rem;
   border-radius: 5px;
   cursor: pointer;
@@ -293,8 +302,8 @@ nav a:hover {
   height: 44px;
   border: none;
   border-radius: 999px;
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   font-size: 1.6rem;
   line-height: 1;
   cursor: pointer;
@@ -336,7 +345,7 @@ nav a:hover {
   transition: opacity 0.5s ease, transform 0.5s ease;
   transform: translateX(20px);
   padding: 0;
-  background: #ffffff;
+  background: var(--card-and-section-background);
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
@@ -377,7 +386,7 @@ nav a:hover {
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  color: #ff6b35;
+  color: var(--primary-color);
   font-weight: 800;
 }
 
@@ -397,14 +406,14 @@ nav a:hover {
 }
 
 .carrusel-models {
-  color: #666;
+  color: var(--secondary-text-color);
 }
 
 .carrusel-cta {
   margin-top: 0.45rem;
   align-self: flex-start;
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   border-radius: 8px;
   padding: 0.7rem 1.15rem;
   font-weight: 700;
@@ -431,7 +440,7 @@ nav a:hover {
 
 /* CARDS */
 .card {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   height: auto;
   justify-content: center;
@@ -462,7 +471,7 @@ nav a:hover {
 }
 
 .card-content span {
-  color: #ff6b35;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: bold;
 }
@@ -539,7 +548,7 @@ nav a:hover {
 }
 
 .faq-list details {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1rem 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -566,7 +575,7 @@ nav a:hover {
 }
 
 .forum-card {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -577,8 +586,8 @@ nav a:hover {
   margin-top: 0.75rem;
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
-  background: #ff6b35;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
   font-size: 0.85rem;
 }
 
@@ -591,7 +600,7 @@ nav a:hover {
 }
 
 .comment-card {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -599,12 +608,12 @@ nav a:hover {
 
 .comment-meta {
   margin-top: 0.75rem;
-  color: #666;
+  color: var(--secondary-text-color);
   font-size: 0.9rem;
 }
 
 .comment-form {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -639,7 +648,7 @@ nav a:hover {
 .remove-btn {
   background: transparent;
   border: none;
-  color: #ff6b35;
+  color: var(--primary-color);
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
@@ -669,7 +678,7 @@ nav a:hover {
 }
 
 .modal {
-  background: #fff;
+  background: var(--card-and-section-background);
   border-radius: 10px;
   padding: 2rem;
   width: min(420px, 100%);
@@ -687,15 +696,15 @@ nav a:hover {
 
 /* FOOTER */
 footer {
-  background: #333;
-  color: #fff;
+  background: var(--main-text-color);
+  color: var(--card-and-section-background);
   text-align: center;
   padding: 2rem;
   flex-shrink: 0;
 }
 
 footer a {
-  color: #ff6b35;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
