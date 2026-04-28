@@ -34,8 +34,9 @@ const subtotal = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0),
 )
 
+const tax = computed(() => subtotal.value * 0.13)
 const shipping = computed(() => (subtotal.value > 0 ? 10000 : 0))
-const total = computed(() => subtotal.value + shipping.value)
+const total = computed(() => subtotal.value + tax.value + shipping.value)
 
 const openModal = (item: CartItem) => {
   removeProductName.value = item.product
@@ -73,17 +74,17 @@ const closeIfOverlay = (event: MouseEvent) => {
           <thead>
             <tr style="background: #f0f0f0; border-bottom: 2px solid #ff6b35">
               <th style="padding: 1rem; text-align: left">Producto</th>
-              <th style="padding: 1rem; text-align: center">Cantidad</th>
               <th style="padding: 1rem; text-align: right">Precio Unitario</th>
-              <th style="padding: 1rem; text-align: right">Importe</th>
-              <th style="padding: 1rem; text-align: center">Quitar</th>
+              <th style="padding: 1rem; text-align: center">Cantidad</th>
+              <th style="padding: 1rem; text-align: right">Importe Total</th>
+              <th style="padding: 1rem; text-align: center">Eliminar</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in cartItems" :key="item.id" style="border-bottom: 1px solid #ddd">
               <td style="padding: 1rem">{{ item.product }}</td>
-              <td style="padding: 1rem; text-align: center">{{ item.quantity }}</td>
               <td style="padding: 1rem; text-align: right">{{ formatCRC(item.price) }}</td>
+              <td style="padding: 1rem; text-align: center">{{ item.quantity }}</td>
               <td style="padding: 1rem; text-align: right">
                 {{ formatCRC(item.price * item.quantity) }}
               </td>
@@ -125,6 +126,17 @@ const closeIfOverlay = (event: MouseEvent) => {
           >
             <span>Subtotal:</span>
             <span id="cartSubtotal">{{ formatCRC(subtotal) }}</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 1rem;
+              font-size: 1.1rem;
+            "
+          >
+            <span>Impuesto (13%):</span>
+            <span id="cartTax">{{ formatCRC(tax) }}</span>
           </div>
           <div
             style="
