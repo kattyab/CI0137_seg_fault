@@ -106,6 +106,41 @@ nav a:hover {
   text-decoration: none;
 }
 
+.cart-link {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--card-and-section-background);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cart-link:hover {
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.cart-link:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 2px;
+}
+
+.cart-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
 .login-link:hover {
   background: #fff1eb;
   color: #d94f22;
@@ -735,12 +770,24 @@ footer a:hover {
   }
 
   .search-login {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     width: 100%;
   }
 
   .search-login input {
     width: 100%;
+  }
+
+  .login-link {
+    flex: 1 1 auto;
+    text-align: center;
+    min-width: 170px;
+  }
+
+  .cart-link {
+    flex: 0 0 46px;
   }
 
   .categorias {
