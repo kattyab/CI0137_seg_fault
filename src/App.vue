@@ -26,9 +26,6 @@ import { RouterLink, RouterView } from 'vue-router'
         <li>
           <RouterLink to="/coleccion">Colección</RouterLink>
         </li>
-        <li>
-          <RouterLink to="/contacto">Contacto</RouterLink>
-        </li>
       </ul>
     </nav>
     <div class="search-login">
