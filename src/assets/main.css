@@ -83,6 +83,41 @@ nav a:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* Sliding animated underline for active link */
+nav a {
+  position: relative;
+  z-index: 0;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -6px;
+  height: 3px;
+  background: var(--card-and-section-background);
+  border-radius: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 260ms cubic-bezier(.2,.9,.3,1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+nav a.router-link-active::after,
+nav a.router-link-exact-active::after {
+  transform: scaleX(1);
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  nav a::after {
+    transition: none;
+    transform: none;
+  }
+}
+
 .search-login {
   display: flex;
   gap: 1rem;
