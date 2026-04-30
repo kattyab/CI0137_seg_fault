@@ -1,6 +1,58 @@
 <script setup lang="ts">
+import { reactive } from 'vue'
+
+const form = reactive({
+  email: '',
+  password: '',
+  recordar: false,
+})
+
+const errors = reactive({
+  email: '',
+  password: '',
+})
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const validateEmail = () => {
+  if (!form.email.trim()) {
+    errors.email = 'Ingresa tu correo electrónico.'
+    return false
+  }
+
+  if (!emailPattern.test(form.email)) {
+    errors.email = 'Ingresa un correo electrónico válido.'
+    return false
+  }
+
+  errors.email = ''
+  return true
+}
+
+const validatePassword = () => {
+  if (!form.password) {
+    errors.password = 'Ingresa tu contraseña.'
+    return false
+  }
+
+  if (form.password.length < 8) {
+    errors.password = 'La contraseña debe tener al menos 8 caracteres.'
+    return false
+  }
+
+  errors.password = ''
+  return true
+}
+
 const handleSubmit = () => {
-  window.alert('Formulario enviado.')
+  const isEmailValid = validateEmail()
+  const isPasswordValid = validatePassword()
+
+  if (!isEmailValid || !isPasswordValid) {
+    return
+  }
+
+  window.alert('Inicio de sesión validado correctamente.')
 }
 </script>
 
@@ -18,17 +70,38 @@ const handleSubmit = () => {
           box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         "
       >
-        <form @submit.prevent="handleSubmit">
+        <form novalidate @submit.prevent="handleSubmit">
           <div class="form-group">
             <label for="email">Correo Electrónico:</label>
-            <input type="email" id="email" name="email" required />
+            <input
+              id="email"
+              v-model="form.email"
+              :aria-invalid="Boolean(errors.email)"
+              :class="{ 'is-invalid': errors.email }"
+              autocomplete="email"
+              name="email"
+              type="email"
+              @blur="validateEmail"
+            />
+            <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
           </div>
           <div class="form-group">
             <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required />
+            <input
+              id="password"
+              v-model="form.password"
+              :aria-invalid="Boolean(errors.password)"
+              :class="{ 'is-invalid': errors.password }"
+              autocomplete="current-password"
+              name="password"
+              type="password"
+              @blur="validatePassword"
+            />
+            <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
           </div>
           <div style="display: flex; align-items: center; margin-bottom: 1.5rem">
             <input
+              v-model="form.recordar"
               type="checkbox"
               id="recordar"
               name="recordar"
