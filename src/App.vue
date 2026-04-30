@@ -26,17 +26,14 @@ import { RouterLink, RouterView } from 'vue-router'
         <li>
           <RouterLink to="/coleccion">Colección</RouterLink>
         </li>
-        <li>
-          <RouterLink to="/carrito">Carrito</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/contacto">Contacto</RouterLink>
-        </li>
       </ul>
     </nav>
     <div class="search-login">
       <input type="search" placeholder="Buscar Sneakers..." />
       <RouterLink to="/login" class="login-link">Iniciar Sesión</RouterLink>
+      <RouterLink to="/carrito" class="cart-link" aria-label="Ir al carrito de compras">
+        <img src="@/assets/images/shopping_cart.svg" alt="" aria-hidden="true" class="cart-icon" />
+      </RouterLink>
     </div>
   </header>
 
