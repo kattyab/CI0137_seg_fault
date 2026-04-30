@@ -720,9 +720,22 @@ nav a.router-link-exact-active::after {
   font-family: Arial, sans-serif;
 }
 
+.form-group input.is-invalid,
+.form-group textarea.is-invalid {
+  border-color: #c2410c;
+  box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.18);
+}
+
 .form-group textarea {
   min-height: 150px;
   resize: vertical;
+}
+
+.field-error {
+  margin-top: 0.4rem;
+  color: #c2410c;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 /* CARRITO - MODAL */

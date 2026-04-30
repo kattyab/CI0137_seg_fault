@@ -1,6 +1,37 @@
 <script setup lang="ts">
+import { reactive } from 'vue'
+
+const form = reactive({
+  email: '',
+})
+
+const errors = reactive({
+  email: '',
+})
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const validateEmail = () => {
+  if (!form.email.trim()) {
+    errors.email = 'Ingresa tu correo electrónico.'
+    return false
+  }
+
+  if (!emailPattern.test(form.email)) {
+    errors.email = 'Ingresa un correo electrónico válido.'
+    return false
+  }
+
+  errors.email = ''
+  return true
+}
+
 const handleSubmit = () => {
-  window.alert('Formulario enviado.')
+  if (!validateEmail()) {
+    return
+  }
+
+  window.alert('Solicitud de recuperación validada correctamente.')
 }
 </script>
 
@@ -22,10 +53,20 @@ const handleSubmit = () => {
           Ingresa tu correo electrónico y te enviaremos un enlace para recuperar tu contraseña.
         </p>
 
-        <form @submit.prevent="handleSubmit">
+        <form novalidate @submit.prevent="handleSubmit">
           <div class="form-group">
             <label for="email">Correo Electrónico:</label>
-            <input type="email" id="email" name="email" required />
+            <input
+              id="email"
+              v-model="form.email"
+              :aria-invalid="Boolean(errors.email)"
+              :class="{ 'is-invalid': errors.email }"
+              autocomplete="email"
+              name="email"
+              type="email"
+              @blur="validateEmail"
+            />
+            <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
           </div>
           <button class="cta" type="submit" style="width: 100%">
             Enviar Enlace de Recuperación

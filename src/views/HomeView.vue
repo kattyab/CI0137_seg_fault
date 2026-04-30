@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import lowImage from '@/assets/images/low/1lowG/gray.png'
@@ -7,8 +7,55 @@ import midImage from '@/assets/images/mid/1midSEEdge/pink-light brown-black.png'
 import highImage from '@/assets/images/high/1retroHighOG/light blue-light brown.png'
 import collectionImage from '@/assets/images/collection/3retroSailandJadeAura/image.png'
 
+const commentForm = reactive({
+  nombre: '',
+  comentario: '',
+})
+
+const commentErrors = reactive({
+  nombre: '',
+  comentario: '',
+})
+
+const validateCommentName = () => {
+  if (!commentForm.nombre.trim()) {
+    commentErrors.nombre = 'Ingresa tu nombre.'
+    return false
+  }
+
+  if (commentForm.nombre.trim().length < 2) {
+    commentErrors.nombre = 'El nombre debe tener al menos 2 caracteres.'
+    return false
+  }
+
+  commentErrors.nombre = ''
+  return true
+}
+
+const validateCommentText = () => {
+  if (!commentForm.comentario.trim()) {
+    commentErrors.comentario = 'Escribe un comentario.'
+    return false
+  }
+
+  if (commentForm.comentario.trim().length < 10) {
+    commentErrors.comentario = 'El comentario debe tener al menos 10 caracteres.'
+    return false
+  }
+
+  commentErrors.comentario = ''
+  return true
+}
+
 const handleSubmit = () => {
-  window.alert('Formulario enviado.')
+  const isNameValid = validateCommentName()
+  const isCommentValid = validateCommentText()
+
+  if (!isNameValid || !isCommentValid) {
+    return
+  }
+
+  window.alert('Comentario validado correctamente.')
 }
 
 const carouselItems = [
@@ -225,25 +272,34 @@ const prevSlide = () => {
           <div class="comment-meta">Sofía P. · Soporte</div>
         </div>
       </div>
-      <form class="comment-form" @submit.prevent="handleSubmit">
+      <form novalidate class="comment-form" @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="comentario-nombre">Nombre</label>
           <input
-            type="text"
             id="comentario-nombre"
+            v-model="commentForm.nombre"
+            :aria-invalid="Boolean(commentErrors.nombre)"
+            :class="{ 'is-invalid': commentErrors.nombre }"
+            autocomplete="name"
             name="comentario-nombre"
+            type="text"
             placeholder="Tu nombre"
-            required
+            @blur="validateCommentName"
           />
+          <p v-if="commentErrors.nombre" class="field-error">{{ commentErrors.nombre }}</p>
         </div>
         <div class="form-group">
           <label for="comentario-texto">Comentario</label>
           <textarea
             id="comentario-texto"
+            v-model="commentForm.comentario"
+            :aria-invalid="Boolean(commentErrors.comentario)"
+            :class="{ 'is-invalid': commentErrors.comentario }"
             name="comentario-texto"
             placeholder="Escribe tu comentario"
-            required
+            @blur="validateCommentText"
           ></textarea>
+          <p v-if="commentErrors.comentario" class="field-error">{{ commentErrors.comentario }}</p>
         </div>
         <button class="cta" type="submit">Publicar comentario</button>
       </form>

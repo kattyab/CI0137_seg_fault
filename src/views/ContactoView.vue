@@ -1,6 +1,114 @@
 <script setup lang="ts">
+import { reactive } from 'vue'
+
+const form = reactive({
+  nombre: '',
+  email: '',
+  telefono: '',
+  asunto: '',
+  mensaje: '',
+})
+
+const errors = reactive({
+  nombre: '',
+  email: '',
+  telefono: '',
+  asunto: '',
+  mensaje: '',
+})
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const phonePattern = /^[0-9+\s-]{8,15}$/
+
+const validateNombre = () => {
+  if (!form.nombre.trim()) {
+    errors.nombre = 'Ingresa tu nombre completo.'
+    return false
+  }
+
+  if (form.nombre.trim().length < 3) {
+    errors.nombre = 'El nombre debe tener al menos 3 caracteres.'
+    return false
+  }
+
+  errors.nombre = ''
+  return true
+}
+
+const validateEmail = () => {
+  if (!form.email.trim()) {
+    errors.email = 'Ingresa tu correo electrónico.'
+    return false
+  }
+
+  if (!emailPattern.test(form.email)) {
+    errors.email = 'Ingresa un correo electrónico válido.'
+    return false
+  }
+
+  errors.email = ''
+  return true
+}
+
+const validateTelefono = () => {
+  if (!form.telefono.trim()) {
+    errors.telefono = ''
+    return true
+  }
+
+  if (!phonePattern.test(form.telefono.trim())) {
+    errors.telefono = 'Ingresa un teléfono válido de 8 a 15 dígitos.'
+    return false
+  }
+
+  errors.telefono = ''
+  return true
+}
+
+const validateAsunto = () => {
+  if (!form.asunto.trim()) {
+    errors.asunto = 'Ingresa el asunto del mensaje.'
+    return false
+  }
+
+  if (form.asunto.trim().length < 5) {
+    errors.asunto = 'El asunto debe tener al menos 5 caracteres.'
+    return false
+  }
+
+  errors.asunto = ''
+  return true
+}
+
+const validateMensaje = () => {
+  if (!form.mensaje.trim()) {
+    errors.mensaje = 'Escribe el mensaje que quieres enviar.'
+    return false
+  }
+
+  if (form.mensaje.trim().length < 10) {
+    errors.mensaje = 'El mensaje debe tener al menos 10 caracteres.'
+    return false
+  }
+
+  errors.mensaje = ''
+  return true
+}
+
 const handleSubmit = () => {
-  window.alert('Formulario enviado.')
+  const validations = [
+    validateNombre(),
+    validateEmail(),
+    validateTelefono(),
+    validateAsunto(),
+    validateMensaje(),
+  ]
+
+  if (validations.some((isValid) => !isValid)) {
+    return
+  }
+
+  window.alert('Mensaje enviado correctamente.')
 }
 </script>
 
@@ -18,26 +126,73 @@ const handleSubmit = () => {
           box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         "
       >
-        <form style="margin-bottom: 2rem" @submit.prevent="handleSubmit">
+        <form novalidate style="margin-bottom: 2rem" @submit.prevent="handleSubmit">
           <div class="form-group">
             <label for="nombre">Nombre Completo:</label>
-            <input type="text" id="nombre" name="nombre" required />
+            <input
+              id="nombre"
+              v-model="form.nombre"
+              :aria-invalid="Boolean(errors.nombre)"
+              :class="{ 'is-invalid': errors.nombre }"
+              autocomplete="name"
+              name="nombre"
+              type="text"
+              @blur="validateNombre"
+            />
+            <p v-if="errors.nombre" class="field-error">{{ errors.nombre }}</p>
           </div>
           <div class="form-group">
             <label for="email">Correo Electrónico:</label>
-            <input type="email" id="email" name="email" required />
+            <input
+              id="email"
+              v-model="form.email"
+              :aria-invalid="Boolean(errors.email)"
+              :class="{ 'is-invalid': errors.email }"
+              autocomplete="email"
+              name="email"
+              type="email"
+              @blur="validateEmail"
+            />
+            <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
           </div>
           <div class="form-group">
             <label for="telefono">Teléfono:</label>
-            <input type="tel" id="telefono" name="telefono" />
+            <input
+              id="telefono"
+              v-model="form.telefono"
+              :aria-invalid="Boolean(errors.telefono)"
+              :class="{ 'is-invalid': errors.telefono }"
+              autocomplete="tel"
+              name="telefono"
+              type="tel"
+              @blur="validateTelefono"
+            />
+            <p v-if="errors.telefono" class="field-error">{{ errors.telefono }}</p>
           </div>
           <div class="form-group">
             <label for="asunto">Asunto:</label>
-            <input type="text" id="asunto" name="asunto" required />
+            <input
+              id="asunto"
+              v-model="form.asunto"
+              :aria-invalid="Boolean(errors.asunto)"
+              :class="{ 'is-invalid': errors.asunto }"
+              name="asunto"
+              type="text"
+              @blur="validateAsunto"
+            />
+            <p v-if="errors.asunto" class="field-error">{{ errors.asunto }}</p>
           </div>
           <div class="form-group">
             <label for="mensaje">Mensaje:</label>
-            <textarea id="mensaje" name="mensaje" required></textarea>
+            <textarea
+              id="mensaje"
+              v-model="form.mensaje"
+              :aria-invalid="Boolean(errors.mensaje)"
+              :class="{ 'is-invalid': errors.mensaje }"
+              name="mensaje"
+              @blur="validateMensaje"
+            ></textarea>
+            <p v-if="errors.mensaje" class="field-error">{{ errors.mensaje }}</p>
           </div>
           <button class="cta" type="submit" style="width: 100%">Enviar Mensaje</button>
         </form>
