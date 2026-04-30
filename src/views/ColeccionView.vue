@@ -21,9 +21,6 @@
               </div>
             </div>
             <div class="card-content">
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
               <h3>Air Jordan 3 Retro Sail and Jade Aura</h3>
               <p>₡120,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
@@ -44,9 +41,6 @@
               </div>
             </div>
             <div class="card-content">
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
               <h3>Air Jordan 9 Retro Flit Grey and French Blue</h3>
               <p>₡150,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
@@ -66,26 +60,24 @@
                 </div>
               </div>
             </div>
+            <div class="thumbs">
+              <label for="mvp92-1" class="thumb">
+                <img
+                  src="@/assets/images/collection/MVP92/black-light%20blue.png"
+                  alt="Black/Light Blue"
+                />
+              </label>
+              <label for="mvp92-2" class="thumb">
+                <img src="@/assets/images/collection/MVP92/multi-color.png" alt="Multi-color" />
+              </label>
+              <label for="mvp92-3" class="thumb">
+                <img src="@/assets/images/collection/MVP92/red.png" alt="Red" />
+              </label>
+            </div>
             <div class="card-content">
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
               <h3>Air Jordan MVP 92</h3>
               <p>₡110,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-            </div>
-            <div class="thumbs">
-              <label for="mvp92-1" class="thumb"
-                ><img
-                  src="@/assets/images/collection/MVP92/black-light%20blue.png"
-                  alt="Black/Light Blue"
-              /></label>
-              <label for="mvp92-2" class="thumb"
-                ><img src="@/assets/images/collection/MVP92/multi-color.png" alt="Multi-color"
-              /></label>
-              <label for="mvp92-3" class="thumb"
-                ><img src="@/assets/images/collection/MVP92/red.png" alt="Red"
-              /></label>
             </div>
           </div>
         </div>
@@ -102,23 +94,21 @@
                 </div>
               </div>
             </div>
+            <div class="thumbs">
+              <label for="spizikeg-1" class="thumb">
+                <img src="@/assets/images/collection/spizikeG/gray.png" alt="Gray" />
+              </label>
+              <label for="spizikeg-2" class="thumb">
+                <img
+                  src="@/assets/images/collection/spizikeG/white-red-green.png"
+                  alt="White Red Green"
+                />
+              </label>
+            </div>
             <div class="card-content">
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
               <h3>Air Jordan Spizike</h3>
               <p>₡105,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-            </div>
-            <div class="thumbs">
-              <label for="spizikeg-1" class="thumb"
-                ><img src="@/assets/images/collection/spizikeG/gray.png" alt="Gray"
-              /></label>
-              <label for="spizikeg-2" class="thumb"
-                ><img
-                  src="@/assets/images/collection/spizikeG/white-red-green.png"
-                  alt="White Red Green"
-              /></label>
             </div>
           </div>
         </div>
