@@ -24,9 +24,6 @@
               <h3>Air Jordan 3 Retro Sail and Jade Aura</h3>
               <p>₡120,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -47,9 +44,6 @@
               <h3>Air Jordan 9 Retro Flit Grey and French Blue</h3>
               <p>₡150,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -84,9 +78,6 @@
               <h3>Air Jordan MVP 92</h3>
               <p>₡110,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -118,9 +109,6 @@
               <h3>Air Jordan Spizike</h3>
               <p>₡105,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>

@@ -31,9 +31,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Low</h3>
               <p>₡65,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -61,9 +58,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Low G</h3>
               <p>₡75,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -91,9 +85,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Low SE</h3>
               <p>₡70,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -118,9 +109,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Skyline Low</h3>
               <p>₡90,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>

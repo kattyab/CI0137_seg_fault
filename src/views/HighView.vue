@@ -31,9 +31,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Retro High OG</h3>
               <p>₡80,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -56,9 +53,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Retro High 9</h3>
               <p>₡85,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>

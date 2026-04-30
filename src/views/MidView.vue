@@ -31,9 +31,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Mid</h3>
               <p>₡70,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -64,9 +61,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Mid SE</h3>
               <p>₡85,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
@@ -86,9 +80,6 @@
             <div class="card-content">
               <h3>Air Jordan 1 Mid SE Edge</h3>
               <p>₡80,000</p>
-              <button class="cta" style="width: 100%; margin-top: 0.5rem">
-                Agregar al Carrito
-              </button>
             </div>
           </div>
         </div>
