@@ -317,6 +317,7 @@ nav a.router-link-exact-active::after {
 .cta-buy {
   background: var(--main-text-color);
   color: var(--card-and-section-background);
+  border: none;
 }
 
 .cta-buy:hover {
@@ -536,10 +537,6 @@ nav a.router-link-exact-active::after {
   text-align: center;
 }
 
-.product-detail .card-content {
-  padding: 0.75rem 1.5rem;
-}
-
 .card-link {
   display: block;
   text-decoration: none;
@@ -550,10 +547,6 @@ nav a.router-link-exact-active::after {
   color: var(--primary-color);
   text-decoration: none;
   font-weight: bold;
-}
-
-.product-detail .card-content h3 {
-  margin-top: 0.75rem;
 }
 
 /* PRODUCTO - DETALLE Y GALERÍA */
