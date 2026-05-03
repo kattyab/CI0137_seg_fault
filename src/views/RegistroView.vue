@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+import openEye from '@/assets/images/password/open_eye.png'
+import closedEye from '@/assets/images/password/closed_eye.png'
 
 const form = reactive({
   nombre: '',
@@ -21,6 +23,8 @@ const errors = reactive({
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const phonePattern = /^[0-9+\s-]{8,15}$/
+const showPassword = ref(false)
+const showPasswordConfirm = ref(false)
 
 const validateNombre = () => {
   if (!form.nombre.trim()) {
@@ -204,30 +208,82 @@ const handleSubmit = () => {
           </div>
           <div class="form-group">
             <label for="password">Contraseña:</label>
-            <input
-              id="password"
-              v-model="form.password"
-              :aria-invalid="Boolean(errors.password)"
-              :class="{ 'is-invalid': errors.password }"
-              autocomplete="new-password"
-              name="password"
-              type="password"
-              @blur="validatePassword"
-            />
+            <div style="position: relative; display: flex; align-items: center">
+              <input
+                id="password"
+                v-model="form.password"
+                :aria-invalid="Boolean(errors.password)"
+                :class="{ 'is-invalid': errors.password }"
+                autocomplete="new-password"
+                name="password"
+                :type="showPassword ? 'text' : 'password'"
+                @blur="validatePassword"
+                style="flex: 1; padding-right: 2.5rem"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                style="
+                  position: absolute;
+                  right: 0.5rem;
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                  padding: 0.5rem;
+                  color: #666;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+                :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              >
+                <img 
+                  :src="showPassword ? openEye : closedEye" 
+                  :alt="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                  style="width: 1.2rem; height: 1.2rem"
+                />
+              </button>
+            </div>
             <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
           </div>
           <div class="form-group">
             <label for="password-confirm">Confirmar Contraseña:</label>
-            <input
-              id="password-confirm"
-              v-model="form.passwordConfirm"
-              :aria-invalid="Boolean(errors.passwordConfirm)"
-              :class="{ 'is-invalid': errors.passwordConfirm }"
-              autocomplete="new-password"
-              name="password-confirm"
-              type="password"
-              @blur="validatePasswordConfirm"
-            />
+            <div style="position: relative; display: flex; align-items: center">
+              <input
+                id="password-confirm"
+                v-model="form.passwordConfirm"
+                :aria-invalid="Boolean(errors.passwordConfirm)"
+                :class="{ 'is-invalid': errors.passwordConfirm }"
+                autocomplete="new-password"
+                name="password-confirm"
+                :type="showPasswordConfirm ? 'text' : 'password'"
+                @blur="validatePasswordConfirm"
+                style="flex: 1; padding-right: 2.5rem"
+              />
+              <button
+                type="button"
+                @click="showPasswordConfirm = !showPasswordConfirm"
+                style="
+                  position: absolute;
+                  right: 0.5rem;
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                  padding: 0.5rem;
+                  color: #666;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+                :aria-label="showPasswordConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              >
+                <img 
+                  :src="showPasswordConfirm ? openEye : closedEye" 
+                  :alt="showPasswordConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                  style="width: 1.2rem; height: 1.2rem"
+                />
+              </button>
+            </div>
             <p v-if="errors.passwordConfirm" class="field-error">{{ errors.passwordConfirm }}</p>
           </div>
           <div style="display: flex; align-items: center; margin-bottom: 1.5rem">
