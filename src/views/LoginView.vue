@@ -35,11 +35,6 @@ const validatePassword = () => {
     return false
   }
 
-  if (form.password.length < 8) {
-    errors.password = 'La contraseña debe tener al menos 8 caracteres.'
-    return false
-  }
-
   errors.password = ''
   return true
 }

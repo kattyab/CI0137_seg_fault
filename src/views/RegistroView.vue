@@ -73,8 +73,28 @@ const validatePassword = () => {
     return false
   }
 
-  if (form.password.length < 8) {
-    errors.password = 'La contraseña debe tener al menos 8 caracteres.'
+  if (form.password.length < 16) {
+    errors.password = 'La contraseña debe tener al menos 16 caracteres.'
+    return false
+  }
+
+  if (!/[a-z]/.test(form.password)) {
+    errors.password = 'La contraseña debe contener al menos una letra minúscula.'
+    return false
+  }
+
+  if (!/[A-Z]/.test(form.password)) {
+    errors.password = 'La contraseña debe contener al menos una letra mayúscula.'
+    return false
+  }
+
+  if (!/[0-9]/.test(form.password)) {
+    errors.password = 'La contraseña debe contener al menos un número.'
+    return false
+  }
+
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(form.password)) {
+    errors.password = 'La contraseña debe contener al menos un signo especial (!@#$%^&*...).'
     return false
   }
 
