@@ -4,8 +4,10 @@ import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
 import { userService } from '@/services/userService'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const auth = useAuthStore()
 
 const form = reactive({
   email: '',
@@ -61,6 +63,13 @@ const handleSubmit = async () => {
     errors.password = 'Correo o contraseña incorrectos.'
     return
   }
+
+  auth.setUser({
+    id: user.id,
+    nombre: user.nombre,
+    email: user.email,
+    telefono: user.telefono,
+  })
 
   window.alert(`¡Bienvenido ${user.nombre}!`)
 
