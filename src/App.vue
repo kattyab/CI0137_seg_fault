@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
@@ -9,12 +9,27 @@ const auth = useAuthStore()
 
 const isLoggedIn = computed(() => Boolean(auth.user))
 const showUserMenu = ref(false)
+const userMenuRef = ref<HTMLElement | null>(null)
 
 const handleLogout = () => {
   auth.logout()
   router.push('/')
   showUserMenu.value = false
 }
+
+const handleClickOutside = (event: MouseEvent) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(event.target as Node)) {
+    showUserMenu.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <template>
@@ -46,7 +61,7 @@ const handleLogout = () => {
     <div class="search-login">
       <input type="search" placeholder="Buscar Sneakers..." />
       <RouterLink v-if="!isLoggedIn" to="/login" class="login-link">Iniciar Sesión</RouterLink>
-      <div v-else style="position: relative">
+      <div v-else style="position: relative" ref="userMenuRef">
         <button
           type="button"
           @click="showUserMenu = !showUserMenu"
@@ -64,6 +79,7 @@ const handleLogout = () => {
         </button>
         <div
           v-if="showUserMenu"
+          @click.stop
           style="
             position: absolute;
             top: 100%;
@@ -85,7 +101,7 @@ const handleLogout = () => {
           </div>
           <button
             type="button"
-            @click="handleLogout"
+            @click.stop="handleLogout"
             style="
               width: 100%;
               padding: 0.5rem;
@@ -106,19 +122,6 @@ const handleLogout = () => {
       </RouterLink>
     </div>
   </header>
-
-  <div
-    v-if="showUserMenu"
-    @click="showUserMenu = false"
-    style="
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 999;
-    "
-  ></div>
 
   <main>
     <RouterView />
