@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import openEye from '@/assets/images/password/open_eye.png'
+import closedEye from '@/assets/images/password/closed_eye.png'
+import { userService } from '@/services/userService'
+import { useAuthStore } from '@/stores/auth'
+
+const router = useRouter()
+const auth = useAuthStore()
 
 const form = reactive({
   email: '',
@@ -11,6 +19,8 @@ const errors = reactive({
   email: '',
   password: '',
 })
+
+const showPassword = ref(false)
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -35,16 +45,11 @@ const validatePassword = () => {
     return false
   }
 
-  if (form.password.length < 8) {
-    errors.password = 'La contraseña debe tener al menos 8 caracteres.'
-    return false
-  }
-
   errors.password = ''
   return true
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   const isEmailValid = validateEmail()
   const isPasswordValid = validatePassword()
 
@@ -52,7 +57,31 @@ const handleSubmit = () => {
     return
   }
 
-  window.alert('Inicio de sesión validado correctamente.')
+  const user = await userService.validateCredentials(form.email, form.password)
+
+  if (!user) {
+    errors.password = 'Correo o contraseña incorrectos.'
+    return
+  }
+
+  auth.setUser({
+    id: user.id,
+    nombre: user.nombre,
+    email: user.email,
+    telefono: user.telefono,
+  })
+
+  window.alert(`¡Bienvenido ${user.nombre}!`)
+
+  // Limpiar formulario
+  form.email = ''
+  form.password = ''
+  form.recordar = false
+
+  // Redirigir a inicio después de 1 segundo
+  setTimeout(() => {
+    router.push('/')
+  }, 1000)
 }
 </script>
 
@@ -87,16 +116,42 @@ const handleSubmit = () => {
           </div>
           <div class="form-group">
             <label for="password">Contraseña:</label>
-            <input
-              id="password"
-              v-model="form.password"
-              :aria-invalid="Boolean(errors.password)"
-              :class="{ 'is-invalid': errors.password }"
-              autocomplete="current-password"
-              name="password"
-              type="password"
-              @blur="validatePassword"
-            />
+            <div style="position: relative; display: flex; align-items: center">
+              <input
+                id="password"
+                v-model="form.password"
+                :aria-invalid="Boolean(errors.password)"
+                :class="{ 'is-invalid': errors.password }"
+                autocomplete="current-password"
+                name="password"
+                :type="showPassword ? 'text' : 'password'"
+                @blur="validatePassword"
+                style="flex: 1; padding-right: 2.5rem"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                style="
+                  position: absolute;
+                  right: 0.5rem;
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                  padding: 0.5rem;
+                  color: #666;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+                :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              >
+                <img 
+                  :src="showPassword ? openEye : closedEye" 
+                  :alt="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                  style="width: 1.2rem; height: 1.2rem"
+                />
+              </button>
+            </div>
             <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
           </div>
           <div style="display: flex; align-items: center; margin-bottom: 1.5rem">

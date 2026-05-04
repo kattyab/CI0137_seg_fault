@@ -52,3 +52,41 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+## Datos de usuarios (JSON)
+
+Por ahora no hay base de datos. Los usuarios registrados se guardan en el navegador usando **localStorage** bajo la llave:
+
+- `users_data`
+
+### Ver usuarios en consola
+
+1. Abre tu app en el navegador
+2. Abre DevTools (F12) → pestaña **Console**
+3. Ejecuta:
+
+```js
+JSON.parse(localStorage.getItem('users_data') || '[]')
+```
+
+### Ver JSON formateado
+
+```js
+console.log(JSON.stringify(JSON.parse(localStorage.getItem('users_data') || '[]'), null, 2))
+```
+
+### Descargar el archivo JSON desde consola
+
+```js
+const data = localStorage.getItem('users_data') || '[]'
+const blob = new Blob([data], { type: 'application/json;charset=utf-8' })
+const url = URL.createObjectURL(blob)
+
+const a = document.createElement('a')
+a.href = url
+a.download = 'usuarios.json'
+document.body.appendChild(a)
+a.click()
+a.remove()
+URL.revokeObjectURL(url)
+```
