@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
+import { userService } from '@/services/userService'
+
+const router = useRouter()
 
 const form = reactive({
   nombre: '',
@@ -49,6 +53,11 @@ const validateEmail = () => {
 
   if (!emailPattern.test(form.email)) {
     errors.email = 'Ingresa un correo electrónico válido.'
+    return false
+  }
+
+  if (userService.getUserByEmail(form.email)) {
+    errors.email = 'El correo electrónico ya está registrado.'
     return false
   }
 
@@ -145,7 +154,33 @@ const handleSubmit = () => {
     return
   }
 
-  window.alert('Cuenta creada correctamente.')
+  const result = userService.createUser({
+    nombre: form.nombre,
+    email: form.email,
+    telefono: form.telefono,
+    password: form.password,
+    terminos: form.terminos,
+  })
+
+  if ('error' in result) {
+    errors.email = result.error
+    return
+  }
+
+  window.alert('Cuenta creada correctamente. ¡Bienvenido!')
+  
+  // Limpiar formulario
+  form.nombre = ''
+  form.email = ''
+  form.telefono = ''
+  form.password = ''
+  form.passwordConfirm = ''
+  form.terminos = false
+
+  // Redirigir a login después de 1 segundo
+  setTimeout(() => {
+    router.push('/login')
+  }, 1000)
 }
 </script>
 

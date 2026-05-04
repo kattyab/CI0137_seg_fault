@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
+import { userService } from '@/services/userService'
+
+const router = useRouter()
 
 const form = reactive({
   email: '',
@@ -51,7 +55,24 @@ const handleSubmit = () => {
     return
   }
 
-  window.alert('Inicio de sesión validado correctamente.')
+  const user = userService.validateCredentials(form.email, form.password)
+
+  if (!user) {
+    errors.password = 'Correo o contraseña incorrectos.'
+    return
+  }
+
+  window.alert(`¡Bienvenido ${user.nombre}!`)
+
+  // Limpiar formulario
+  form.email = ''
+  form.password = ''
+  form.recordar = false
+
+  // Redirigir a inicio después de 1 segundo
+  setTimeout(() => {
+    router.push('/')
+  }, 1000)
 }
 </script>
 
