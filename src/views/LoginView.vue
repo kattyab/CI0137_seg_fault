@@ -47,7 +47,7 @@ const validatePassword = () => {
   return true
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   const isEmailValid = validateEmail()
   const isPasswordValid = validatePassword()
 
@@ -55,7 +55,7 @@ const handleSubmit = () => {
     return
   }
 
-  const user = userService.validateCredentials(form.email, form.password)
+  const user = await userService.validateCredentials(form.email, form.password)
 
   if (!user) {
     errors.password = 'Correo o contraseña incorrectos.'

@@ -140,7 +140,7 @@ const validateTerminos = () => {
   return true
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   const validations = [
     validateNombre(),
     validateEmail(),
@@ -154,7 +154,7 @@ const handleSubmit = () => {
     return
   }
 
-  const result = userService.createUser({
+  const result = await userService.createUser({
     nombre: form.nombre,
     email: form.email,
     telefono: form.telefono,
@@ -162,8 +162,9 @@ const handleSubmit = () => {
     terminos: form.terminos,
   })
 
-  if ('error' in result) {
-    errors.email = result.error
+  if (typeof result === 'object' && result !== null && 'error' in result) {
+    const message = (result as { error: string }).error
+    errors.email = message
     return
   }
 
