@@ -25,7 +25,7 @@
 
       <aside class="details">
         <h1 class="product-title">{{ product.nombre }}</h1>
-        <div class="price">₡{{ product.precio }}</div>
+        <div class="price">₡{{ formattedPrice }}</div>
 
         <div class="color-swatches">
           <div
@@ -129,6 +129,11 @@ const product = computed(() => {
       'air-jordan-1-retro-high-9': { id: 'air-jordan-1-retro-high-9', nombre: 'Air Jordan 1 Retro High 9', precio: 128000, image: new URL('@/assets/images/high/9retro/black.png', import.meta.url).href },
   }
   return map[id] ?? { id, nombre: id, precio: 0, image: '' }
+})
+
+const formattedPrice = computed(() => {
+  const n = Number(product.value.precio ?? 0)
+  return new Intl.NumberFormat('en-US').format(n)
 })
 
 import { ref, onMounted, watch } from 'vue'
