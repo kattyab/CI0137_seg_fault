@@ -154,16 +154,6 @@ const handleSubmit = async () => {
             </div>
             <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
           </div>
-          <div style="display: flex; align-items: center; margin-bottom: 1.5rem">
-            <input
-              v-model="form.recordar"
-              type="checkbox"
-              id="recordar"
-              name="recordar"
-              style="width: auto; margin-right: 0.5rem"
-            />
-            <label for="recordar" style="margin: 0">Recuérdame</label>
-          </div>
           <button class="cta" type="submit" style="width: 100%">Iniciar Sesión</button>
         </form>
 
