@@ -9,7 +9,7 @@
       <h2>Ediciones Limitadas</h2>
       <div class="grid">
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-3-retro-sail-jade-aura' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -25,11 +25,11 @@
               <p>₡120,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-9-retro-flit-grey-french-blue' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -45,11 +45,11 @@
               <p>₡150,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-mvp-92' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -79,11 +79,11 @@
               <p>₡110,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-spizike' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -110,7 +110,7 @@
               <p>₡105,000</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </section>

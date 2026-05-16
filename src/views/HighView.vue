@@ -9,7 +9,7 @@
       <h2>Modelos Disponibles</h2>
       <div class="grid">
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-og' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -32,11 +32,11 @@
               <h3>Air Jordan 1 Retro High OG</h3>
               <p>₡80,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-9' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides">
                 <div class="slide"><img src="@/assets/images/high/9retro/black.png" alt="Color 1"/></div>
@@ -54,7 +54,7 @@
               <h3>Air Jordan 1 Retro High 9</h3>
               <p>₡85,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </section>

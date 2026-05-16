@@ -9,7 +9,7 @@
       <h2>Modelos Disponibles</h2>
       <div class="grid">
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-mid' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -32,11 +32,11 @@
               <h3>Air Jordan 1 Mid</h3>
               <p>₡70,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -62,11 +62,11 @@
               <h3>Air Jordan 1 Mid SE</h3>
               <p>₡85,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se-edge' } }" class="product-detail card-link">
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -81,7 +81,7 @@
               <h3>Air Jordan 1 Mid SE Edge</h3>
               <p>₡80,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </section>
