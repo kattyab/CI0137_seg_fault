@@ -157,7 +157,7 @@ const variantImages = computed(() => {
 
   const leftPreviews = computed(() => {
   const imgs = variantImages.value
-  const count = 4
+  const count = 6
   const out: string[] = []
   if (testThumbOverride) {
     for (let i = 0; i < count; i++) out.push(testThumb)
@@ -197,18 +197,17 @@ watch(() => route.params.id, () => {
 </script>
 
 <style scoped>
-  .product-page { height: calc(100vh - 80px); overflow: hidden }
+  .product-page { min-height: calc(100vh - 80px); overflow-y: auto }
 
   .container {
   display: grid;
-  grid-template-columns: 88px 1fr 360px;
-    gap: 1rem;
+  grid-template-columns: 78px minmax(0, 500px) 360px;
+    column-gap: 0.5rem;
+    row-gap: 0.35rem;
     padding: 1rem;
     max-width: 1200px;
     margin: 0 auto;
-    height: 100%;
     align-items: start;
-    overflow: hidden;
   }
 
 .thumbs-col {
@@ -217,7 +216,7 @@ watch(() => route.params.id, () => {
   gap: 18px;
   align-items: center;
   justify-content: flex-start;
-  padding: 24px 6px;
+  padding: 24px 0;
   height: 100%;
 }
 
@@ -252,20 +251,19 @@ watch(() => route.params.id, () => {
   outline-offset: 4px;
 }
 
-.image-col { display: flex; align-items: flex-start; justify-content: center }
+.image-col { display: flex; align-items: flex-start; justify-content: flex-start }
 .image-wrap {
-  width: 100%;
-  /* let the main image drive visible size but cap it to viewport */
-  height: 100%;
-  max-height: calc(100vh - 160px);
-  background: linear-gradient(180deg, #f6f6f6, #ececec);
-  border-radius: 8px;
+  width: min(100%, 500px);
+  min-height: auto;
+  max-height: none;
+  background: transparent;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 0.5rem;
-  overflow: hidden;
+  padding: 0;
+  overflow: visible;
 }
 
 .badge {
@@ -280,15 +278,14 @@ watch(() => route.params.id, () => {
   color: #333;
 }
 
-.main-image { max-width: 100%; width: auto; height: auto; max-height: calc(100vh - 220px); object-fit: contain; display: block }
+.main-image { width: 100%; max-width: 500px; height: auto; max-height: none; object-fit: contain; display: block; border: none; border-radius: 0; box-shadow: none }
 
-.details { width: 360px; align-self: start; }
+.details { width: 360px; align-self: start; padding-left: 0.35rem; }
 .product-title { font-size: 1.6rem; margin-bottom: 0.5rem; font-weight: 800 }
 .price { font-weight: 900; margin: 0.5rem 0; font-size: 1.3rem }
 
 .color-swatches { display:flex; gap:0.5rem; margin: 0.75rem 0 1.25rem }
 .swatch { width:40px; height:40px; border-radius:8px; border:1px solid #ddd; background:#fff }
-.swatch { /* no active outline */ }
 
 .sizes h4 { margin-bottom: 0.5rem; font-weight:700 }
 .grid-sizes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem }
@@ -304,7 +301,7 @@ watch(() => route.params.id, () => {
 @media (max-width: 900px) {
   .container { grid-template-columns: 1fr; padding: 0.75rem }
   .thumbs-col { flex-direction: row; order: 2; gap: 0.5rem }
-  .image-wrap { height: 420px }
-  .details { width: 100%; order: 3 }
+  .image-wrap { width: min(100%, 500px); min-height: auto }
+  .details { width: 100%; order: 3; padding-left: 0 }
 }
 </style>
