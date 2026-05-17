@@ -152,10 +152,22 @@ const closeIfOverlay = (event: MouseEvent) => {
           <strong id="removeProductName">{{ removeProductName }}</strong> del carrito?
         </p>
         <div class="modal-actions">
-          <button class="cta" id="confirmRemove" type="button" @click="confirmRemove">
+          <button
+            class="cta"
+            id="confirmRemove"
+            type="button"
+            style="font-size: 1rem; padding: 1rem 1.75rem; min-width: 140px"
+            @click="confirmRemove"
+          >
             Eliminar
           </button>
-          <button class="ghost-btn" id="cancelRemove" type="button" @click="closeModal">
+          <button
+            class="ghost-btn"
+            id="cancelRemove"
+            type="button"
+            style="font-size: 1rem; padding: 1rem 1.75rem; min-width: 140px"
+            @click="closeModal"
+          >
             Cancelar
           </button>
         </div>
@@ -163,3 +175,24 @@ const closeIfOverlay = (event: MouseEvent) => {
     </div>
   </main>
 </template>
+
+<style scoped>
+.modal-actions button {
+  min-width: 140px;
+  padding: 1rem 1.75rem;
+  font-size: 1rem;
+  line-height: 1;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#confirmRemove {
+  margin-top: 0;
+}
+
+#cancelRemove {
+  margin-top: 0;
+}
+</style>

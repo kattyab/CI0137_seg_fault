@@ -71,14 +71,14 @@ export const useCartStore = defineStore('cart', () => {
     let idx = -1
     for (let i = 0; i < items.value.length; i++) {
       const existing = items.value[i]
+      if (!existing) continue
       const existingKey = existing._key ?? compositeKeyFor(existing)
       if (existingKey === key) { idx = i; break }
     }
     if (idx === -1) {
       items.value.push({ ...item, quantity: item.quantity ?? 1, _key: key })
     } else {
-      const existing = items.value[idx]
-      if (!existing) return
+      const existing = items.value[idx]!
       // merge quantities for exact same composite attributes
       existing.quantity = (existing.quantity || 0) + (item.quantity || 1)
     }
@@ -99,8 +99,7 @@ export const useCartStore = defineStore('cart', () => {
     let idx = items.value.findIndex(i => i._key === idOrKey)
     if (idx === -1) idx = items.value.findIndex(i => i.id === idOrKey)
     if (idx === -1) return
-    const existing = items.value[idx]
-    if (!existing) return
+    const existing = items.value[idx]!
     if (qty <= 0) removeItem(existing._key ?? existing.id)
     else existing.quantity = qty
   }
