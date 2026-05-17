@@ -1,3 +1,9 @@
+<script setup lang="ts">
+const mid1Main = new URL('@/assets/images/mid/1mid/white-black-red.png', import.meta.url).href
+const mid2Main = new URL('@/assets/images/mid/1midSE/light green.png', import.meta.url).href
+const mid3Main = new URL('@/assets/images/mid/1midSEEdge/pink-light brown-black.png', import.meta.url).href
+</script>
+
 <template>
   <main>
     <section class="hero" style="height: 30vh">
@@ -9,7 +15,10 @@
       <h2>Modelos Disponibles</h2>
       <div class="grid">
         <div class="card">
-          <div class="product-detail">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-mid' }, query: { image: mid1Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -32,11 +41,14 @@
               <h3>Air Jordan 1 Mid</h3>
               <p>₡70,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se' }, query: { image: mid2Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -62,11 +74,14 @@
               <h3>Air Jordan 1 Mid SE</h3>
               <p>₡85,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div class="card">
-          <div class="product-detail">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se-edge' }, query: { image: mid3Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -81,7 +96,7 @@
               <h3>Air Jordan 1 Mid SE Edge</h3>
               <p>₡80,000</p>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </section>

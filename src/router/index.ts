@@ -10,6 +10,12 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/producto/:id',
+      name: 'product',
+      component: () => import('@/views/ProductView.vue'),
+      props: true,
+    },
+    {
       path: '/low',
       name: 'low',
       component: () => import('@/views/LowView.vue'),
@@ -33,6 +39,16 @@ const router = createRouter({
       path: '/carrito',
       name: 'carrito',
       component: () => import('@/views/CarritoView.vue'),
+    },
+    {
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import('@/views/CheckoutView.vue'),
+    },
+    {
+      path: '/checkout/confirmado',
+      name: 'checkout-confirmado',
+      component: () => import('@/views/CheckoutSuccessView.vue'),
     },
     {
       path: '/contacto',
