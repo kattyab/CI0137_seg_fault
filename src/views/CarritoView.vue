@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 
 const cart = useCartStore()
 const auth = useAuthStore()
+const router = useRouter()
 
 const isModalVisible = ref(false)
 const pendingItemId = ref<string | null>(null)
@@ -40,6 +41,11 @@ const closeIfOverlay = (event: MouseEvent) => {
   if (event.target === event.currentTarget) {
     closeModal()
   }
+}
+
+const goToCheckout = () => {
+  if (cart.items.length === 0) return
+  router.push({ name: 'checkout' })
 }
 </script>
 
@@ -134,7 +140,7 @@ const closeIfOverlay = (event: MouseEvent) => {
 
         <div class="cart-actions" style="display: flex; gap: 1rem">
           <RouterLink to="/" class="cta cart-action-link">Continuar Comprando</RouterLink>
-          <button class="cta cta-buy cart-action-btn" type="button">Proceder al Pago</button>
+          <button class="cta cta-buy cart-action-btn" type="button" :disabled="cart.items.length === 0" @click="goToCheckout">Proceder al Pago</button>
         </div>
       </div>
     </section>
