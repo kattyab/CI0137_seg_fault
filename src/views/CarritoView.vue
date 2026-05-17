@@ -1,45 +1,25 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useCartStore } from '@/stores/cart'
+import { useAuthStore } from '@/stores/auth'
 
-type CartItem = {
-  id: number
-  product: string
-  quantity: number
-  price: number
-}
-
-const cartItems = ref<CartItem[]>([
-  {
-    id: 1,
-    product: 'Air Jordan 1 Retro High OG Gray',
-    quantity: 1,
-    price: 80000,
-  },
-  {
-    id: 2,
-    product: 'Air Jordan 1 Low SE Black',
-    quantity: 2,
-    price: 70000,
-  },
-])
+const cart = useCartStore()
+const auth = useAuthStore()
 
 const isModalVisible = ref(false)
-const pendingItemId = ref<number | null>(null)
+const pendingItemId = ref<string | null>(null)
 const removeProductName = ref('este producto')
 
 const formatCRC = (amount: number) => `₡${amount.toLocaleString('es-CR')}`
 
-const subtotal = computed(() =>
-  cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0),
-)
-
+const subtotal = computed(() => cart.subtotal)
 const shipping = computed(() => (subtotal.value > 0 ? 10000 : 0))
 const total = computed(() => subtotal.value + shipping.value)
 
-const openModal = (item: CartItem) => {
-  removeProductName.value = item.product
-  pendingItemId.value = item.id
+const openModal = (itemId: string, productName: string) => {
+  removeProductName.value = productName
+  pendingItemId.value = itemId
   isModalVisible.value = true
 }
 
@@ -52,8 +32,7 @@ const confirmRemove = () => {
   if (pendingItemId.value === null) {
     return
   }
-
-  cartItems.value = cartItems.value.filter((item) => item.id !== pendingItemId.value)
+  cart.removeItem(pendingItemId.value)
   closeModal()
 }
 
@@ -80,25 +59,25 @@ const closeIfOverlay = (event: MouseEvent) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in cartItems" :key="item.id" style="border-bottom: 1px solid #ddd">
-              <td style="padding: 1rem">{{ item.product }}</td>
+            <tr v-for="item in cart.items" :key="item._key ?? item.id" style="border-bottom: 1px solid #ddd">
+              <td style="padding: 1rem">{{ item.nombre }}<span v-if="item.size"> - {{ item.size }}</span></td>
               <td style="padding: 1rem; text-align: center">{{ item.quantity }}</td>
-              <td style="padding: 1rem; text-align: right">{{ formatCRC(item.price) }}</td>
+              <td style="padding: 1rem; text-align: right">{{ formatCRC(item.precio) }}</td>
               <td style="padding: 1rem; text-align: right">
-                {{ formatCRC(item.price * item.quantity) }}
+                {{ formatCRC(item.precio * item.quantity) }}
               </td>
               <td style="padding: 1rem; text-align: center">
                 <button
                   class="remove-btn"
                   type="button"
-                  :aria-label="`Eliminar ${item.product}`"
-                  @click="openModal(item)"
+                  :aria-label="`Eliminar ${item.nombre}`"
+                  @click="openModal(item._key ?? item.id, item.nombre)"
                 >
                   ×
                 </button>
               </td>
             </tr>
-            <tr v-if="cartItems.length === 0">
+            <tr v-if="cart.items.length === 0">
               <td colspan="5" style="padding: 1rem; text-align: center">
                 No hay productos en el carrito.
               </td>

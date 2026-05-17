@@ -219,7 +219,7 @@ function selectMainView(i: string | number) { const idx = Number(i); mainViewInd
 function previewMainView(i: string | number) { const idx = Number(i); mainImageOverride.value = leftPreviews.value[idx] ?? null }
 function clearPreview() { mainImageOverride.value = null }
 
-const sizes = ['W 5 / M 3.5','W 5.5 / M 4','W 6 / M 4.5','W 6.5 / M 5','W 7 / M 5.5','W 7.5 / M 6']
+const sizes = ['W 5 / M 3.5','W 5.5 / M 4','W 6 / M 4.5','W 6.5 / M 5','W 7 / M 5.5','W 7.5 / M 6','W 8 / M 6.5','W 8.5 / M 7','W 9 / M 7.5','W 9.5 / M 8','W 10 / M 8.5','W 10.5 / M 9','W 11 / M 9.5']
 
 const selectedSize = ref<string | null>(null)
 
@@ -346,8 +346,8 @@ onBeforeUnmount(() => {
 .swatch { width:40px; height:40px; border-radius:8px; border:1px solid #ddd; background:#fff }
 
 .sizes h4 { margin-bottom: 0.5rem; font-weight:700 }
-.grid-sizes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem }
-.size { padding: 0.9rem 1rem; border: 1px solid #e6e6e6; background: white; border-radius: 8px; font-weight:700; cursor:pointer; text-align:center }
+.grid-sizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; justify-items: start }
+.size { padding: 0.7rem 1rem; border: 1px solid #e6e6e6; background: white; border-radius: 8px; font-weight:700; cursor:pointer; text-align:center; width: 100%; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
 .size:hover { border-color: #bbb }
 .size:active { transform: translateY(1px) }
 .size.active { background: #111; color: #fff; border-color: #111 }
