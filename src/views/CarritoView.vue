@@ -66,7 +66,11 @@ const goToCheckout = () => {
           </thead>
           <tbody>
             <tr v-for="item in cart.items" :key="item._key ?? item.id" style="border-bottom: 1px solid #ddd">
-              <td style="padding: 1rem">{{ item.nombre }}<span v-if="item.size"> - {{ item.size }}</span></td>
+              <td style="padding: 1rem">
+                {{ item.nombre }}
+                <span v-if="item.size"> - {{ item.size }}</span>
+                <span v-if="item.color"> - {{ item.color }}</span>
+              </td>
               <td style="padding: 1rem; text-align: center">{{ item.quantity }}</td>
               <td style="padding: 1rem; text-align: right">{{ formatCRC(item.precio) }}</td>
               <td style="padding: 1rem; text-align: right">

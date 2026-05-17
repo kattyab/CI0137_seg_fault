@@ -51,7 +51,14 @@
         </div>
 
         <div class="actions">
-          <AddToCartButton :id="product.id" :nombre="product.nombre" :precio="product.precio" :size="selectedSize" :requireSize="true" />
+          <AddToCartButton
+            :id="product.id"
+            :nombre="product.nombre"
+            :precio="product.precio"
+            :size="selectedSize"
+            :color="(variants[selectedVariant] && variants[selectedVariant].name) || ''"
+            :requireSize="true"
+          />
         </div>
       </aside>
     </div>
@@ -79,8 +86,25 @@ const product = computed(() => {
   const map: Record<string, any> = {
       'air-jordan-3-retro-sail-jade-aura': { id: 'air-jordan-3-retro-sail-jade-aura', nombre: 'Air Jordan 3 Retro Sail Jade Aura', precio: 120000, image: new URL('@/assets/images/collection/3retroSailandJadeAura/image.png', import.meta.url).href },
       'air-jordan-9-retro-flit-grey-french-blue': { id: 'air-jordan-9-retro-flit-grey-french-blue', nombre: 'Air Jordan 9 Retro Flit Grey French Blue', precio: 95000, image: new URL('@/assets/images/collection/9retroFlitGreyandFrenchBlue/image.png', import.meta.url).href },
-      'air-jordan-mvp-92': { id: 'air-jordan-mvp-92', nombre: 'Air Jordan MVP 92', precio: 110000, image: new URL('@/assets/images/collection/MVP92/black-light%20blue.png', import.meta.url).href },
-      'air-jordan-spizike': { id: 'air-jordan-spizike', nombre: 'Air Jordan Spizike', precio: 115000, image: new URL('@/assets/images/collection/spizikeG/image.png', import.meta.url).href },
+      'air-jordan-mvp-92': {
+        id: 'air-jordan-mvp-92',
+        nombre: 'Air Jordan MVP 92',
+        precio: 110000,
+        variants: [
+          { id: 'black', name: 'Black / Light Blue', image: new URL('@/assets/images/collection/MVP92/black-light blue.png', import.meta.url).href },
+          { id: 'multi', name: 'Multi Color', image: new URL('@/assets/images/collection/MVP92/multi-color.png', import.meta.url).href },
+          { id: 'red', name: 'Red', image: new URL('@/assets/images/collection/MVP92/red.png', import.meta.url).href },
+        ],
+      },
+      'air-jordan-spizike': {
+        id: 'air-jordan-spizike',
+        nombre: 'Air Jordan Spizike',
+        precio: 115000,
+        variants: [
+          { id: 'gray', name: 'Gray', image: new URL('@/assets/images/collection/spizikeG/gray.png', import.meta.url).href },
+          { id: 'white-red-green', name: 'White / Red / Green', image: new URL('@/assets/images/collection/spizikeG/white-red-green.png', import.meta.url).href },
+        ],
+      },
       'air-jordan-1-low': {
         id: 'air-jordan-1-low',
         nombre: 'Air Jordan 1 Low',
