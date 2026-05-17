@@ -19,6 +19,7 @@ const props = defineProps<{
   quantity?: number
   size?: string | null
   color?: string | null
+  image?: string | null
   requireSize?: boolean
 }>()
 
@@ -34,6 +35,7 @@ function add() {
   const item: any = { id: props.id, nombre: props.nombre, precio: props.precio, quantity: props.quantity ?? 1 }
   if (props.size) item.size = props.size
   if (props.color) item.color = props.color
+  if (props.image) item.image = props.image
   cart.addItem(item)
   added.value = true
   setTimeout(() => {

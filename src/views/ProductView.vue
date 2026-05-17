@@ -57,6 +57,7 @@
             :precio="product.precio"
             :size="selectedSize"
             :color="(variants[selectedVariant] && variants[selectedVariant].name) || ''"
+            :image="(variants[selectedVariant] && variants[selectedVariant].image) || product.image"
             :requireSize="true"
           />
         </div>
