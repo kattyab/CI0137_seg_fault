@@ -85,13 +85,26 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function removeItem(idOrKey: string) {
-    // if idOrKey matches an internal _key, remove only that line; otherwise remove by product id
+    // if idOrKey matches an internal _key, decrement quantity by 1 and remove the line when it reaches 0
     const byKey = items.value.findIndex(i => i._key === idOrKey)
     if (byKey !== -1) {
-      items.value.splice(byKey, 1)
+      const existing = items.value[byKey]!
+      if ((existing.quantity || 0) > 1) {
+        existing.quantity -= 1
+      } else {
+        items.value.splice(byKey, 1)
+      }
       return
     }
-    items.value = items.value.filter(i => i.id !== idOrKey)
+    const byId = items.value.findIndex(i => i.id === idOrKey)
+    if (byId !== -1) {
+      const existing = items.value[byId]!
+      if ((existing.quantity || 0) > 1) {
+        existing.quantity -= 1
+      } else {
+        items.value.splice(byId, 1)
+      }
+    }
   }
 
   function setQuantity(idOrKey: string, qty: number) {
