@@ -1,3 +1,10 @@
+<script setup lang="ts">
+const low1Main = new URL('@/assets/images/low/1low/gray-white-black.png', import.meta.url).href
+const low2Main = new URL('@/assets/images/low/1lowG/gray.png', import.meta.url).href
+const low3Main = new URL('@/assets/images/low/1lowSE/black.png', import.meta.url).href
+const low4Main = new URL('@/assets/images/low/skylineLow/red-white-gray.png', import.meta.url).href
+</script>
+
 <template>
   <main>
     <section class="hero" style="height: 30vh">
@@ -9,7 +16,10 @@
       <h2>Modelos Disponibles</h2>
       <div class="grid">
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-low' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-low' }, query: { image: low1Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -36,7 +46,10 @@
         </div>
 
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-low-g' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-low-g' }, query: { image: low2Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -63,7 +76,10 @@
         </div>
 
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-low-se' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-low-se' }, query: { image: low3Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -90,7 +106,10 @@
         </div>
 
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-skyline-low' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-skyline-low' }, query: { image: low4Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">

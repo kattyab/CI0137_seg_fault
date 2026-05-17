@@ -183,6 +183,8 @@ const selectedVariant = ref(0)
 const mainViewIndex = ref(0)
 const variants = computed(() => product.value.variants ?? [{ id: product.value.id, name: product.value.nombre, image: product.value.image, images: [product.value.image] }])
 
+const initialRouteImage = computed(() => (typeof route.query.image === 'string' ? route.query.image : ''))
+
 const variantImages = computed(() => {
   const v = variants.value[selectedVariant.value]
   if (!v) return [product.value.image]
@@ -209,6 +211,27 @@ const variantImages = computed(() => {
 
 const mainImageOverride = ref<string | null>(null)
 
+function applyInitialImage() {
+  const queryImage = initialRouteImage.value
+  selectedVariant.value = 0
+  mainViewIndex.value = 0
+  mainImageOverride.value = null
+
+  if (!queryImage) return
+
+  const matchedVariantIndex = variants.value.findIndex((v: any) => {
+    const images = v.images ?? (v.image ? [v.image] : [])
+    return images.includes(queryImage) || v.image === queryImage
+  })
+
+  if (matchedVariantIndex !== -1) {
+    selectedVariant.value = matchedVariantIndex
+    return
+  }
+
+  mainImageOverride.value = queryImage
+}
+
 const imageSrc = computed(() => {
   if (mainImageOverride.value) return mainImageOverride.value
   return variantImages.value[mainViewIndex.value] ?? variantImages.value[0] ?? ''
@@ -229,10 +252,12 @@ function chooseSize(s: string) {
 
 onMounted(() => {
   window.scrollTo({ top: 0, behavior: 'auto' })
+  applyInitialImage()
 })
 
-watch(() => route.params.id, () => {
+watch(() => [route.params.id, route.query.image], () => {
   window.scrollTo({ top: 0, behavior: 'auto' })
+  applyInitialImage()
 })
 
 // size chart modal

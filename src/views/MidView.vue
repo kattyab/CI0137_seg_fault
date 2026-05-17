@@ -1,3 +1,9 @@
+<script setup lang="ts">
+const mid1Main = new URL('@/assets/images/mid/1mid/white-black-red.png', import.meta.url).href
+const mid2Main = new URL('@/assets/images/mid/1midSE/light green.png', import.meta.url).href
+const mid3Main = new URL('@/assets/images/mid/1midSEEdge/pink-light brown-black.png', import.meta.url).href
+</script>
+
 <template>
   <main>
     <section class="hero" style="height: 30vh">
@@ -9,7 +15,10 @@
       <h2>Modelos Disponibles</h2>
       <div class="grid">
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-mid' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-mid' }, query: { image: mid1Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -36,7 +45,10 @@
         </div>
 
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se' }, query: { image: mid2Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
@@ -66,7 +78,10 @@
         </div>
 
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se-edge' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se-edge' }, query: { image: mid3Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">

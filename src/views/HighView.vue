@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const high1Main = new URL('@/assets/images/high/1retroHighOG/gray.png', import.meta.url).href
+const high2Main = new URL('@/assets/images/high/9retro/black.png', import.meta.url).href
+</script>
+
 <template>
   <main>
     <section class="hero" style="height: 30vh">
@@ -9,7 +14,10 @@
       <h2>Modelos Disponibles</h2>
       <div class="grid">
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-og' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-og' }, query: { image: high1Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
@@ -36,7 +44,10 @@
         </div>
 
         <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-9' } }" class="product-detail card-link">
+          <router-link
+            :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-9' }, query: { image: high2Main } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide"><img src="@/assets/images/high/9retro/black.png" alt="Color 1"/></div>
