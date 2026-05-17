@@ -18,7 +18,6 @@
 
       <div class="image-col">
         <div class="image-wrap">
-          <div class="badge">Highly Rated</div>
           <img :src="imageSrc" alt="" class="main-image" />
         </div>
       </div>
@@ -48,7 +47,7 @@
           <div class="grid-sizes">
             <button v-for="s in sizes" :key="s" class="size" :class="{ active: selectedSize === s }" @click="chooseSize(s)">{{ s }}</button>
           </div>
-          <a href="#" class="size-guide">Size Guide</a>
+          <button type="button" class="size-guide" @click.prevent="openSizeChart">Size Guide</button>
         </div>
 
         <div class="actions">
@@ -57,6 +56,13 @@
       </aside>
     </div>
   </main>
+
+      <div v-if="showSizeChart" class="size-modal" @click.self="closeSizeChart">
+        <div class="size-modal__content" role="dialog" aria-modal="true" aria-label="Size chart">
+          <button class="size-modal__close" type="button" @click="closeSizeChart" aria-label="Cerrar">×</button>
+          <img :src="sizeChart" alt="Size chart" class="size-chart-img" />
+        </div>
+      </div>
 </template>
 
 <script setup lang="ts">
@@ -114,9 +120,35 @@ const product = computed(() => {
           { id: '2', name: 'White / Black / Gray', image: new URL('@/assets/images/low/skylineLow/white-black-gray.png', import.meta.url).href },
         ],
       },
-      'air-jordan-1-mid': { id: 'air-jordan-1-mid', nombre: 'Air Jordan 1 Mid', precio: 75000, image: new URL('@/assets/images/mid/1mid/green.png', import.meta.url).href },
-      'air-jordan-1-mid-se': { id: 'air-jordan-1-mid-se', nombre: 'Air Jordan 1 Mid SE', precio: 78000, image: new URL('@/assets/images/mid/1midSE/blue.png', import.meta.url).href },
-      'air-jordan-1-mid-se-edge': { id: 'air-jordan-1-mid-se-edge', nombre: 'Air Jordan 1 Mid SE Edge', precio: 80000, image: new URL('@/assets/images/mid/1midSEEdge/pink-light%20brown-black.png', import.meta.url).href },
+      'air-jordan-1-mid': {
+        id: 'air-jordan-1-mid',
+        nombre: 'Air Jordan 1 Mid',
+        precio: 75000,
+        variants: [
+          { id: '1', name: 'White / Black / Red', image: new URL('@/assets/images/mid/1mid/white-black-red.png', import.meta.url).href },
+          { id: '2', name: 'White / Black / Light Blue', image: new URL('@/assets/images/mid/1mid/white-black-light blue.png', import.meta.url).href },
+          { id: '3', name: 'Green', image: new URL('@/assets/images/mid/1mid/green.png', import.meta.url).href },
+        ],
+      },
+      'air-jordan-1-mid-se': {
+        id: 'air-jordan-1-mid-se',
+        nombre: 'Air Jordan 1 Mid SE',
+        precio: 78000,
+        variants: [
+          { id: '1', name: 'Brown', image: new URL('@/assets/images/mid/1midSE/brown.png', import.meta.url).href },
+          { id: '2', name: 'Blue', image: new URL('@/assets/images/mid/1midSE/blue.png', import.meta.url).href },
+          { id: '3', name: 'Light Green', image: new URL('@/assets/images/mid/1midSE/light green.png', import.meta.url).href },
+          { id: '4', name: 'Wine', image: new URL('@/assets/images/mid/1midSE/wine.png', import.meta.url).href },
+        ],
+      },
+      'air-jordan-1-mid-se-edge': {
+        id: 'air-jordan-1-mid-se-edge',
+        nombre: 'Air Jordan 1 Mid SE Edge',
+        precio: 80000,
+        variants: [
+          { id: '1', name: 'Pink / Light Brown / Black', image: new URL('@/assets/images/mid/1midSEEdge/pink-light%20brown-black.png', import.meta.url).href },
+        ],
+      },
       'air-jordan-1-retro-high-og': {
         id: 'air-jordan-1-retro-high-og',
         nombre: 'Air Jordan 1 Retro High OG',
@@ -126,7 +158,15 @@ const product = computed(() => {
           { id: '2', name: 'Light Blue', image: new URL('@/assets/images/high/1retroHighOG/light blue-light brown.png', import.meta.url).href },
         ],
       },
-      'air-jordan-1-retro-high-9': { id: 'air-jordan-1-retro-high-9', nombre: 'Air Jordan 1 Retro High 9', precio: 128000, image: new URL('@/assets/images/high/9retro/black.png', import.meta.url).href },
+      'air-jordan-1-retro-high-9': {
+        id: 'air-jordan-1-retro-high-9',
+        nombre: 'Air Jordan 1 Retro High 9',
+        precio: 128000,
+        variants: [
+          { id: '1', name: 'Black', image: new URL('@/assets/images/high/9retro/black.png', import.meta.url).href },
+          { id: '2', name: 'Brown', image: new URL('@/assets/images/high/9retro/brown.png', import.meta.url).href },
+        ],
+      },
   }
   return map[id] ?? { id, nombre: id, precio: 0, image: '' }
 })
@@ -136,7 +176,7 @@ const formattedPrice = computed(() => {
   return new Intl.NumberFormat('en-US').format(n)
 })
 
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 
 
 const selectedVariant = ref(0)
@@ -193,6 +233,24 @@ onMounted(() => {
 
 watch(() => route.params.id, () => {
   window.scrollTo({ top: 0, behavior: 'auto' })
+})
+
+// size chart modal
+const sizeChart = new URL('@/assets/images/size/size-chart.jpg', import.meta.url).href
+const showSizeChart = ref(false)
+function openSizeChart() { showSizeChart.value = true }
+function closeSizeChart() { showSizeChart.value = false }
+
+function onKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Escape' && showSizeChart.value) closeSizeChart()
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeyDown)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeyDown)
 })
 </script>
 
@@ -297,6 +355,36 @@ watch(() => route.params.id, () => {
 .size-guide { display:inline-block; margin-top:0.6rem; color: #666; text-decoration: underline; font-size:0.9rem }
 
 .actions { margin-top: 1rem }
+
+.size-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 1200;
+}
+.size-modal__content {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 92vw;
+  max-height: 92vh;
+  overflow: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  position: relative;
+}
+.size-modal__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+.size-chart-img { width: 100%; height: auto; display: block }
 
 @media (max-width: 900px) {
   .container { grid-template-columns: 1fr; padding: 0.75rem }
