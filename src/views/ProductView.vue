@@ -352,7 +352,9 @@ onBeforeUnmount(() => {
 .size:active { transform: translateY(1px) }
 .size.active { background: #111; color: #fff; border-color: #111 }
 
-.size-guide { display:inline-block; margin-top:0.6rem; color: #666; text-decoration: underline; font-size:0.9rem }
+.size-guide { display:inline-block; margin-top:0.6rem; color: #666; text-decoration: underline; font-size:0.9rem; border: none; background: none; padding: 0; cursor: pointer }
+.size-guide:focus { outline: none }
+.size-guide:active { outline: none }
 
 .actions { margin-top: 1rem }
 
