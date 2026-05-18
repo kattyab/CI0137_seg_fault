@@ -1,45 +1,26 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { computed, ref, onMounted, watch } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/cart'
+import { useAuthStore } from '@/stores/auth'
 
-type CartItem = {
-  id: number
-  product: string
-  quantity: number
-  price: number
-}
-
-const cartItems = ref<CartItem[]>([
-  {
-    id: 1,
-    product: 'Air Jordan 1 Retro High OG Gray',
-    quantity: 1,
-    price: 80000,
-  },
-  {
-    id: 2,
-    product: 'Air Jordan 1 Low SE Black',
-    quantity: 2,
-    price: 70000,
-  },
-])
+const cart = useCartStore()
+const auth = useAuthStore()
+const router = useRouter()
 
 const isModalVisible = ref(false)
-const pendingItemId = ref<number | null>(null)
+const pendingItemId = ref<string | null>(null)
 const removeProductName = ref('este producto')
 
 const formatCRC = (amount: number) => `₡${amount.toLocaleString('es-CR')}`
 
-const subtotal = computed(() =>
-  cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0),
-)
-
+const subtotal = computed(() => cart.subtotal)
 const shipping = computed(() => (subtotal.value > 0 ? 10000 : 0))
 const total = computed(() => subtotal.value + shipping.value)
 
-const openModal = (item: CartItem) => {
-  removeProductName.value = item.product
-  pendingItemId.value = item.id
+const openModal = (itemId: string, productName: string) => {
+  removeProductName.value = productName
+  pendingItemId.value = itemId
   isModalVisible.value = true
 }
 
@@ -52,8 +33,7 @@ const confirmRemove = () => {
   if (pendingItemId.value === null) {
     return
   }
-
-  cartItems.value = cartItems.value.filter((item) => item.id !== pendingItemId.value)
+  cart.removeItem(pendingItemId.value)
   closeModal()
 }
 
@@ -62,6 +42,81 @@ const closeIfOverlay = (event: MouseEvent) => {
     closeModal()
   }
 }
+
+const goToCheckout = () => {
+  if (cart.items.length === 0) return
+  router.push({ name: 'checkout' })
+}
+
+// fallback thumbnail for items without image
+const fallbackThumb = new URL('@/assets/images/collection/3retroSailandJadeAura/image.png', import.meta.url).href
+
+// resolved thumbnails cache: key -> url
+const resolvedThumbs = ref<Record<string, string>>({})
+
+async function checkUrl(url: string) {
+  try {
+    const resp = await fetch(url, { method: 'HEAD' })
+    return resp.ok
+  } catch {
+    return false
+  }
+}
+
+function idToCandidates(id: string) {
+  const out: string[] = []
+  const raw = id.replace(/^air-jordan-/i, '') // remove common prefix
+  // candidate: folder = raw (as-is)
+  out.push(`@/assets/images/collection/${raw}/image.png`)
+  // candidate: remove hyphens
+  const noHyphen = raw.replace(/-/g, '')
+  out.push(`@/assets/images/collection/${noHyphen}/image.png`)
+  // candidate: uppercase (useful for MVP92)
+  out.push(`@/assets/images/collection/${noHyphen.toUpperCase()}/image.png`)
+  // also try product main image filename patterns
+  out.push(`@/assets/images/collection/${raw}.png`)
+  out.push(`@/assets/images/collection/${noHyphen}.png`)
+  return out
+}
+
+async function resolveImageForItem(item: any) {
+  const key = item._key ?? item.id
+  if (!key) return
+  if (item.image) {
+    resolvedThumbs.value[key] = item.image
+    return
+  }
+  if (resolvedThumbs.value[key]) return
+  const candidates = idToCandidates(item.id || item._key || '')
+  for (const c of candidates) {
+    const url = new URL(c.replace(/^@\//, ''), import.meta.url).href
+    // check if exists
+    // eslint-disable-next-line no-await-in-loop
+    if (await checkUrl(url)) {
+      resolvedThumbs.value[key] = url
+      return
+    }
+  }
+  // leave unresolved (fall back)
+}
+
+function resolveAllMissing() {
+  for (const it of cart.items) {
+    if (!it) continue
+    const key = it._key ?? it.id
+    if (!it.image && !resolvedThumbs.value[key]) {
+      void resolveImageForItem(it)
+    }
+  }
+}
+
+onMounted(() => {
+  resolveAllMissing()
+})
+
+watch(() => cart.items.slice(), () => {
+  resolveAllMissing()
+})
 </script>
 
 <template>
@@ -72,6 +127,7 @@ const closeIfOverlay = (event: MouseEvent) => {
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem">
           <thead>
             <tr style="background: #f0f0f0; border-bottom: 2px solid #ff6b35">
+              <th style="padding: 1rem; text-align: left">Foto</th>
               <th style="padding: 1rem; text-align: left">Producto</th>
               <th style="padding: 1rem; text-align: center">Cantidad</th>
               <th style="padding: 1rem; text-align: right">Precio Unitario</th>
@@ -80,26 +136,33 @@ const closeIfOverlay = (event: MouseEvent) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in cartItems" :key="item.id" style="border-bottom: 1px solid #ddd">
-              <td style="padding: 1rem">{{ item.product }}</td>
+            <tr v-for="item in cart.items" :key="item._key ?? item.id" style="border-bottom: 1px solid #ddd">
+              <td style="padding: 0.5rem; width: 80px; text-align: center">
+                <img :src="resolvedThumbs[item._key ?? item.id] || item.image || fallbackThumb" :alt="item.nombre" style="width:64px; height:64px; object-fit:contain; display:block; margin:0 auto;" />
+              </td>
+              <td style="padding: 1rem">
+                {{ item.nombre }}
+                <span v-if="item.size"> - {{ item.size }}</span>
+                <span v-if="item.color"> - {{ item.color }}</span>
+              </td>
               <td style="padding: 1rem; text-align: center">{{ item.quantity }}</td>
-              <td style="padding: 1rem; text-align: right">{{ formatCRC(item.price) }}</td>
+              <td style="padding: 1rem; text-align: right">{{ formatCRC(item.precio) }}</td>
               <td style="padding: 1rem; text-align: right">
-                {{ formatCRC(item.price * item.quantity) }}
+                {{ formatCRC(item.precio * item.quantity) }}
               </td>
               <td style="padding: 1rem; text-align: center">
                 <button
                   class="remove-btn"
                   type="button"
-                  :aria-label="`Eliminar ${item.product}`"
-                  @click="openModal(item)"
+                  :aria-label="`Eliminar ${item.nombre}`"
+                  @click="openModal(item._key ?? item.id, item.nombre)"
                 >
                   ×
                 </button>
               </td>
             </tr>
-            <tr v-if="cartItems.length === 0">
-              <td colspan="5" style="padding: 1rem; text-align: center">
+            <tr v-if="cart.items.length === 0">
+              <td colspan="6" style="padding: 1rem; text-align: center">
                 No hay productos en el carrito.
               </td>
             </tr>
@@ -155,7 +218,7 @@ const closeIfOverlay = (event: MouseEvent) => {
 
         <div class="cart-actions" style="display: flex; gap: 1rem">
           <RouterLink to="/" class="cta cart-action-link">Continuar Comprando</RouterLink>
-          <button class="cta cta-buy cart-action-btn" type="button">Proceder al Pago</button>
+          <button class="cta cta-buy cart-action-btn" type="button" :disabled="cart.items.length === 0" @click="goToCheckout">Proceder al Pago</button>
         </div>
       </div>
     </section>
@@ -173,10 +236,22 @@ const closeIfOverlay = (event: MouseEvent) => {
           <strong id="removeProductName">{{ removeProductName }}</strong> del carrito?
         </p>
         <div class="modal-actions">
-          <button class="cta" id="confirmRemove" type="button" @click="confirmRemove">
+          <button
+            class="cta"
+            id="confirmRemove"
+            type="button"
+            style="font-size: 1rem; padding: 1rem 1.75rem; min-width: 140px"
+            @click="confirmRemove"
+          >
             Eliminar
           </button>
-          <button class="ghost-btn" id="cancelRemove" type="button" @click="closeModal">
+          <button
+            class="ghost-btn"
+            id="cancelRemove"
+            type="button"
+            style="font-size: 1rem; padding: 1rem 1.75rem; min-width: 140px"
+            @click="closeModal"
+          >
             Cancelar
           </button>
         </div>
@@ -184,3 +259,24 @@ const closeIfOverlay = (event: MouseEvent) => {
     </div>
   </main>
 </template>
+
+<style scoped>
+.modal-actions button {
+  min-width: 140px;
+  padding: 1rem 1.75rem;
+  font-size: 1rem;
+  line-height: 1;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#confirmRemove {
+  margin-top: 0;
+}
+
+#cancelRemove {
+  margin-top: 0;
+}
+</style>
