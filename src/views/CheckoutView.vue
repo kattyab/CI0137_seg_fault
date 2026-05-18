@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 
@@ -19,16 +19,87 @@ const payment = reactive({
   cvc: '',
 })
 
+const cvcError = ref('')
+const submitAttempted = ref(false)
+const touched = reactive({
+  name: false,
+  cardNumber: false,
+  expiry: false,
+  cvc: false,
+})
+const focused = reactive({
+  name: false,
+  cardNumber: false,
+  expiry: false,
+  cvc: false,
+})
+
+const namePattern = /^[\p{L}\s'-]+$/u
+
+function onlyDigits(value: string) {
+  return value.replace(/\D/g, '')
+}
+
 function onCardInput(e: Event) {
   const el = e.target as HTMLInputElement
-  let digits = (el.value || '').replace(/\D/g, '')
-  digits = digits.slice(0, 16)
-  // format as groups of 4
+  const digits = onlyDigits(el.value || '').slice(0, 16)
   payment.cardNumber = digits.replace(/(.{4})/g, '$1 ').trim()
 }
 
+function onNameInput(e: Event) {
+  const el = e.target as HTMLInputElement
+  payment.name = el.value || ''
+}
+
+function onExpiryInput(e: Event) {
+  const el = e.target as HTMLInputElement
+  const digits = onlyDigits(el.value).slice(0, 4)
+  if (digits.length <= 2) {
+    payment.expiry = digits
+    return
+  }
+
+  payment.expiry = `${digits.slice(0, 2)}/${digits.slice(2)}`
+}
+
+function onCvcInput(e: Event) {
+  const el = e.target as HTMLInputElement
+  const rawValue = el.value || ''
+  const digits = onlyDigits(rawValue).slice(0, 4)
+  payment.cvc = rawValue
+
+  if (!rawValue.trim()) {
+    cvcError.value = ''
+    return
+  }
+
+  if (/\D/.test(rawValue)) {
+    cvcError.value = 'Ingresa un código CVC válido.'
+    return
+  }
+
+  cvcError.value = digits.length === 3 || digits.length === 4 ? '' : 'Ingresa un código CVC válido.'
+}
+
+function markTouched(field: keyof typeof touched) {
+  touched[field] = true
+}
+
+function markFocused(field: keyof typeof focused) {
+  focused[field] = true
+}
+
+function markBlurred(field: keyof typeof focused) {
+  focused[field] = false
+  markTouched(field)
+}
+
+function normalizeExpiry(value: string) {
+  return value.trim()
+}
+
 function isExpiryValid(value: string) {
-  const match = value.trim().match(/^(\d{2})\/(\d{2})$/)
+  const match = normalizeExpiry(value).match(/^(\d{2})\/(\d{2})$/)
   if (!match) return false
 
   const month = Number(match[1])
@@ -42,10 +113,50 @@ function isExpiryValid(value: string) {
   return year > currentYear || (year === currentYear && month >= currentMonth)
 }
 
+function getExpiryError(value: string) {
+  const normalized = normalizeExpiry(value)
+  if (!normalized) return ''
+
+  const match = normalized.match(/^(\d{2})\/(\d{2})$/)
+  if (!match) return 'Ingresa una fecha válida en formato MM/AA.'
+
+  const month = Number(match[1])
+  if (month < 1 || month > 12) {
+    return 'Ingresa una fecha válida en formato MM/AA.'
+  }
+
+  return isExpiryValid(normalized) ? '' : 'La tarjeta está vencida. Revisa la fecha de vencimiento.'
+}
+
+function isCardNumberValid(value: string) {
+  return onlyDigits(value).length === 16
+}
+
+function isNameValid(value: string) {
+  const normalized = value.trim()
+  return normalized.length >= 3 && namePattern.test(normalized)
+}
+
+function isCvcValid(value: string) {
+  const digits = onlyDigits(value)
+  return digits.length === 3 || digits.length === 4
+}
+
 const expiryIsValid = computed(() => isExpiryValid(payment.expiry))
-const canPay = computed(() => cart.items.length > 0 && expiryIsValid.value)
+const cardNumberIsValid = computed(() => isCardNumberValid(payment.cardNumber))
+const nameIsValid = computed(() => isNameValid(payment.name))
+const cvcIsValid = computed(() => isCvcValid(payment.cvc))
+const canPay = computed(
+  () => cart.items.length > 0 && nameIsValid.value && cardNumberIsValid.value && expiryIsValid.value && cvcIsValid.value,
+)
 
 function pay() {
+  submitAttempted.value = true
+  touched.name = true
+  touched.cardNumber = true
+  touched.expiry = true
+  touched.cvc = true
+
   if (!canPay.value) return
   const paidTotal = total.value
   cart.clearCart()
@@ -70,24 +181,71 @@ function pay() {
         <form class="payment-form" @submit.prevent="pay">
           <label>
             Nombre en la tarjeta
-            <input v-model="payment.name" type="text" placeholder="Juan Pérez" required />
+            <input
+              :value="payment.name"
+              autocomplete="cc-name"
+              inputmode="text"
+              placeholder="Juan Pérez"
+              required
+              type="text"
+              @input="onNameInput"
+              @focus="markFocused('name')"
+              @blur="markBlurred('name')"
+            />
+            <small v-if="(touched.name || submitAttempted) && !focused.name && !nameIsValid" class="field-error">Ingresa solo letras para el nombre.</small>
           </label>
 
           <label>
             Número de tarjeta
-            <input :value="payment.cardNumber" @input="onCardInput" type="text" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" required />
+            <input
+              :value="payment.cardNumber"
+              autocomplete="cc-number"
+              inputmode="numeric"
+              maxlength="19"
+              placeholder="1234 5678 9012 3456"
+              required
+              type="text"
+              @input="onCardInput"
+              @focus="markFocused('cardNumber')"
+              @blur="markBlurred('cardNumber')"
+            />
+            <small v-if="(touched.cardNumber || submitAttempted) && !focused.cardNumber && !cardNumberIsValid" class="field-error">Ingresa un número de tarjeta de 16 dígitos.</small>
           </label>
 
           <div class="two-cols">
             <label>
               Vencimiento
-              <input v-model="payment.expiry" type="text" placeholder="MM/AA" maxlength="5" required />
-              <small v-if="payment.expiry && !expiryIsValid" class="field-error">Inserte una tarjeta válida.</small>
+              <input
+                :value="payment.expiry"
+                autocomplete="cc-exp"
+                inputmode="numeric"
+                maxlength="5"
+                placeholder="MM/AA"
+                required
+                type="text"
+                @input="onExpiryInput"
+                @focus="markFocused('expiry')"
+                @blur="markBlurred('expiry')"
+              />
+              <small v-if="(touched.expiry || submitAttempted) && !focused.expiry && !expiryIsValid" class="field-error">{{ getExpiryError(payment.expiry) }}</small>
             </label>
 
             <label>
               CVC
-              <input v-model="payment.cvc" type="password" inputmode="numeric" maxlength="4" placeholder="123" required />
+              <input
+                :value="payment.cvc"
+                autocomplete="cc-csc"
+                inputmode="numeric"
+                maxlength="4"
+                placeholder="123"
+                required
+                type="password"
+                @input="onCvcInput"
+                @focus="markFocused('cvc')"
+                @blur="markBlurred('cvc')"
+              />
+              <small v-if="(touched.cvc || submitAttempted) && !focused.cvc && cvcError" class="field-error">{{ cvcError }}</small>
+              <small v-else-if="(touched.cvc || submitAttempted) && !focused.cvc && payment.cvc && !cvcIsValid" class="field-error">Ingresa un CVC de 3 o 4 dígitos.</small>
             </label>
           </div>
 
