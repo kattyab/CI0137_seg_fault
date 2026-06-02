@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
@@ -29,6 +29,37 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const phonePattern = /^[0-9+\s-]{8,15}$/
 const showPassword = ref(false)
 const showPasswordConfirm = ref(false)
+
+// Guardar formulario en localStorage
+const saveFormToLocalStorage = () => {
+  localStorage.setItem('registroForm', JSON.stringify(form))
+}
+
+// Cargar formulario desde localStorage
+const loadFormFromLocalStorage = () => {
+  const savedForm = localStorage.getItem('registroForm')
+  if (savedForm) {
+    try {
+      const parsed = JSON.parse(savedForm)
+      form.nombre = parsed.nombre || ''
+      form.email = parsed.email || ''
+      form.telefono = parsed.telefono || ''
+      form.password = parsed.password || ''
+      form.passwordConfirm = parsed.passwordConfirm || ''
+      form.terminos = parsed.terminos || false
+    } catch (error) {
+      console.error('Error loading form from localStorage:', error)
+    }
+  }
+}
+
+// Cargar datos al montar el componente
+onMounted(() => {
+  loadFormFromLocalStorage()
+})
+
+// Guardar cada vez que cambie el formulario
+watch(form, saveFormToLocalStorage, { deep: true })
 
 const validateNombre = () => {
   if (!form.nombre.trim()) {
@@ -86,28 +117,14 @@ const validatePassword = () => {
     return false
   }
 
-  if (form.password.length < 16) {
-    errors.password = 'La contraseña debe tener al menos 16 caracteres.'
-    return false
-  }
+  const hasMinLength = form.password.length >= 16
+  const hasLowercase = /[a-z]/.test(form.password)
+  const hasUppercase = /[A-Z]/.test(form.password)
+  const hasNumber = /[0-9]/.test(form.password)
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(form.password)
 
-  if (!/[a-z]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos una letra minúscula.'
-    return false
-  }
-
-  if (!/[A-Z]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos una letra mayúscula.'
-    return false
-  }
-
-  if (!/[0-9]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos un número.'
-    return false
-  }
-
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos un signo especial (!@#$%^&*...).'
+  if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber || !hasSpecialChar) {
+    errors.password = 'La contraseña debe tener al menos 16 caracteres, número, mayúscula, minúscula y carácter especial (!@#$%^&*).'
     return false
   }
 
@@ -170,13 +187,14 @@ const handleSubmit = async () => {
 
   window.alert('Cuenta creada correctamente. ¡Bienvenido!')
   
-  // Limpiar formulario
+  // Limpiar formulario y localStorage
   form.nombre = ''
   form.email = ''
   form.telefono = ''
   form.password = ''
   form.passwordConfirm = ''
   form.terminos = false
+  localStorage.removeItem('registroForm')
 
   // Redirigir a login después de 1 segundo
   setTimeout(() => {
