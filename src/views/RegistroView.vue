@@ -219,7 +219,6 @@ const handleSubmit = async () => {
       >
         <form novalidate @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label style="color: red;"> Campos Obligatorios * </label>
             <label for="nombre">Nombre Completo: <span style="color: red;">*</span></label>
             <input
               id="nombre"
@@ -359,6 +358,7 @@ const handleSubmit = async () => {
           <p v-if="errors.terminos" class="field-error" style="margin-top: -1rem; margin-bottom: 1rem">
             {{ errors.terminos }}
           </p>
+          <label style="color: red;"> Campos Obligatorios * </label>
           <button class="cta" type="submit" style="width: 100%">Crear Cuenta</button>
         </form>
 
