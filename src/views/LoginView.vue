@@ -5,7 +5,7 @@ import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
 import { userService } from '@/services/userService'
 import { useAuthStore } from '@/stores/auth'
-import { initSession } from '@/composables/useSessionTimeout'  // 👈 nuevo import
+import { initSession } from '@/composables/useSessionTimeout'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -67,7 +67,9 @@ const handleSubmit = async () => {
     telefono: user.telefono,
   })
 
-  // ✅ Iniciar sesión y timers JUSTO después de autenticar al usuario
+  // Iniciar sesión y timers JUSTO después de autenticar al usuario
+  // Este llamado debe estar aquí para asegurar que los timers se inicien solo 
+  // después de una autenticación exitosa
   initSession(router)
 
   window.alert(`¡Bienvenido ${user.nombre}!`)
