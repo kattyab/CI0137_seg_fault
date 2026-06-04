@@ -112,7 +112,7 @@ export const useSessionTimeout = () => {
   const router = useRouter()
 
   onMounted(() => {
-    if (!auth.user) return   // sin sesión → nada que vigilar
+    if (!auth.user) return
 
     console.log('Sesión existente detectada, reanudando timers...')
     routerInstance = router
@@ -121,8 +121,5 @@ export const useSessionTimeout = () => {
     onUserActivity()
   })
 
-  onUnmounted(() => {
-    // No limpiamos timers aquí: App.vue nunca se desmonta mientras la app corre.
-    // Si quisieras usarlo en un componente hijo temporal, sí limpiarías aquí.
-  })
+  onUnmounted(() => {})
 }
