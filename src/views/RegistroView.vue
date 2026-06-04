@@ -98,8 +98,8 @@ const validateEmail = () => {
 
 const validateTelefono = () => {
   if (!form.telefono.trim()) {
-    errors.telefono = ''
-    return true
+    errors.telefono = 'Ingresa tu número de teléfono.'
+    return false
   }
 
   if (!phonePattern.test(form.telefono.trim())) {
@@ -219,7 +219,8 @@ const handleSubmit = async () => {
       >
         <form novalidate @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="nombre">Nombre Completo:</label>
+            <label style="color: red;"> Campos Obligatorios * </label>
+            <label for="nombre">Nombre Completo: <span style="color: red;">*</span></label>
             <input
               id="nombre"
               v-model="form.nombre"
@@ -233,7 +234,7 @@ const handleSubmit = async () => {
             <p v-if="errors.nombre" class="field-error">{{ errors.nombre }}</p>
           </div>
           <div class="form-group">
-            <label for="email">Correo Electrónico:</label>
+            <label for="email">Correo Electrónico: <span style="color: red;">*</span></label>
             <input
               id="email"
               v-model="form.email"
@@ -247,7 +248,7 @@ const handleSubmit = async () => {
             <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
           </div>
           <div class="form-group">
-            <label for="telefono">Teléfono:</label>
+            <label for="telefono">Teléfono: <span style="color: red;">*</span></label>
             <input
               id="telefono"
               v-model="form.telefono"
@@ -261,7 +262,7 @@ const handleSubmit = async () => {
             <p v-if="errors.telefono" class="field-error">{{ errors.telefono }}</p>
           </div>
           <div class="form-group">
-            <label for="password">Contraseña:</label>
+            <label for="password">Contraseña: <span style="color: red;">*</span></label>
             <div style="position: relative; display: flex; align-items: center">
               <input
                 id="password"
@@ -301,7 +302,7 @@ const handleSubmit = async () => {
             <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
           </div>
           <div class="form-group">
-            <label for="password-confirm">Confirmar Contraseña:</label>
+            <label for="password-confirm">Confirmar Contraseña: <span style="color: red;">*</span></label>
             <div style="position: relative; display: flex; align-items: center">
               <input
                 id="password-confirm"
