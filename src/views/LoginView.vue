@@ -5,6 +5,7 @@ import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
 import { userService } from '@/services/userService'
 import { useAuthStore } from '@/stores/auth'
+import { initSession } from '@/composables/useSessionTimeout'  // 👈 nuevo import
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -29,12 +30,10 @@ const validateEmail = () => {
     errors.email = 'Ingresa tu correo electrónico.'
     return false
   }
-
   if (!emailPattern.test(form.email)) {
     errors.email = 'Ingresa un correo electrónico válido.'
     return false
   }
-
   errors.email = ''
   return true
 }
@@ -44,7 +43,6 @@ const validatePassword = () => {
     errors.password = 'Ingresa tu contraseña.'
     return false
   }
-
   errors.password = ''
   return true
 }
@@ -53,9 +51,7 @@ const handleSubmit = async () => {
   const isEmailValid = validateEmail()
   const isPasswordValid = validatePassword()
 
-  if (!isEmailValid || !isPasswordValid) {
-    return
-  }
+  if (!isEmailValid || !isPasswordValid) return
 
   const user = await userService.validateCredentials(form.email, form.password)
 
@@ -71,14 +67,15 @@ const handleSubmit = async () => {
     telefono: user.telefono,
   })
 
+  // ✅ Iniciar sesión y timers JUSTO después de autenticar al usuario
+  initSession(router)
+
   window.alert(`¡Bienvenido ${user.nombre}!`)
 
-  // Limpiar formulario
   form.email = ''
   form.password = ''
   form.recordar = false
 
-  // Redirigir a inicio después de 1 segundo
   setTimeout(() => {
     router.push('/')
   }, 1000)
@@ -145,8 +142,8 @@ const handleSubmit = async () => {
                 "
                 :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
               >
-                <img 
-                  :src="showPassword ? openEye : closedEye" 
+                <img
+                  :src="showPassword ? openEye : closedEye"
                   :alt="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
                   style="width: 1.2rem; height: 1.2rem"
                 />
