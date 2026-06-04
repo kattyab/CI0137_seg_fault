@@ -132,7 +132,7 @@ watch(() => cart.items.slice(), () => {
               <th style="padding: 1rem; text-align: center">Cantidad</th>
               <th style="padding: 1rem; text-align: right">Precio Unitario</th>
               <th style="padding: 1rem; text-align: right">Importe</th>
-              <th style="padding: 1rem; text-align: center">Quitar</th>
+              <th style="padding: 1rem; text-align: center">Eliminar</th>
             </tr>
           </thead>
           <tbody>
