@@ -3,6 +3,11 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+import { storeToRefs } from 'pinia'
+
+const cart = useCartStore()
+const { totalItems } = storeToRefs(cart)
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -62,25 +67,17 @@ onUnmounted(() => {
       <input type="search" placeholder="Buscar Sneakers..." />
       <RouterLink v-if="!isLoggedIn" to="/login" class="login-link">Iniciar Sesión</RouterLink>
       <div v-else style="position: relative" ref="userMenuRef">
-        <button
-          type="button"
-          @click="showUserMenu = !showUserMenu"
-          style="
+        <button type="button" @click="showUserMenu = !showUserMenu" style="
             background: none;
             border: none;
             cursor: pointer;
             padding: 0;
             display: flex;
             align-items: center;
-          "
-          aria-label="Menú de usuario"
-        >
+          " aria-label="Menú de usuario">
           <img src="@/assets/images/user.svg" alt="" aria-hidden="true" class="cart-icon" />
         </button>
-        <div
-          v-if="showUserMenu"
-          @click.stop
-          style="
+        <div v-if="showUserMenu" @click.stop style="
             position: absolute;
             top: 100%;
             right: 0;
@@ -92,17 +89,13 @@ onUnmounted(() => {
             z-index: 1000;
             min-width: 250px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          "
-        >
+          ">
           <div style="margin-bottom: 1rem">
             <div style="font-weight: 700; margin-bottom: 0.25rem; color: #000">{{ auth.user?.nombre }}</div>
             <div style="font-size: 0.85rem; color: #666">{{ auth.user?.email }}</div>
             <div style="font-size: 0.85rem; color: #666">{{ auth.user?.telefono }}</div>
           </div>
-          <button
-            type="button"
-            @click.stop="handleLogout"
-            style="
+          <button type="button" @click.stop="handleLogout" style="
               width: 100%;
               padding: 0.5rem;
               background: #ff6b35;
@@ -111,14 +104,17 @@ onUnmounted(() => {
               border-radius: 4px;
               cursor: pointer;
               font-weight: 600;
-            "
-          >
+            ">
             Cerrar sesión
           </button>
         </div>
       </div>
       <RouterLink to="/carrito" class="cart-link" aria-label="Ir al carrito de compras">
         <img src="@/assets/images/shopping_cart.svg" alt="" aria-hidden="true" class="cart-icon" />
+
+        <span v-if="totalItems > 0" class="cart-badge">
+          {{ totalItems }}
+        </span>
       </RouterLink>
     </div>
   </header>
