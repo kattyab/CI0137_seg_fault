@@ -2,9 +2,12 @@
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
+import { useAuthStore } from '@/stores/auth'
+import { purchaseService } from '@/services/purchaseService'
 
 const router = useRouter()
 const cart = useCartStore()
+const auth = useAuthStore()
 
 const formatCRC = (amount: number) => `₡${amount.toLocaleString('es-CR')}`
 
@@ -157,9 +160,28 @@ function pay() {
   touched.expiry = true
   touched.cvc = true
 
+  if (!auth.user) {
+    window.alert('Debes iniciar sesión para completar la compra.')
+    router.push({ name: 'login' })
+    return
+  }
+
   if (!canPay.value) return
+
+  const paidSubtotal = subtotal.value
+  const paidShipping = shipping.value
   const paidTotal = total.value
+
+  purchaseService.createPurchase({
+    userId: auth.user.id,
+    items: cart.items,
+    subtotal: paidSubtotal,
+    shipping: paidShipping,
+    total: paidTotal,
+  })
+
   cart.clearCart()
+
   router.push({
     name: 'checkout-confirmado',
     query: {
@@ -167,6 +189,7 @@ function pay() {
     },
   })
 }
+
 </script>
 
 <template>
