@@ -2,7 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useAuthStore } from './auth'
 
-export type CartItem = { id: string; nombre: string; precio: number; quantity: number; _key?: string; [key: string]: any }
+export type CartItem = { id: string; nombre: string; precio: number; quantity: number; _key?: string; [key: string]: unknown }
 
 const STORAGE_PREFIX = 'cart:'
 
@@ -32,12 +32,8 @@ export const useCartStore = defineStore('cart', () => {
     {
       return
     }
-    const existingKeys = new Set(items.value.map(i => i._key ?? compositeKeyFor(i)))
     for (const item of itemsGuest) {
-      const key = compositeKeyFor(item)
-      if (!existingKeys.has(key)) {
-        items.value.push({ ...item, _key: key })
-      }
+      addItem(item)
     }
     save()
     localStorage.removeItem(guestCart.value)
@@ -58,19 +54,23 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
-  // init
-  load()
-  normalizeKeys()
-
   // persist when items change
   watch(items, save, { deep: true })
 
-  // reload when user changes
-  watch(() => auth.user, () => { mergeGuestCart(); load(); normalizeKeys(); })
+  // reload and merge when user changes (runs immediately on init and synchronously on change)
+  watch(
+    () => auth.user,
+    () => {
+      load()
+      mergeGuestCart()
+      normalizeKeys()
+    },
+    { immediate: true, flush: 'sync' }
+  )
 
   function compositeKeyFor(item: CartItem) {
     // build deterministic key from id plus any extra attributes (size, variant, etc.)
-    const clone: Record<string, any> = { ...item }
+    const clone: Record<string, unknown> = { ...item }
     delete clone.quantity
     delete clone.nombre
     delete clone.precio
@@ -81,8 +81,8 @@ export const useCartStore = defineStore('cart', () => {
         clone[k] = clone[k].replace(/\s+/g, ' ').trim()
       }
     }
-    const keys = Object.keys(clone).sort()
-    const obj: Record<string, any> = {}
+    const keys = Object.keys(clone).sort((a, b) => a.localeCompare(b))
+    const obj: Record<string, unknown> = {}
     for (const k of keys) obj[k] = clone[k]
     return `${item.id}::${JSON.stringify(obj)}`
   }
