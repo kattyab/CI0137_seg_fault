@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
 import { userService } from '@/services/userService'
+import { useRegistroStore } from '@/stores/useRegistroStore'
 
 const router = useRouter()
+const registroStore = useRegistroStore()
 
-const form = reactive({
-  nombre: '',
-  email: '',
-  telefono: '',
-  password: '',
-  passwordConfirm: '',
-  terminos: false,
-})
+// Usar el form del store directamente
+const form = registroStore.form
 
 const errors = reactive({
   nombre: '',
@@ -67,8 +63,8 @@ const validateEmail = () => {
 
 const validateTelefono = () => {
   if (!form.telefono.trim()) {
-    errors.telefono = ''
-    return true
+    errors.telefono = 'Ingresa tu número de teléfono.'
+    return false
   }
 
   if (!phonePattern.test(form.telefono.trim())) {
@@ -86,28 +82,14 @@ const validatePassword = () => {
     return false
   }
 
-  if (form.password.length < 16) {
-    errors.password = 'La contraseña debe tener al menos 16 caracteres.'
-    return false
-  }
+  const hasMinLength = form.password.length >= 16
+  const hasLowercase = /[a-z]/.test(form.password)
+  const hasUppercase = /[A-Z]/.test(form.password)
+  const hasNumber = /[0-9]/.test(form.password)
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(form.password)
 
-  if (!/[a-z]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos una letra minúscula.'
-    return false
-  }
-
-  if (!/[A-Z]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos una letra mayúscula.'
-    return false
-  }
-
-  if (!/[0-9]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos un número.'
-    return false
-  }
-
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(form.password)) {
-    errors.password = 'La contraseña debe contener al menos un signo especial (!@#$%^&*...).'
+  if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber || !hasSpecialChar) {
+    errors.password = 'La contraseña debe tener al menos 16 caracteres, número, mayúscula, minúscula y carácter especial (!@#$%^&*).'
     return false
   }
 
@@ -171,11 +153,7 @@ const handleSubmit = async () => {
   window.alert('Cuenta creada correctamente. ¡Bienvenido!')
   
   // Limpiar formulario
-  form.nombre = ''
-  form.email = ''
-  form.telefono = ''
-  form.password = ''
-  form.passwordConfirm = ''
+  registroStore.clearForm()
   form.terminos = false
 
   // Redirigir a login después de 1 segundo
@@ -201,7 +179,7 @@ const handleSubmit = async () => {
       >
         <form novalidate @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="nombre">Nombre Completo:</label>
+            <label for="nombre">Nombre Completo: <span style="color: red;">*</span></label>
             <input
               id="nombre"
               v-model="form.nombre"
@@ -215,7 +193,7 @@ const handleSubmit = async () => {
             <p v-if="errors.nombre" class="field-error">{{ errors.nombre }}</p>
           </div>
           <div class="form-group">
-            <label for="email">Correo Electrónico:</label>
+            <label for="email">Correo Electrónico: <span style="color: red;">*</span></label>
             <input
               id="email"
               v-model="form.email"
@@ -229,7 +207,7 @@ const handleSubmit = async () => {
             <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
           </div>
           <div class="form-group">
-            <label for="telefono">Teléfono:</label>
+            <label for="telefono">Teléfono: <span style="color: red;">*</span></label>
             <input
               id="telefono"
               v-model="form.telefono"
@@ -243,7 +221,7 @@ const handleSubmit = async () => {
             <p v-if="errors.telefono" class="field-error">{{ errors.telefono }}</p>
           </div>
           <div class="form-group">
-            <label for="password">Contraseña:</label>
+            <label for="password">Contraseña: <span style="color: red;">*</span></label>
             <div style="position: relative; display: flex; align-items: center">
               <input
                 id="password"
@@ -283,7 +261,7 @@ const handleSubmit = async () => {
             <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
           </div>
           <div class="form-group">
-            <label for="password-confirm">Confirmar Contraseña:</label>
+            <label for="password-confirm">Confirmar Contraseña: <span style="color: red;">*</span></label>
             <div style="position: relative; display: flex; align-items: center">
               <input
                 id="password-confirm"
@@ -340,6 +318,7 @@ const handleSubmit = async () => {
           <p v-if="errors.terminos" class="field-error" style="margin-top: -1rem; margin-bottom: 1rem">
             {{ errors.terminos }}
           </p>
+          <label style="color: red;"> Campos Obligatorios * </label>
           <button class="cta" type="submit" style="width: 100%">Crear Cuenta</button>
         </form>
 
