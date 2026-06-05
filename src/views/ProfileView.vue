@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { userService } from '@/services/userService'
+import { purchaseService } from '@/services/purchaseService'
 
 const auth = useAuthStore()
 
@@ -27,6 +28,29 @@ const createdAtText = computed(() => {
   })
 })
 
+const showPurchaseHistory = ref(false)
+
+const togglePurchaseHistory = () => {
+  showPurchaseHistory.value = !showPurchaseHistory.value
+}
+
+const purchases = computed(() => {
+  if (!auth.user) {
+    return []
+  }
+
+  return purchaseService.getPurchasesByUserId(auth.user.id)
+})
+
+const formatCRC = (amount: number) => `₡${amount.toLocaleString('es-CR')}`
+
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString('es-CR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
 </script>
 
 <template>
@@ -69,6 +93,95 @@ const createdAtText = computed(() => {
             <span class="profile-value">{{ createdAtText }}</span>
           </div>
         </div>
+
+        <section class="purchase-history">
+          <button
+            type="button"
+            class="purchase-history-toggle"
+            :aria-expanded="showPurchaseHistory"
+            aria-controls="purchase-history-content"
+            @click="togglePurchaseHistory"
+          >
+            <span>Historial de compras</span>
+
+            <img
+              src="@/assets/images/user/arrow-up.png"
+              alt=""
+              aria-hidden="true"
+              class="purchase-history-arrow"
+              :class="{ 'is-open': showPurchaseHistory }"
+            />
+          </button>
+
+          <div
+            v-show="showPurchaseHistory"
+            id="purchase-history-content"
+            class="purchase-history-content"
+          >
+            <div v-if="purchases.length === 0" class="purchase-empty">
+              <p>Aún no tienes compras registradas.</p>
+              <p>Cuando completes una compra, aparecerá aquí.</p>
+            </div>
+
+            <div v-else class="purchase-list">
+              <article
+                v-for="purchase in purchases"
+                :key="purchase.id"
+                class="purchase-card"
+              >
+                <div class="purchase-header">
+                  <div>
+                    <h4>Compra #{{ purchase.id.replace('purchase_', '') }}</h4>
+                    <p>{{ formatDate(purchase.createdAt) }}</p>
+                  </div>
+
+                  <span class="purchase-status">
+                    {{ purchase.status }}
+                  </span>
+                </div>
+
+                <div class="purchase-products">
+                  <div
+                    v-for="item in purchase.items"
+                    :key="`${purchase.id}-${item.lineKey}`"
+                    class="purchase-product"
+                  >
+                    <img
+                      v-if="item.image"
+                      :src="item.image"
+                      :alt="item.nombre"
+                      class="purchase-product-image"
+                    />
+
+                    <div>
+                      <strong>{{ item.nombre }}</strong>
+                      <p v-if="item.size">Talla: {{ item.size }}</p>
+                      <p v-if="item.color">Color: {{ item.color }}</p>
+                      <p>Cantidad: {{ item.quantity }}</p>
+                      <p>Precio unitario: {{ formatCRC(item.precio) }}</p>
+                      <p>Importe: {{ formatCRC(item.precio * item.quantity) }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="purchase-total">
+                  <span>Subtotal:</span>
+                  <strong>{{ formatCRC(purchase.subtotal) }}</strong>
+                </div>
+
+                <div class="purchase-total">
+                  <span>Envío:</span>
+                  <strong>{{ formatCRC(purchase.shipping) }}</strong>
+                </div>
+
+                <div class="purchase-total purchase-total-final">
+                  <span>Total:</span>
+                  <strong>{{ formatCRC(purchase.total) }}</strong>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
       </div>
 
       <div v-else class="profile-card profile-empty">
