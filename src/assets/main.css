@@ -347,16 +347,16 @@ nav a.router-link-exact-active::after {
 }
 
 /* CARRUSEL */
-.carrusel {
+.carousel {
   margin-top: 2rem;
 }
 
-.carrusel h2 {
+.carousel h2 {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.carrusel-container {
+.carousel-container {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
@@ -365,7 +365,7 @@ nav a.router-link-exact-active::after {
   margin-top: 1rem;
 }
 
-.carrusel-arrow {
+.carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -385,27 +385,27 @@ nav a.router-link-exact-active::after {
   z-index: 3;
 }
 
-.carrusel-arrow:hover {
+.carousel-arrow:hover {
   background: #d94f22;
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
 }
 
-.carrusel-arrow:first-child {
+.carousel-arrow:first-child {
   left: 0.75rem;
 }
 
-.carrusel-arrow:last-child {
+.carousel-arrow:last-child {
   right: 0.75rem;
 }
 
-.carrusel-track {
+.carousel-track {
   position: relative;
   min-height: 390px;
   overflow: hidden;
   border-radius: 14px;
 }
 
-.carrusel-item {
+.carousel-item {
   position: absolute;
   inset: 0;
   display: grid;
@@ -424,14 +424,14 @@ nav a.router-link-exact-active::after {
   text-decoration: none;
 }
 
-.carrusel-item.active {
+.carousel-item.active {
   opacity: 1;
   transform: translateX(0);
   z-index: 1;
   pointer-events: auto;
 }
 
-.carrusel-media {
+.carousel-media {
   background: linear-gradient(180deg, #efefef 0%, #d9d9d9 100%);
   display: flex;
   align-items: center;
@@ -439,14 +439,14 @@ nav a.router-link-exact-active::after {
   padding: 1.5rem;
 }
 
-.carrusel-item img {
+.carousel-item img {
   width: 100%;
   height: 100%;
   max-height: 360px;
   object-fit: contain;
 }
 
-.carrusel-content {
+.carousel-content {
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -455,7 +455,7 @@ nav a.router-link-exact-active::after {
   color: #222;
 }
 
-.carrusel-kicker {
+.carousel-kicker {
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
@@ -463,26 +463,26 @@ nav a.router-link-exact-active::after {
   font-weight: 800;
 }
 
-.carrusel-content h3 {
+.carousel-content h3 {
   font-size: clamp(1.4rem, 2vw, 1.9rem);
   line-height: 1.15;
 }
 
-.carrusel-subtitle {
+.carousel-subtitle {
   color: #585858;
   font-size: 1rem;
 }
 
-.carrusel-price {
+.carousel-price {
   font-weight: 800;
   font-size: 1.15rem;
 }
 
-.carrusel-models {
+.carousel-models {
   color: var(--secondary-text-color);
 }
 
-.carrusel-cta {
+.carousel-cta {
   margin-top: 0.45rem;
   align-self: flex-start;
   background: var(--primary-color);
@@ -1246,16 +1246,16 @@ footer a:hover {
     white-space: normal;
   }
 
-  .carrusel-container {
+  .carousel-container {
     padding: 0 0.75rem;
   }
 
-  .carrusel-track {
+  .carousel-track {
     min-height: 0;
     overflow: visible;
   }
 
-  .carrusel-item {
+  .carousel-item {
     position: static;
     inset: auto;
     display: none;
@@ -1267,34 +1267,34 @@ footer a:hover {
     grid-template-rows: 250px auto;
   }
 
-  .carrusel-item.active {
+  .carousel-item.active {
     display: grid;
     pointer-events: auto;
   }
 
-  .carrusel-arrow {
+  .carousel-arrow {
     width: 38px;
     height: 38px;
     font-size: 1.35rem;
   }
 
-  .carrusel-arrow:first-child {
+  .carousel-arrow:first-child {
     left: 0.25rem;
   }
 
-  .carrusel-arrow:last-child {
+  .carousel-arrow:last-child {
     right: 0.25rem;
   }
 
-  .carrusel-media {
+  .carousel-media {
     padding: 1rem;
   }
 
-  .carrusel-item img {
+  .carousel-item img {
     max-height: 220px;
   }
 
-  .carrusel-content {
+  .carousel-content {
     padding: 1.25rem;
   }
 
