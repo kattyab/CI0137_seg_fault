@@ -10,6 +10,7 @@ export const useCartStore = defineStore('cart', () => {
   const items = ref<CartItem[]>([])
   const auth = useAuthStore()
 
+  const guestCart = computed(() => `${STORAGE_PREFIX}guest`)
   const storageKey = () => `${STORAGE_PREFIX}${auth.user?.id ?? 'guest'}`
 
   function load() {
@@ -19,6 +20,27 @@ export const useCartStore = defineStore('cart', () => {
     } catch {
       items.value = []
     }
+  }
+
+  function mergeGuestCart() {
+    if (!auth.user){
+      return
+    }
+    const guestRaw = localStorage.getItem(guestCart.value)
+    const itemsGuest = guestRaw ? JSON.parse(guestRaw) : []
+    if (itemsGuest.length === 0)
+    {
+      return
+    }
+    const existingKeys = new Set(items.value.map(i => i._key ?? compositeKeyFor(i)))
+    for (const item of itemsGuest) {
+      const key = compositeKeyFor(item)
+      if (!existingKeys.has(key)) {
+        items.value.push({ ...item, _key: key })
+      }
+    }
+    save()
+    localStorage.removeItem(guestCart.value)
   }
 
   // ensure existing items have an internal composite key
@@ -44,7 +66,7 @@ export const useCartStore = defineStore('cart', () => {
   watch(items, save, { deep: true })
 
   // reload when user changes
-  watch(() => auth.user, () => { load(); normalizeKeys(); })
+  watch(() => auth.user, () => { mergeGuestCart(); load(); normalizeKeys(); })
 
   function compositeKeyFor(item: CartItem) {
     // build deterministic key from id plus any extra attributes (size, variant, etc.)
