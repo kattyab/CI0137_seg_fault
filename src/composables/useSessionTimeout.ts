@@ -112,7 +112,7 @@ export const useSessionTimeout = () => {
   const router = useRouter()
 
   onMounted(() => {
-    if (!auth.user) return
+    if (!auth.user && !localStorage.getItem(STORAGE_KEYS.SESSION_START)) return
 
     console.log('Sesión existente detectada, reanudando timers...')
     routerInstance = router
