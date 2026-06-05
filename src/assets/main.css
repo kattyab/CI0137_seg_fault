@@ -798,6 +798,159 @@ footer a:hover {
   text-decoration: underline;
 }
 
+/* MENÚ DE USUARIO */
+.user-menu-profile-link {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0.55rem;
+  background: #fff1eb;
+  color: var(--primary-color);
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.user-menu-profile-link:hover {
+  background: #ffdccc;
+  color: #d94f22;
+}
+
+/* PERFIL DE USUARIO */
+.profile-section {
+  padding: 3rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  background: var(--card-and-section-background);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.profile-header h2 {
+  margin-bottom: 0.25rem;
+}
+
+.profile-subtitle {
+  color: var(--secondary-text-color);
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.profile-item {
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.profile-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--secondary-text-color);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.profile-value {
+  color: var(--main-text-color);
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.profile-empty {
+  text-align: center;
+}
+
+.profile-empty p {
+  margin: 1rem 0 1.5rem;
+  color: var(--secondary-text-color);
+}
+
+/* MENÚ DESPLEGABLE DE USUARIO */
+.user-menu-option {
+  width: 100%;
+  min-height: 34px;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  background: #fff1eb;
+  color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+
+  font-family: Arial, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-menu-option:last-child {
+  margin-bottom: 0;
+}
+
+.user-menu-option:hover {
+  background: #ffdccc;
+  color: #d94f22;
+}
+
+.user-menu-icon {
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.user-menu-option-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: none;
+}
+
 /* RESPONSIVE - DISPOSITIVOS MÓVILES */
 @media (max-width: 768px) {
   header {
@@ -905,5 +1058,17 @@ footer a:hover {
 
   .carrusel-content {
     padding: 1.25rem;
+  }
+
+  .profile-section {
+    padding: 2rem 1rem;
+  }
+
+  .profile-header {
+    align-items: flex-start;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
   }
 }
