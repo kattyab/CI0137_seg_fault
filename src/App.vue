@@ -3,13 +3,21 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useSessionTimeout } from '@/composables/useSessionTimeout'
 
 const router = useRouter()
 const auth = useAuthStore()
 
+// Iniciar el monitoreo de inactividad
+useSessionTimeout()
+
 const isLoggedIn = computed(() => Boolean(auth.user))
 const showUserMenu = ref(false)
+const showSearchBox = ref(false)
+const searchText = ref('')
+
 const userMenuRef = ref<HTMLElement | null>(null)
+const searchRef = ref<HTMLElement | null>(null)
 
 const handleLogout = () => {
   auth.logout()
@@ -17,9 +25,19 @@ const handleLogout = () => {
   showUserMenu.value = false
 }
 
+const openSearchBox = () => {
+  showSearchBox.value = true
+}
+
 const handleClickOutside = (event: MouseEvent) => {
-  if (userMenuRef.value && !userMenuRef.value.contains(event.target as Node)) {
+  const target = event.target as Node
+
+  if (userMenuRef.value && !userMenuRef.value.contains(target)) {
     showUserMenu.value = false
+  }
+
+  if (searchRef.value && !searchRef.value.contains(target)) {
+    showSearchBox.value = false
   }
 }
 
@@ -58,9 +76,54 @@ onUnmounted(() => {
         </li>
       </ul>
     </nav>
+
     <div class="search-login">
-      <input type="search" placeholder="Buscar Sneakers..." />
-      <RouterLink v-if="!isLoggedIn" to="/login" class="login-link">Iniciar Sesión</RouterLink>
+      <div ref="searchRef" @click.stop class="search-wrapper">
+        <div class="search-field">
+          <input
+            v-model="searchText"
+            type="search"
+            placeholder="Buscar Sneakers..."
+            @focus="openSearchBox"
+            @click="openSearchBox"
+            class="search-input"
+          />
+    
+          <button
+            type="button"
+            aria-label="Buscar sneakers"
+            @click="openSearchBox"
+            class="search-button"
+          >
+            <img
+              src="@/assets/images/searchbar/search-button.png"
+              alt=""
+              aria-hidden="true"
+              class="search-icon"
+            />
+          </button>
+        </div>
+
+        <div v-if="showSearchBox" class="search-box">
+          <p class="search-box-title">
+            Buscar sneakers
+          </p>
+
+          <p v-if="!searchText" class="search-box-text">
+            Escribe una marca, modelo o categoría para encontrar tus sneakers favoritos.
+          </p>
+
+          <p v-else class="search-box-text">
+            Mostrando búsqueda para:
+            <strong>{{ searchText }}</strong>
+          </p>
+        </div>
+      </div>
+
+      <RouterLink v-if="!isLoggedIn" to="/login" class="login-link">
+        Iniciar Sesión
+      </RouterLink>
+
       <div v-else style="position: relative" ref="userMenuRef">
         <button
           type="button"

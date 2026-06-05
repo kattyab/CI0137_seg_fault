@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+</script>
+
 <template>
   <main>
     <section class="categorias">
@@ -72,6 +78,24 @@
         <p style="margin-top: 2rem; font-size: 0.9rem; color: #666">
           Última actualización: Marzo 2026
         </p>
+
+        <div style="margin-top: 2rem; text-align: center">
+          <button 
+            @click="router.back()" 
+            style="
+              padding: 0.75rem 1.5rem;
+              background-color: #ff6b35;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: bold;
+              font-size: 1rem;
+            "
+          >
+            Volver
+          </button>
+        </div>
       </div>
     </section>
   </main>

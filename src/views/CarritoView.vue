@@ -45,7 +45,11 @@ const closeIfOverlay = (event: MouseEvent) => {
 
 const goToCheckout = () => {
   if (cart.items.length === 0) return
-  router.push({ name: 'checkout' })
+  if (auth.user) {
+    router.push({ name: 'checkout' })
+  } else {
+    router.push({ name: 'login' })
+  }
 }
 
 // fallback thumbnail for items without image
@@ -218,7 +222,15 @@ watch(() => cart.items.slice(), () => {
 
         <div class="cart-actions" style="display: flex; gap: 1rem">
           <RouterLink to="/" class="cta cart-action-link">Continuar Comprando</RouterLink>
-          <button class="cta cta-buy cart-action-btn" type="button" :disabled="cart.items.length === 0" @click="goToCheckout">Proceder al Pago</button>
+          <button
+            class="cta cta-buy cart-action-btn"
+            type="button"
+            :disabled="cart.items.length === 0"
+            @click="goToCheckout()"
+          >
+            <span v-if="!auth.user">Inicia sesión</span>
+            <span v-else>Proceder al Pago</span>
+          </button>
         </div>
       </div>
     </section>
@@ -278,5 +290,13 @@ watch(() => cart.items.slice(), () => {
 
 #cancelRemove {
   margin-top: 0;
+  background: var(--main-text-color);
+  color: var(--card-and-section-background);
+  border: none;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>
