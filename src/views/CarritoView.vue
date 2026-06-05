@@ -290,6 +290,9 @@ watch(() => cart.items.slice(), () => {
 
 #cancelRemove {
   margin-top: 0;
+  background: var(--main-text-color);
+  color: var(--card-and-section-background);
+  border: none;
 }
 
 button:disabled {
