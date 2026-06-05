@@ -137,8 +137,11 @@ onUnmounted(() => {
             padding: 0;
             display: flex;
             align-items: center;
-          " aria-label="Menú de usuario">
-          <img src="@/assets/images/user.svg" alt="" aria-hidden="true" class="cart-icon" />
+          " aria-label="Menú de usuario"
+        >
+          <div class="cart-link">
+            <img src="@/assets/images/user.svg" alt="" aria-hidden="true" class="cart-icon"/>
+          </div>
         </button>
         <div v-if="showUserMenu" @click.stop style="
             position: absolute;
@@ -152,23 +155,34 @@ onUnmounted(() => {
             z-index: 1000;
             min-width: 250px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          ">
-          <div style="margin-bottom: 1rem">
-            <div style="font-weight: 700; margin-bottom: 0.25rem; color: #000">{{ auth.user?.nombre }}</div>
-            <div style="font-size: 0.85rem; color: #666">{{ auth.user?.email }}</div>
-            <div style="font-size: 0.85rem; color: #666">{{ auth.user?.telefono }}</div>
-          </div>
-          <button type="button" @click.stop="handleLogout" style="
-              width: 100%;
-              padding: 0.5rem;
-              background: #ff6b35;
-              color: white;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-weight: 600;
-            ">
-            Cerrar sesión
+          "
+        >   
+          <RouterLink
+            to="/perfil"
+            class="user-menu-option"
+            @click="showUserMenu = false"
+          >
+            <img
+              src="@/assets/images/user/user-icon.png"
+              alt=""
+              aria-hidden="true"
+              class="user-menu-option-icon"
+            />
+            <span>Ver perfil</span>
+          </RouterLink>
+
+          <button
+            type="button"
+            class="user-menu-option"
+            @click.stop="handleLogout"
+          >
+            <img
+              src="@/assets/images/user/logout-icon.png"
+              alt=""
+              aria-hidden="true"
+              class="user-menu-option-icon"
+            />
+            <span>Cerrar sesión</span>
           </button>
         </div>
       </div>

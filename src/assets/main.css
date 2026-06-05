@@ -370,16 +370,16 @@ nav a.router-link-exact-active::after {
 }
 
 /* CARRUSEL */
-.carrusel {
+.carousel {
   margin-top: 2rem;
 }
 
-.carrusel h2 {
+.carousel h2 {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.carrusel-container {
+.carousel-container {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
@@ -388,7 +388,7 @@ nav a.router-link-exact-active::after {
   margin-top: 1rem;
 }
 
-.carrusel-arrow {
+.carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -410,27 +410,27 @@ nav a.router-link-exact-active::after {
   z-index: 3;
 }
 
-.carrusel-arrow:hover {
+.carousel-arrow:hover {
   background: #d94f22;
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
 }
 
-.carrusel-arrow:first-child {
+.carousel-arrow:first-child {
   left: 0.75rem;
 }
 
-.carrusel-arrow:last-child {
+.carousel-arrow:last-child {
   right: 0.75rem;
 }
 
-.carrusel-track {
+.carousel-track {
   position: relative;
   min-height: 390px;
   overflow: hidden;
   border-radius: 14px;
 }
 
-.carrusel-item {
+.carousel-item {
   position: absolute;
   inset: 0;
   display: grid;
@@ -451,14 +451,14 @@ nav a.router-link-exact-active::after {
   text-decoration: none;
 }
 
-.carrusel-item.active {
+.carousel-item.active {
   opacity: 1;
   transform: translateX(0);
   z-index: 1;
   pointer-events: auto;
 }
 
-.carrusel-media {
+.carousel-media {
   background: linear-gradient(180deg, #efefef 0%, #d9d9d9 100%);
   display: flex;
   align-items: center;
@@ -466,14 +466,14 @@ nav a.router-link-exact-active::after {
   padding: 1.5rem;
 }
 
-.carrusel-item img {
+.carousel-item img {
   width: 100%;
   height: 100%;
   max-height: 360px;
   object-fit: contain;
 }
 
-.carrusel-content {
+.carousel-content {
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -482,7 +482,7 @@ nav a.router-link-exact-active::after {
   color: #222;
 }
 
-.carrusel-kicker {
+.carousel-kicker {
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
@@ -490,26 +490,26 @@ nav a.router-link-exact-active::after {
   font-weight: 800;
 }
 
-.carrusel-content h3 {
+.carousel-content h3 {
   font-size: clamp(1.4rem, 2vw, 1.9rem);
   line-height: 1.15;
 }
 
-.carrusel-subtitle {
+.carousel-subtitle {
   color: #585858;
   font-size: 1rem;
 }
 
-.carrusel-price {
+.carousel-price {
   font-weight: 800;
   font-size: 1.15rem;
 }
 
-.carrusel-models {
+.carousel-models {
   color: var(--secondary-text-color);
 }
 
-.carrusel-cta {
+.carousel-cta {
   margin-top: 0.45rem;
   align-self: flex-start;
   background: var(--primary-color);
@@ -825,6 +825,159 @@ footer a:hover {
   text-decoration: underline;
 }
 
+/* MENÚ DE USUARIO */
+.user-menu-profile-link {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0.55rem;
+  background: #fff1eb;
+  color: var(--primary-color);
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.user-menu-profile-link:hover {
+  background: #ffdccc;
+  color: #d94f22;
+}
+
+/* PERFIL DE USUARIO */
+.profile-section {
+  padding: 3rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  background: var(--card-and-section-background);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: var(--card-and-section-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.profile-header h2 {
+  margin-bottom: 0.25rem;
+}
+
+.profile-subtitle {
+  color: var(--secondary-text-color);
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.profile-item {
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.profile-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--secondary-text-color);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.profile-value {
+  color: var(--main-text-color);
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.profile-empty {
+  text-align: center;
+}
+
+.profile-empty p {
+  margin: 1rem 0 1.5rem;
+  color: var(--secondary-text-color);
+}
+
+/* MENÚ DESPLEGABLE DE USUARIO */
+.user-menu-option {
+  width: 100%;
+  min-height: 34px;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  background: #fff1eb;
+  color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+
+  font-family: Arial, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-menu-option:last-child {
+  margin-bottom: 0;
+}
+
+.user-menu-option:hover {
+  background: #ffdccc;
+  color: #d94f22;
+}
+
+.user-menu-icon {
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.user-menu-option-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: none;
+}
+
 /* BUSCADOR DEL HEADER */
 .search-wrapper {
   position: relative;
@@ -975,16 +1128,16 @@ footer a:hover {
     white-space: normal;
   }
 
-  .carrusel-container {
+  .carousel-container {
     padding: 0 0.75rem;
   }
 
-  .carrusel-track {
+  .carousel-track {
     min-height: 0;
     overflow: visible;
   }
 
-  .carrusel-item {
+  .carousel-item {
     position: static;
     inset: auto;
     display: none;
@@ -996,37 +1149,49 @@ footer a:hover {
     grid-template-rows: 250px auto;
   }
 
-  .carrusel-item.active {
+  .carousel-item.active {
     display: grid;
     pointer-events: auto;
   }
 
-  .carrusel-arrow {
+  .carousel-arrow {
     width: 38px;
     height: 38px;
     font-size: 1.35rem;
   }
 
-  .carrusel-arrow:first-child {
+  .carousel-arrow:first-child {
     left: 0.25rem;
   }
 
-  .carrusel-arrow:last-child {
+  .carousel-arrow:last-child {
     right: 0.25rem;
   }
 
-  .carrusel-media {
+  .carousel-media {
     padding: 1rem;
   }
 
-  .carrusel-item img {
+  .carousel-item img {
     max-height: 220px;
   }
 
-  .carrusel-content {
+  .carousel-content {
     padding: 1.25rem;
   }
 
+  .profile-section {
+    padding: 2rem 1rem;
+  }
+
+  .profile-header {
+    align-items: flex-start;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+  
   .search-wrapper {
     flex: 1 1 100%;
     width: 100%;
