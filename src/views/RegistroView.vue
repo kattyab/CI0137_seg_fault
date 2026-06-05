@@ -4,17 +4,13 @@ import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
 import { userService } from '@/services/userService'
+import { useRegistroStore } from '@/stores/useRegistroStore'
 
 const router = useRouter()
+const registroStore = useRegistroStore()
 
-const form = reactive({
-  nombre: '',
-  email: '',
-  telefono: '',
-  password: '',
-  passwordConfirm: '',
-  terminos: false,
-})
+// Usar el form del store directamente
+const form = registroStore.form
 
 const errors = reactive({
   nombre: '',
@@ -29,37 +25,6 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const phonePattern = /^[0-9+\s-]{8,15}$/
 const showPassword = ref(false)
 const showPasswordConfirm = ref(false)
-
-// Guardar formulario en localStorage
-const saveFormToLocalStorage = () => {
-  localStorage.setItem('registroForm', JSON.stringify(form))
-}
-
-// Cargar formulario desde localStorage
-const loadFormFromLocalStorage = () => {
-  const savedForm = localStorage.getItem('registroForm')
-  if (savedForm) {
-    try {
-      const parsed = JSON.parse(savedForm)
-      form.nombre = parsed.nombre || ''
-      form.email = parsed.email || ''
-      form.telefono = parsed.telefono || ''
-      form.password = parsed.password || ''
-      form.passwordConfirm = parsed.passwordConfirm || ''
-      form.terminos = parsed.terminos || false
-    } catch (error) {
-      console.error('Error loading form from localStorage:', error)
-    }
-  }
-}
-
-// Cargar datos al montar el componente
-onMounted(() => {
-  loadFormFromLocalStorage()
-})
-
-// Guardar cada vez que cambie el formulario
-watch(form, saveFormToLocalStorage, { deep: true })
 
 const validateNombre = () => {
   if (!form.nombre.trim()) {
@@ -187,14 +152,9 @@ const handleSubmit = async () => {
 
   window.alert('Cuenta creada correctamente. ¡Bienvenido!')
   
-  // Limpiar formulario y localStorage
-  form.nombre = ''
-  form.email = ''
-  form.telefono = ''
-  form.password = ''
-  form.passwordConfirm = ''
+  // Limpiar formulario
+  registroStore.clearForm()
   form.terminos = false
-  localStorage.removeItem('registroForm')
 
   // Redirigir a login después de 1 segundo
   setTimeout(() => {
