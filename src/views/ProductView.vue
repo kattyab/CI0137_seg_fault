@@ -396,8 +396,8 @@ onBeforeUnmount(() => {
 .swatch { width:40px; height:40px; border-radius:8px; border:1px solid #ddd; background:#fff }
 
 .sizes h4 { margin-bottom: 0.5rem; font-weight:700 }
-.grid-sizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; justify-items: start }
-.size { padding: 0.7rem 1rem; border: 1px solid #e6e6e6; background: white; border-radius: 8px; font-weight:700; cursor:pointer; text-align:center; width: 100%; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.grid-sizes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; justify-items: start }
+.size { padding: 0.65rem 0.5rem; border: 1px solid #e6e6e6; background: white; border-radius: 8px; font-weight:700; font-size: 0.9rem; cursor:pointer; text-align:center; width: 100%; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
 .size:hover { border-color: #bbb }
 .size:active { transform: translateY(1px) }
 .size.active { background: #111; color: #fff; border-color: #111 }

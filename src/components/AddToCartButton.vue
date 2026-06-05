@@ -1,7 +1,6 @@
 <template>
   <button class="add-to-cart" @click="add" :disabled="isDisabled">
-    <span v-if="!auth.user">Inicia sesión</span>
-    <span v-else-if="added">Añadido ✓</span>
+    <span v-if="added">Añadido ✓</span>
     <span v-else-if="props.requireSize && !props.size">Selecciona talla</span>
     <span v-else>Añadir al carrito</span>
   </button>
@@ -10,7 +9,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useCartStore } from '@/stores/cart'
-import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps<{
   id: string
@@ -24,10 +22,9 @@ const props = defineProps<{
 }>()
 
 const cart = useCartStore()
-const auth = useAuthStore()
 const added = ref(false)
 const adding = ref(false)
-const isDisabled = computed(() => !auth.user || adding.value || (!!props.requireSize && !props.size))
+const isDisabled = computed(() => adding.value || (!!props.requireSize && !props.size))
 
 function add() {
   if (isDisabled.value) return
@@ -59,6 +56,6 @@ function add() {
   box-shadow: 0 10px 28px rgba(0,0,0,0.14);
 }
 .add-to-cart, .add-to-cart span { color: white !important }
-.add-to-cart[disabled] { opacity: 0.7; cursor: default }
+.add-to-cart[disabled] { opacity: 0.7; cursor: not-allowed }
 .add-to-cart:hover { background: #000 }
 </style>
