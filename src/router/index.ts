@@ -80,6 +80,11 @@ const router = createRouter({
       name: 'recuperar-contrasena',
       component: () => import('@/views/RecuperarContrasenaView.vue'),
     },
+    {
+      path: '/perfil',
+      name: 'profile',
+      component: () => import('@/views/ProfileView.vue'),
+    },
   ],
 })
 
