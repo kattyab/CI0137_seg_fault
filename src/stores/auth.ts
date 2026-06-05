@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { STORAGE_KEYS } from '@/constants/storageKeys'
 
 export type AuthUser = {
   id: string
@@ -7,7 +8,8 @@ export type AuthUser = {
   telefono: string
 }
 
-const AUTH_USER_STORAGE_KEY = 'current_user'
+const AUTH_USER_STORAGE_KEY = STORAGE_KEYS.AUTH_USER
+const SESSION_START_STORAGE_KEY = STORAGE_KEYS.SESSION_START
 
 const safeParse = (value: string | null): unknown => {
   if (!value) return null
@@ -42,8 +44,10 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user))
     },
     logout() {
+      console.trace('Logout ejecutado')
       this.user = null
       localStorage.removeItem(AUTH_USER_STORAGE_KEY)
+      localStorage.removeItem(SESSION_START_STORAGE_KEY)
     },
   },
 })

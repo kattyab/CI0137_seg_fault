@@ -3,9 +3,13 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useSessionTimeout } from '@/composables/useSessionTimeout'
 
 const router = useRouter()
 const auth = useAuthStore()
+
+// Iniciar el monitoreo de inactividad
+useSessionTimeout()
 
 const isLoggedIn = computed(() => Boolean(auth.user))
 const showUserMenu = ref(false)
