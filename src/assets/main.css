@@ -100,7 +100,7 @@ nav a::after {
   border-radius: 2px;
   transform-origin: left;
   transform: scaleX(0);
-  transition: transform 260ms cubic-bezier(.2,.9,.3,1);
+  transition: transform 260ms cubic-bezier(0.2, 0.9, 0.3, 1);
   pointer-events: none;
   z-index: -1;
 }
@@ -142,21 +142,39 @@ nav a.router-link-exact-active::after {
 }
 
 .cart-link {
-  width: 46px;
-  height: 46px;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 3px;
+
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: var(--card-and-section-background);
-  text-decoration: none;
-  flex-shrink: 0;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+  background: white;
+  color: #ff6b35; /* naranja */
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 100;
+  pointer-events: none;
+
+  border: 1px solid #ff6b35; /* opcional, para resaltarlo más */
 }
 
 .cart-link:hover {
@@ -185,7 +203,12 @@ nav a.router-link-exact-active::after {
 /* HERO SECTION */
 .hero {
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.62) 45%, rgba(0, 0, 0, 0.74) 100%),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.78) 0%,
+      rgba(0, 0, 0, 0.62) 45%,
+      rgba(0, 0, 0, 0.74) 100%
+    ),
     url('@/assets/images/background.png');
   height: 50vh;
   display: flex;
@@ -381,7 +404,9 @@ nav a.router-link-exact-active::after {
   display: grid;
   place-items: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
   z-index: 3;
 }
 
@@ -413,7 +438,9 @@ nav a.router-link-exact-active::after {
   align-items: stretch;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
   transform: translateX(20px);
   padding: 0;
   background: var(--card-and-section-background);

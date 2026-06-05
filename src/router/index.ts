@@ -13,7 +13,6 @@ const router = createRouter({
       path: '/producto/:id',
       name: 'product',
       component: () => import('@/views/ProductView.vue'),
-      props: true,
     },
     {
       path: '/low',

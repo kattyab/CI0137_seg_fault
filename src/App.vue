@@ -3,6 +3,11 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+import { storeToRefs } from 'pinia'
+
+const cart = useCartStore()
+const { totalItems } = storeToRefs(cart)
 import { useSessionTimeout } from '@/composables/useSessionTimeout'
 
 const router = useRouter()
@@ -125,27 +130,20 @@ onUnmounted(() => {
       </RouterLink>
 
       <div v-else style="position: relative" ref="userMenuRef">
-        <button
-          type="button"
-          @click="showUserMenu = !showUserMenu"
-          style="
+        <button type="button" @click="showUserMenu = !showUserMenu" style="
             background: none;
             border: none;
             cursor: pointer;
             padding: 0;
             display: flex;
             align-items: center;
-          "
-          aria-label="Menú de usuario"
+          " aria-label="Menú de usuario"
         >
           <div class="cart-link">
             <img src="@/assets/images/user.svg" alt="" aria-hidden="true" class="cart-icon"/>
           </div>
         </button>
-        <div
-          v-if="showUserMenu"
-          @click.stop
-          style="
+        <div v-if="showUserMenu" @click.stop style="
             position: absolute;
             top: 100%;
             right: 0;
@@ -190,6 +188,10 @@ onUnmounted(() => {
       </div>
       <RouterLink to="/carrito" class="cart-link" aria-label="Ir al carrito de compras">
         <img src="@/assets/images/shopping_cart.svg" alt="" aria-hidden="true" class="cart-icon" />
+
+        <span v-if="totalItems > 0" class="cart-badge">
+          {{ totalItems }}
+        </span>
       </RouterLink>
     </div>
   </header>
