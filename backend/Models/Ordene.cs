@@ -12,10 +12,12 @@ public partial class Ordene
     [Key]
     [Column("id")]
     [StringLength(30)]
+    [Unicode(false)]
     public string Id { get; set; } = null!;
 
     [Column("id_usuario")]
     [StringLength(30)]
+    [Unicode(false)]
     public string IdUsuario { get; set; } = null!;
 
     [Column("fecha")]
@@ -23,6 +25,7 @@ public partial class Ordene
 
     [Column("estado")]
     [StringLength(30)]
+    [Unicode(false)]
     public string Estado { get; set; } = null!;
 
     [Column("total", TypeName = "decimal(10, 2)")]
@@ -34,4 +37,7 @@ public partial class Ordene
     [ForeignKey("IdUsuario")]
     [InverseProperty("Ordenes")]
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+
+    [InverseProperty("IdOrdenNavigation")]
+    public virtual ICollection<TransaccionesPago> TransaccionesPagos { get; set; } = new List<TransaccionesPago>();
 }

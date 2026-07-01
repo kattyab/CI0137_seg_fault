@@ -1,0 +1,26 @@
+USE [web-development-26];
+GO
+
+IF OBJECT_ID('dbo.TRANSACCIONES_PAGO', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.TRANSACCIONES_PAGO (
+        id                  VARCHAR(30)   NOT NULL,
+        id_orden            VARCHAR(30)   NOT NULL,
+        nombre_tarjeta      VARCHAR(100)  NOT NULL,
+        bin_tarjeta         VARCHAR(6)    NOT NULL,
+        ultimos4            VARCHAR(4)    NOT NULL,
+        marca               VARCHAR(30)   NOT NULL,
+        exp_mes             INT           NOT NULL,
+        exp_anio            INT           NOT NULL,
+        monto               DECIMAL(10,2) NOT NULL,
+        estado              VARCHAR(30)   NOT NULL,
+        codigo_autorizacion VARCHAR(30)   NULL,
+        motivo_rechazo      VARCHAR(150)  NULL,
+        createdDate         DATETIME2     NOT NULL DEFAULT SYSUTCDATETIME(),
+
+        CONSTRAINT pk_transacciones_pago PRIMARY KEY (id),
+        CONSTRAINT fk_pago_orden FOREIGN KEY (id_orden) REFERENCES ORDENES(id),
+        CONSTRAINT chk_estado_pago CHECK (estado IN ('Aprobada', 'Rechazada'))
+    );
+END;
+GO

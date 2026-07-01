@@ -15,6 +15,7 @@ public partial class DetalleOrden
 
     [Column("id_orden")]
     [StringLength(30)]
+    [Unicode(false)]
     public string IdOrden { get; set; } = null!;
 
     [Column("id_inventario")]

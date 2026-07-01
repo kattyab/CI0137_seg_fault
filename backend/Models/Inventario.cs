@@ -26,6 +26,11 @@ public partial class Inventario
     [Column("stock")]
     public int Stock { get; set; }
 
+    [Column("imagen_url")]
+    [StringLength(255)]
+    [Unicode(false)]
+    public string? ImagenUrl { get; set; }
+
     [InverseProperty("IdInventarioNavigation")]
     public virtual ICollection<DetalleOrden> DetalleOrdens { get; set; } = new List<DetalleOrden>();
 

@@ -15,6 +15,7 @@ public partial class Talla
 
     [Column("nombre")]
     [StringLength(20)]
+    [Unicode(false)]
     public string Nombre { get; set; } = null!;
 
     [InverseProperty("IdTallaNavigation")]
