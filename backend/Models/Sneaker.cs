@@ -18,17 +18,15 @@ public partial class Sneaker
 
     [Column("nombre")]
     [StringLength(150)]
+    [Unicode(false)]
     public string Nombre { get; set; } = null!;
 
     [Column("precio", TypeName = "decimal(10, 2)")]
     public decimal Precio { get; set; }
 
     [Column("descripcion")]
+    [Unicode(false)]
     public string? Descripcion { get; set; }
-
-    [Column("imagen_url")]
-    [StringLength(255)]
-    public string? ImagenUrl { get; set; }
 
     [ForeignKey("IdCategoria")]
     [InverseProperty("Sneakers")]

@@ -7,10 +7,6 @@ namespace Backend.Api.Data;
 
 public partial class AppDbContext : DbContext
 {
-    public AppDbContext()
-    {
-    }
-
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
@@ -29,6 +25,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Sneaker> Sneakers { get; set; }
 
     public virtual DbSet<Talla> Tallas { get; set; }
+
+    public virtual DbSet<TransaccionesPago> TransaccionesPagos { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
@@ -97,6 +95,17 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Talla>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk_tallas");
+        });
+
+        modelBuilder.Entity<TransaccionesPago>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_transacciones_pago");
+
+            entity.Property(e => e.CreatedDate).HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.IdOrdenNavigation).WithMany(p => p.TransaccionesPagos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_pago_orden");
         });
 
         modelBuilder.Entity<Usuario>(entity =>

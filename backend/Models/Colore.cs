@@ -15,6 +15,7 @@ public partial class Colore
 
     [Column("nombre")]
     [StringLength(100)]
+    [Unicode(false)]
     public string Nombre { get; set; } = null!;
 
     [InverseProperty("IdColorNavigation")]

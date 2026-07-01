@@ -15,6 +15,7 @@ public partial class Categoria
 
     [Column("nombre")]
     [StringLength(50)]
+    [Unicode(false)]
     public string Nombre { get; set; } = null!;
 
     [InverseProperty("IdCategoriaNavigation")]
