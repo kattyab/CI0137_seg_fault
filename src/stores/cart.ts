@@ -2,7 +2,17 @@ import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useAuthStore } from './auth'
 
-export type CartItem = { id: string; nombre: string; precio: number; quantity: number; _key?: string; [key: string]: unknown }
+export type CartItem = {
+  id: string
+  nombre: string
+  precio: number
+  quantity: number
+  _key?: string
+  image?: string
+  size?: string
+  color?: string
+  [key: string]: unknown
+}
 
 const STORAGE_PREFIX = 'cart:'
 
