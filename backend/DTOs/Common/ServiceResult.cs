@@ -15,12 +15,13 @@ public class ServiceResult<T>
         };
     }
 
-    public static ServiceResult<T> Fail(string error)
+    public static ServiceResult<T> Fail(string error, T? data = default)
     {
         return new ServiceResult<T>
         {
             Success = false,
-            Error = error
+            Error = error,
+            Data = data
         };
     }
 }

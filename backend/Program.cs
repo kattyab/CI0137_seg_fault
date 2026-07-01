@@ -19,6 +19,10 @@ builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
+builder.Services.AddScoped<ICheckoutService, CheckoutService>();
+builder.Services.AddScoped<PaymentValidationService>();
+builder.Services.AddScoped<PaymentGatewayService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("VueApp", policy =>
