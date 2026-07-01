@@ -1,0 +1,89 @@
+CREATE DATABASE [web-development-26];
+GO
+
+USE [web-development-26];
+GO
+
+-- Usuarios registrados en la plataforma
+CREATE TABLE USUARIOS (
+  id           NVARCHAR(30)   NOT NULL,
+  nombre       NVARCHAR(100)  NOT NULL,
+  email        NVARCHAR(100)  NOT NULL,
+  telefono     NVARCHAR(20)   NOT NULL,
+  passwordHash NVARCHAR(100)  NOT NULL,
+  passwordSalt NVARCHAR(100)  NOT NULL,
+  createdDate  DATETIME2      NOT NULL,
+  CONSTRAINT pk_usuarios  PRIMARY KEY (id),
+  CONSTRAINT uq_usu_email UNIQUE (email)
+);
+
+-- Categorías: Low, Mid, High, Collection
+CREATE TABLE CATEGORIAS (
+  id     INT          NOT NULL IDENTITY(1,1),
+  nombre NVARCHAR(50) NOT NULL,
+  CONSTRAINT pk_categorias PRIMARY KEY (id)
+);
+
+-- Modelo base del tenis
+CREATE TABLE SNEAKERS (
+  id           INT             NOT NULL IDENTITY(1,1),
+  id_categoria INT             NOT NULL,
+  nombre       NVARCHAR(150)   NOT NULL,
+  precio       DECIMAL(10,2)   NOT NULL,
+  descripcion  NVARCHAR(MAX)   NULL,
+  imagen_url   NVARCHAR(255)   NULL,
+  CONSTRAINT pk_sneakers PRIMARY KEY (id),
+  CONSTRAINT fk_sne_cat  FOREIGN KEY (id_categoria) REFERENCES CATEGORIAS(id)
+);
+
+-- Catálogo de colores disponibles
+CREATE TABLE COLORES (
+  id     INT          NOT NULL IDENTITY(1,1),
+  nombre NVARCHAR(100) NOT NULL,
+  CONSTRAINT pk_colores PRIMARY KEY (id)
+);
+
+-- Catálogo de tallas disponibles
+CREATE TABLE TALLAS (
+  id     INT          NOT NULL IDENTITY(1,1),
+  nombre NVARCHAR(20) NOT NULL,
+  CONSTRAINT pk_tallas PRIMARY KEY (id)
+);
+
+-- Stock: relación entre sneaker, color (opcional) y talla
+CREATE TABLE INVENTARIO (
+  id         INT NOT NULL IDENTITY(1,1),
+  id_sneaker INT NOT NULL,
+  id_color   INT NULL,
+  id_talla   INT NOT NULL,
+  stock      INT NOT NULL DEFAULT 0,
+  CONSTRAINT pk_inventario  PRIMARY KEY (id),
+  CONSTRAINT fk_inv_sne     FOREIGN KEY (id_sneaker) REFERENCES SNEAKERS(id),
+  CONSTRAINT fk_inv_color   FOREIGN KEY (id_color)   REFERENCES COLORES(id),
+  CONSTRAINT fk_inv_talla   FOREIGN KEY (id_talla)   REFERENCES TALLAS(id),
+  CONSTRAINT uq_inventario  UNIQUE (id_sneaker, id_color, id_talla)
+);
+
+-- Orden de compra del usuario
+CREATE TABLE ORDENES (
+  id         NVARCHAR(30)  NOT NULL,
+  id_usuario NVARCHAR(30)  NOT NULL,
+  fecha      DATETIME2     NOT NULL,
+  estado     NVARCHAR(30)  NOT NULL DEFAULT 'Procesando',
+  total      DECIMAL(10,2) NOT NULL,
+  CONSTRAINT pk_ordenes       PRIMARY KEY (id),
+  CONSTRAINT fk_ord_user      FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id),
+  CONSTRAINT chk_estado_orden CHECK (estado IN ('Procesando', 'Completado', 'Cancelado'))
+);
+
+-- Ítems dentro de cada orden
+CREATE TABLE DETALLE_ORDEN (
+  id            INT           NOT NULL IDENTITY(1,1),
+  id_orden      NVARCHAR(30)  NOT NULL,
+  id_inventario INT           NOT NULL,
+  cantidad      INT           NOT NULL DEFAULT 1,
+  precio_unit   DECIMAL(10,2) NOT NULL,
+  CONSTRAINT pk_detalle   PRIMARY KEY (id),
+  CONSTRAINT fk_det_orden FOREIGN KEY (id_orden)      REFERENCES ORDENES(id),
+  CONSTRAINT fk_det_inv   FOREIGN KEY (id_inventario) REFERENCES INVENTARIO(id)
+);
