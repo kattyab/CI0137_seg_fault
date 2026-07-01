@@ -6,7 +6,7 @@ public class PaymentGatewayService
     {
         string digits = new string(cardNumber.Where(char.IsDigit).ToArray());
 
-        if (digits.StartsWith(PaymentConstants.DeclinedCardPrefix))
+        if (digits.EndsWith(PaymentConstants.DeclinedCardSuffix))
         {
             return PaymentGatewayResult.Reject("La transacción fue rechazada por el banco emisor.");
         }
