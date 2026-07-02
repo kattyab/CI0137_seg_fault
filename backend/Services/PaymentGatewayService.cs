@@ -6,11 +6,6 @@ public class PaymentGatewayService
     {
         string digits = new string(cardNumber.Where(char.IsDigit).ToArray());
 
-        if (digits.StartsWith(PaymentConstants.DeclinedCardPrefix))
-        {
-            return PaymentGatewayResult.Reject("La transacción fue rechazada por el banco emisor.");
-        }
-
         if (amount <= PaymentConstants.MinimumTransactionAmount)
         {
             return PaymentGatewayResult.Reject("El monto de la transacción no es válido.");

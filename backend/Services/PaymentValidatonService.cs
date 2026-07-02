@@ -29,10 +29,20 @@ public class PaymentValidationService
         if (!Regex.IsMatch(payment.Cvc, PaymentConstants.CvcRegexPattern))
             return PaymentValidationResult.Fail("El CVC debe tener 3 o 4 dígitos.");
 
+        string bin = digits[..PaymentConstants.CardBinLength];
+
+        if (!PaymentConstants.CostaRicaBins.TryGetValue(bin, out var binInfo))
+        {
+            return PaymentValidationResult.Fail(
+                "El BIN de la tarjeta no pertenece a una entidad registrada para Costa Rica."
+            );
+        }
+
         return PaymentValidationResult.Ok(
-            bin: digits[..PaymentConstants.CardBinLength],
+            bin: bin,
             last4: digits[^PaymentConstants.CardLastDigitsLength..],
-            brand: GetBrand(digits)
+            brand: binInfo.Brand,
+            issuerBank: binInfo.BankName
         );
     }
 
@@ -100,15 +110,21 @@ public class PaymentValidationResult
     public string Bin { get; set; } = string.Empty;
     public string Last4 { get; set; } = string.Empty;
     public string Brand { get; set; } = string.Empty;
+    public string IssuerBank { get; set; } = string.Empty;
 
-    public static PaymentValidationResult Ok(string bin, string last4, string brand)
+    public static PaymentValidationResult Ok(
+        string bin,
+        string last4,
+        string brand,
+        string issuerBank)
     {
         return new PaymentValidationResult
         {
             Success = true,
             Bin = bin,
             Last4 = last4,
-            Brand = brand
+            Brand = brand,
+            IssuerBank = issuerBank
         };
     }
 
