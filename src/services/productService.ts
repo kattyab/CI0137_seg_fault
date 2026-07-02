@@ -13,6 +13,7 @@ export interface InventoryEntry {
   color: string | null
   talla: string
   stock: number
+  imagenUrl: string | null
 }
 
 export interface ProductDetail {

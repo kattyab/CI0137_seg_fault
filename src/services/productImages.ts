@@ -1,149 +1,111 @@
-// Local product images mapped by DB product name and color.
-// Temporary bridge until the backend returns imagenUrl from the database:
-// a non-null imagenUrl from the API always takes precedence over this manifest.
+// Local product images resolved from the assets tree.
+//
+// INVENTARIO.imagen_url (returned by the API as imagenUrl) stores the colorway
+// FOLDER in Vite-alias form, e.g. '@/assets/images/low/1lowG/white-linen';
+// the shot filename (right.png, front.png, ...) is appended here. When the API
+// gives no imagenUrl, the folder is derived from the product name plus the DB
+// color name — COLORES.nombre matches the colorway folder name exactly.
+// Collection models have no colorway subfolders: shots live in the model folder.
 
-const files = import.meta.glob('../assets/images/{low,mid,high,collection}/*/*.png', {
+const files = import.meta.glob('../assets/images/{low,mid,high,collection}/**/*.png', {
   eager: true,
   query: '?url',
   import: 'default',
 }) as Record<string, string>
 
-const FALLBACK = files['../assets/images/collection/3retroSailandJadeAura/image.png'] ?? ''
+export const SHOTS = [
+  'right',
+  'left',
+  'front',
+  'back',
+  'up',
+  'down',
+  'front-detail',
+  'back-detail',
+] as const
+export type Shot = (typeof SHOTS)[number]
+const DEFAULT_SHOT: Shot = 'right'
 
-const file = (rel: string) => files[`../assets/images/${rel}`] ?? FALLBACK
+const PREFIX = '../assets/images/'
 
-type ImageEntry = {
-  folder: string
-  defaultFile: string
-  // exact DB color name -> filename inside the folder
-  colors: Record<string, string>
+// Model folder per DB product name (SNEAKERS.nombre). Colorway subfolders are
+// discovered from the glob, so only new models need an entry here.
+const MODEL_FOLDERS: Record<string, string> = {
+  'Air Jordan 1 Low': 'low/1low',
+  'Air Jordan 1 Low G': 'low/1lowG',
+  'Air Jordan 1 Low SE': 'low/1lowSE',
+  'Air Jordan 1 Skyline Low': 'low/skylineLow',
+  'Air Jordan 1 Mid': 'mid/1mid',
+  'Air Jordan 1 Mid SE': 'mid/1midSE',
+  'Air Jordan 1 Mid SE Edge': 'mid/1midSEEdge',
+  'Air Jordan 1 Retro High OG': 'high/1retroHighOG',
+  'Air Jordan 1 Retro High OG Flight Club': 'high/1retroHighOGFlightClub',
+  'Air Jordan 9 Retro High': 'high/9retro',
+  'Air Jordan 4 Retro SE We Are Eternal': 'collection/airJordan4RetroSEWeAreEternal',
+  'Air Jordan 5 Black Carolina': 'collection/airJordan5BlackCarolina',
+  'Air Jordan 7 Retro Miro': 'collection/airJordan7RetroMiro',
+  "Book 2x McDonald's": 'collection/book2xMcDonalds',
 }
 
-// Keys are the exact `nombre` values seeded in database/002
-const MANIFEST: Record<string, ImageEntry> = {
-  'Air Jordan 1 Low': {
-    folder: 'low/1low',
-    defaultFile: 'gray-white-black.png',
-    colors: {
-      'Negro/Blanco/Rojo': 'gray-white-black.png',
-      'Blanco/Blanco': 'white.png',
-      'Azul Marino/Blanco': 'white-blue-light blue.png',
-    },
-  },
-  'Air Jordan 1 Low G': {
-    folder: 'low/1lowG',
-    defaultFile: 'gray.png',
-    colors: {
-      'Gris/Blanco': 'gray.png',
-      'Beige/Blanco': 'light brown.png',
-      'Blanco/Celeste': 'neon-white.png',
-    },
-  },
-  'Air Jordan 1 Low SE': {
-    folder: 'low/1lowSE',
-    defaultFile: 'black.png',
-    colors: {
-      'Negro Charol': 'black.png',
-      'Beige/Gris': 'brown.png',
-      'Vino/Negro': 'wine.png',
-    },
-  },
-  'Air Jordan 1 Skyline Low': {
-    folder: 'low/skylineLow',
-    defaultFile: 'red-white-gray.png',
-    colors: {
-      'Blanco/Rojo': 'red-white-gray.png',
-      'Gris/Negro': 'white-black-gray.png',
-    },
-  },
-  'Air Jordan 1 Mid': {
-    folder: 'mid/1mid',
-    defaultFile: 'white-black-red.png',
-    colors: {
-      'Rojo/Negro/Blanco': 'white-black-red.png',
-      'Gris/Blanco/Negro': 'white-black-light blue.png',
-      'Gris Camuflado/Blanco': 'green.png',
-    },
-  },
-  'Air Jordan 1 Mid SE': {
-    folder: 'mid/1midSE',
-    defaultFile: 'light green.png',
-    colors: {
-      'Crema/Verde Oliva': 'light green.png',
-      'Beige/Rosado': 'brown.png',
-      'Rosado/Blanco': 'wine.png',
-      'Azul/Blanco': 'blue.png',
-    },
-  },
-  'Air Jordan 1 Mid SE Edge': {
-    folder: 'mid/1midSEEdge',
-    defaultFile: 'pink-light brown-black.png',
-    colors: {
-      'Negro/Beige/Naranja-Rosado': 'pink-light brown-black.png',
-    },
-  },
-  'Air Jordan 1 Retro High OG': {
-    folder: 'high/1retroHighOG',
-    defaultFile: 'gray.png',
-    colors: {
-      'Gris/Blanco/Azul': 'gray.png',
-      'Blanco/Celeste Jaspeado': 'light blue-light brown.png',
-    },
-  },
-  'Air Jordan 9 Retro High': {
-    folder: 'high/9retro',
-    defaultFile: 'black.png',
-    colors: {
-      'Negro Jaspeado': 'black.png',
-      'Beige/Café': 'brown.png',
-    },
-  },
-  'Air Jordan 3 Retro Sail and Jade Aura': {
-    folder: 'collection/3retroSailandJadeAura',
-    defaultFile: 'image.png',
-    colors: {
-      'Sail/Jade con Rosado': 'image.png',
-    },
-  },
-  'Air Jordan 9 Retro Flit Grey and French Blue': {
-    folder: 'collection/9retroFlitGreyandFrenchBlue',
-    defaultFile: 'image.png',
-    colors: {
-      'Gris/Azul Francés': 'image.png',
-    },
-  },
-  'Air Jordan MVP 92': {
-    folder: 'collection/MVP92',
-    defaultFile: 'black-light blue.png',
-    colors: {
-      'Negro/Turquesa': 'black-light blue.png',
-      'Blanco/Morado': 'multi-color.png',
-      'Vino/Negro/Turquesa': 'red.png',
-    },
-  },
-  'Air Jordan Spizike': {
-    folder: 'collection/spizikeG',
-    defaultFile: 'gray.png',
-    colors: {
-      'Gris Claro/Blanco': 'gray.png',
-      'Blanco/Verde/Rojo': 'white-red-green.png',
-    },
-  },
+// 'cat/model' -> colorway subfolder names, derived from the glob keys
+const colorwaysByModel = new Map<string, string[]>()
+for (const key of Object.keys(files)) {
+  const parts = key.slice(PREFIX.length).split('/')
+  if (parts.length !== 4) continue // model folders without colorways have 3 parts
+  const model = `${parts[0]}/${parts[1]}`
+  const colorways = colorwaysByModel.get(model) ?? []
+  if (!colorways.includes(parts[2]!)) {
+    colorways.push(parts[2]!)
+    colorwaysByModel.set(model, colorways)
+  }
 }
 
-export function productImage(nombre: string, color?: string | null, imagenUrl?: string | null): string {
-  if (imagenUrl) return imagenUrl
-  const entry = MANIFEST[nombre]
-  if (!entry) return FALLBACK
-  const filename = (color && entry.colors[color]) || entry.defaultFile
-  return file(`${entry.folder}/${filename}`)
+const FALLBACK = files[`${PREFIX}collection/airJordan4RetroSEWeAreEternal/${DEFAULT_SHOT}.png`] ?? ''
+
+// '@/assets/images/low/1lowG/white-linen' (DB form) -> 'low/1lowG/white-linen'
+const stripBase = (url: string) => url.replace(/^(@\/|\.{0,2}\/)?(src\/)?assets\/images\//, '').replace(/\/+$/, '')
+
+function folderFor(nombre: string, color?: string | null, imagenUrl?: string | null): string | null {
+  if (imagenUrl) return stripBase(imagenUrl)
+  const model = MODEL_FOLDERS[nombre]
+  if (!model) return null
+  const colorways = colorwaysByModel.get(model)
+  if (!colorways || colorways.length === 0) return model
+  if (color && colorways.includes(color)) return `${model}/${color}`
+  return `${model}/${colorways[0]}`
 }
 
+const shotUrl = (folder: string, shot: Shot) => files[`${PREFIX}${folder}/${shot}.png`] ?? FALLBACK
+
+export function productImage(
+  nombre: string,
+  color?: string | null,
+  imagenUrl?: string | null,
+  shot: Shot = DEFAULT_SHOT,
+): string {
+  const folder = folderFor(nombre, color, imagenUrl)
+  return folder ? shotUrl(folder, shot) : FALLBACK
+}
+
+// All shots of one colorway, for the product page gallery.
+export function productShots(
+  nombre: string,
+  color?: string | null,
+  imagenUrl?: string | null,
+): string[] {
+  const folder = folderFor(nombre, color, imagenUrl)
+  if (!folder) return FALLBACK ? [FALLBACK] : []
+  const shots = SHOTS.map((s) => files[`${PREFIX}${folder}/${s}.png`]).filter(
+    (u): u is string => Boolean(u),
+  )
+  if (shots.length > 0) return shots
+  return FALLBACK ? [FALLBACK] : []
+}
+
+// One representative image per colorway, for category card thumbnails.
 export function variantImages(nombre: string): { color: string; url: string }[] {
-  const entry = MANIFEST[nombre]
-  if (!entry) return []
-  return Object.entries(entry.colors).map(([color, filename]) => ({
-    color,
-    url: file(`${entry.folder}/${filename}`),
-  }))
+  const model = MODEL_FOLDERS[nombre]
+  if (!model) return []
+  const colorways = colorwaysByModel.get(model) ?? []
+  return colorways.map((color) => ({ color, url: shotUrl(`${model}/${color}`, DEFAULT_SHOT) }))
 }

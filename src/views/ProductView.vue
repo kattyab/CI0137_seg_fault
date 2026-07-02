@@ -69,7 +69,7 @@ import { useRoute, RouterLink } from 'vue-router'
 import AddToCartButton from '@/components/AddToCartButton.vue'
 import AddToCartModal from '@/components/AddToCartModal.vue'
 import { getProduct, type ProductDetail } from '@/services/productService'
-import { productImage } from '@/services/productImages'
+import { productImage, productShots } from '@/services/productImages'
 import type { CartItem } from '@/stores/cart'
 
 const route = useRoute()
@@ -99,9 +99,10 @@ const formattedPrice = computed(() => {
 const selectedVariant = ref(0)
 const mainViewIndex = ref(0)
 
-type Variant = { id: string; name: string; image: string }
+type Variant = { id: string; name: string; image: string; imagenUrl: string | null }
 
-// unique colors from the inventory, mapped to local images (imagenUrl wins when the API provides it)
+// unique colors from the inventory, each resolved to its own colorway folder
+// (the per-entry imagenUrl wins when the API provides it)
 const variants = computed<Variant[]>(() => {
   const p = product.value
   if (!p) return []
@@ -111,28 +112,29 @@ const variants = computed<Variant[]>(() => {
     const color = entry.color ?? ''
     if (seen.has(color)) continue
     seen.add(color)
-    out.push({ id: color || String(p.id), name: color, image: productImage(p.nombre, entry.color, p.imagenUrl) })
+    out.push({
+      id: color || String(p.id),
+      name: color,
+      image: productImage(p.nombre, entry.color, entry.imagenUrl),
+      imagenUrl: entry.imagenUrl,
+    })
   }
-  if (out.length === 0) out.push({ id: String(p.id), name: '', image: productImage(p.nombre, null, p.imagenUrl) })
+  if (out.length === 0)
+    out.push({ id: String(p.id), name: '', image: productImage(p.nombre, null, p.imagenUrl), imagenUrl: p.imagenUrl })
   return out
 })
 
 const initialRouteImage = computed(() => (typeof route.query.image === 'string' ? route.query.image : ''))
 
+// every shot (right, left, front, back, ...) of the selected colorway
 const variantImages = computed(() => {
+  const p = product.value
   const v = variants.value[selectedVariant.value]
-  return v?.image ? [v.image] : []
+  if (!p || !v) return []
+  return productShots(p.nombre, v.name || null, v.imagenUrl)
 })
 
-// produce a left-column list with several small previews (repeat if needed)
-const leftPreviews = computed(() => {
-  const imgs = variantImages.value
-  if (imgs.length === 0) return []
-  const count = 6
-  const out: string[] = []
-  for (let i = 0; i < count; i++) out.push(imgs[i % imgs.length]!)
-  return out
-})
+const leftPreviews = computed(() => variantImages.value)
 
 const mainImageOverride = ref<string | null>(null)
 
