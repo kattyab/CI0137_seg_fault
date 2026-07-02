@@ -67,7 +67,7 @@ const carouselItems = [
     alt: 'Air Jordan Low',
     title: 'Air Jordan Low',
     subtitle: 'Ligero y versatil para uso diario.',
-    price: 'Desde ₡60,000',
+    price: 'Desde ₡65,000',
     models: '4 modelos disponibles',
   },
   {
@@ -156,7 +156,7 @@ const carouselItems = [
             <img src="@/assets/images/low/1lowG/gray.png" alt="Air Jordan Low" />
             <div class="card-content">
               <h3>Air Jordan Low</h3>
-              <p>Desde ₡60,000</p>
+              <p>Desde ₡65,000</p>
               <span>Ver 4 Modelos</span>
             </div>
           </RouterLink>

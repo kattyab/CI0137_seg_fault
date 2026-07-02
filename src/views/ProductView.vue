@@ -1,6 +1,9 @@
 <template>
   <main class="product-page">
-    <div class="container">
+    <div v-if="loading" class="state-msg">
+      <p>Cargando producto…</p>
+    </div>
+    <div v-else-if="product" class="container">
       <div class="thumbs-col" @mouseleave="clearPreview">
         <img v-for="(t, i) in leftPreviews" :key="i" :src="t" class="thumb-single" @click="selectMainView(i)"
           @mouseenter="previewMainView(i)" @focus="previewMainView(i)" @keydown.enter.prevent="selectMainView(i)"
@@ -35,12 +38,18 @@
         </div>
 
         <div class="actions">
-          <AddToCartButton :id="product.id" :nombre="product.nombre" :precio="product.precio" :size="selectedSize"
-            :color="(variants[selectedVariant] && variants[selectedVariant].name) || ''"
-            :image="(variants[selectedVariant] && variants[selectedVariant].image) || product.image" :requireSize="true"
+          <AddToCartButton :id="String(product.id)" :nombre="product.nombre" :precio="product.precio" :size="selectedSize"
+            :color="variants[selectedVariant]?.name || ''"
+            :image="variants[selectedVariant]?.image || ''"
+            :inventory-id="selectedEntry?.inventoryId" :stock="selectedEntry?.stock" :requireSize="true"
             @added="handleProductAdded" />
         </div>
       </aside>
+    </div>
+    <div v-else class="state-msg">
+      <h2>Producto no encontrado</h2>
+      <p>El producto que buscas no existe o ya no está disponible.</p>
+      <RouterLink to="/" class="cta">Volver al inicio</RouterLink>
     </div>
   </main>
 
@@ -55,164 +64,73 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref, onMounted, watch, onBeforeUnmount } from 'vue'
+import { useRoute, RouterLink } from 'vue-router'
 import AddToCartButton from '@/components/AddToCartButton.vue'
 import AddToCartModal from '@/components/AddToCartModal.vue'
+import { getProduct, type ProductDetail } from '@/services/productService'
+import { productImage } from '@/services/productImages'
+import type { CartItem } from '@/stores/cart'
 
 const route = useRoute()
-const id = String(route.params.id || 'unknown')
 
-// minimal product resolver from id — you can replace with API call
-const product = computed(() => {
-  // map id -> product data (fallback sample)
-  const map: Record<string, any> = {
-    'air-jordan-3-retro-sail-jade-aura': { id: 'air-jordan-3-retro-sail-jade-aura', nombre: 'Air Jordan 3 Retro Sail Jade Aura', precio: 120000, image: new URL('@/assets/images/collection/3retroSailandJadeAura/image.png', import.meta.url).href },
-    'air-jordan-9-retro-flit-grey-french-blue': { id: 'air-jordan-9-retro-flit-grey-french-blue', nombre: 'Air Jordan 9 Retro Flit Grey French Blue', precio: 95000, image: new URL('@/assets/images/collection/9retroFlitGreyandFrenchBlue/image.png', import.meta.url).href },
-    'air-jordan-mvp-92': {
-      id: 'air-jordan-mvp-92',
-      nombre: 'Air Jordan MVP 92',
-      precio: 110000,
-      variants: [
-        { id: 'black', name: 'Black / Light Blue', image: new URL('@/assets/images/collection/MVP92/black-light blue.png', import.meta.url).href },
-        { id: 'multi', name: 'Multi Color', image: new URL('@/assets/images/collection/MVP92/multi-color.png', import.meta.url).href },
-        { id: 'red', name: 'Red', image: new URL('@/assets/images/collection/MVP92/red.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-spizike': {
-      id: 'air-jordan-spizike',
-      nombre: 'Air Jordan Spizike',
-      precio: 115000,
-      variants: [
-        { id: 'gray', name: 'Gray', image: new URL('@/assets/images/collection/spizikeG/gray.png', import.meta.url).href },
-        { id: 'white-red-green', name: 'White / Red / Green', image: new URL('@/assets/images/collection/spizikeG/white-red-green.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-low': {
-      id: 'air-jordan-1-low',
-      nombre: 'Air Jordan 1 Low',
-      precio: 65000,
-      variants: [
-        { id: '1', name: 'White', image: new URL('@/assets/images/low/1low/white.png', import.meta.url).href },
-        { id: '2', name: 'White / Blue', image: new URL('@/assets/images/low/1low/white-blue-light blue.png', import.meta.url).href },
-        { id: '3', name: 'Gray / White / Black', image: new URL('@/assets/images/low/1low/gray-white-black.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-low-g': {
-      id: 'air-jordan-1-low-g',
-      nombre: 'Air Jordan 1 Low G',
-      precio: 68000,
-      variants: [
-        { id: '1', name: 'Gray', image: new URL('@/assets/images/low/1lowG/gray.png', import.meta.url).href },
-        { id: '2', name: 'Light Brown', image: new URL('@/assets/images/low/1lowG/light brown.png', import.meta.url).href },
-        { id: '3', name: 'Neon White', image: new URL('@/assets/images/low/1lowG/neon-white.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-low-se': {
-      id: 'air-jordan-1-low-se',
-      nombre: 'Air Jordan 1 Low SE',
-      precio: 70000,
-      variants: [
-        { id: '1', name: 'Brown', image: new URL('@/assets/images/low/1lowSE/brown.png', import.meta.url).href },
-        { id: '2', name: 'Black', image: new URL('@/assets/images/low/1lowSE/black.png', import.meta.url).href },
-        { id: '3', name: 'Wine', image: new URL('@/assets/images/low/1lowSE/wine.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-skyline-low': {
-      id: 'air-jordan-1-skyline-low',
-      nombre: 'Air Jordan 1 Skyline Low',
-      precio: 72000,
-      variants: [
-        { id: '1', name: 'Red / White / Gray', image: new URL('@/assets/images/low/skylineLow/red-white-gray.png', import.meta.url).href },
-        { id: '2', name: 'White / Black / Gray', image: new URL('@/assets/images/low/skylineLow/white-black-gray.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-mid': {
-      id: 'air-jordan-1-mid',
-      nombre: 'Air Jordan 1 Mid',
-      precio: 75000,
-      variants: [
-        { id: '1', name: 'White / Black / Red', image: new URL('@/assets/images/mid/1mid/white-black-red.png', import.meta.url).href },
-        { id: '2', name: 'White / Black / Light Blue', image: new URL('@/assets/images/mid/1mid/white-black-light blue.png', import.meta.url).href },
-        { id: '3', name: 'Green', image: new URL('@/assets/images/mid/1mid/green.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-mid-se': {
-      id: 'air-jordan-1-mid-se',
-      nombre: 'Air Jordan 1 Mid SE',
-      precio: 78000,
-      variants: [
-        { id: '1', name: 'Brown', image: new URL('@/assets/images/mid/1midSE/brown.png', import.meta.url).href },
-        { id: '2', name: 'Blue', image: new URL('@/assets/images/mid/1midSE/blue.png', import.meta.url).href },
-        { id: '3', name: 'Light Green', image: new URL('@/assets/images/mid/1midSE/light green.png', import.meta.url).href },
-        { id: '4', name: 'Wine', image: new URL('@/assets/images/mid/1midSE/wine.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-mid-se-edge': {
-      id: 'air-jordan-1-mid-se-edge',
-      nombre: 'Air Jordan 1 Mid SE Edge',
-      precio: 80000,
-      variants: [
-        { id: '1', name: 'Pink / Light Brown / Black', image: new URL('@/assets/images/mid/1midSEEdge/pink-light%20brown-black.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-retro-high-og': {
-      id: 'air-jordan-1-retro-high-og',
-      nombre: 'Air Jordan 1 Retro High OG',
-      precio: 125000,
-      variants: [
-        { id: '1', name: 'Gray', image: new URL('@/assets/images/high/1retroHighOG/gray.png', import.meta.url).href },
-        { id: '2', name: 'Light Blue', image: new URL('@/assets/images/high/1retroHighOG/light blue-light brown.png', import.meta.url).href },
-      ],
-    },
-    'air-jordan-1-retro-high-9': {
-      id: 'air-jordan-1-retro-high-9',
-      nombre: 'Air Jordan 1 Retro High 9',
-      precio: 128000,
-      variants: [
-        { id: '1', name: 'Black', image: new URL('@/assets/images/high/9retro/black.png', import.meta.url).href },
-        { id: '2', name: 'Brown', image: new URL('@/assets/images/high/9retro/brown.png', import.meta.url).href },
-      ],
-    },
+const product = ref<ProductDetail | null>(null)
+const loading = ref(true)
+
+async function loadProduct() {
+  loading.value = true
+  product.value = null
+  selectedSize.value = null
+  try {
+    product.value = await getProduct(String(route.params.id))
+  } catch {
+    product.value = null
+  } finally {
+    loading.value = false
   }
-  return map[id] ?? { id, nombre: id, precio: 0, image: '' }
-})
+  applyInitialImage()
+}
 
 const formattedPrice = computed(() => {
-  const n = Number(product.value.precio ?? 0)
+  const n = Number(product.value?.precio ?? 0)
   return new Intl.NumberFormat('en-US').format(n)
 })
 
-import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
-
-
 const selectedVariant = ref(0)
 const mainViewIndex = ref(0)
-const variants = computed(() => product.value.variants ?? [{ id: product.value.id, name: product.value.nombre, image: product.value.image, images: [product.value.image] }])
+
+type Variant = { id: string; name: string; image: string }
+
+// unique colors from the inventory, mapped to local images (imagenUrl wins when the API provides it)
+const variants = computed<Variant[]>(() => {
+  const p = product.value
+  if (!p) return []
+  const seen = new Set<string>()
+  const out: Variant[] = []
+  for (const entry of p.inventario) {
+    const color = entry.color ?? ''
+    if (seen.has(color)) continue
+    seen.add(color)
+    out.push({ id: color || String(p.id), name: color, image: productImage(p.nombre, entry.color, p.imagenUrl) })
+  }
+  if (out.length === 0) out.push({ id: String(p.id), name: '', image: productImage(p.nombre, null, p.imagenUrl) })
+  return out
+})
 
 const initialRouteImage = computed(() => (typeof route.query.image === 'string' ? route.query.image : ''))
 
 const variantImages = computed(() => {
   const v = variants.value[selectedVariant.value]
-  if (!v) return [product.value.image]
-  return v.images ?? (v.image ? [v.image] : [product.value.image])
+  return v?.image ? [v.image] : []
 })
 
 // produce a left-column list with several small previews (repeat if needed)
-// TEST OVERRIDE: set to true to force a temporary test image on all left thumbnails
-// (disabled now — set to true only for manual testing)
-const testThumbOverride = false
-const testThumb = new URL('@/assets/images/collection/3retroSailandJadeAura/image.png', import.meta.url).href
-
 const leftPreviews = computed(() => {
   const imgs = variantImages.value
+  if (imgs.length === 0) return []
   const count = 6
   const out: string[] = []
-  if (testThumbOverride) {
-    for (let i = 0; i < count; i++) out.push(testThumb)
-    return out
-  }
-  for (let i = 0; i < count; i++) out.push(imgs[i % imgs.length])
+  for (let i = 0; i < count; i++) out.push(imgs[i % imgs.length]!)
   return out
 })
 
@@ -226,10 +144,7 @@ function applyInitialImage() {
 
   if (!queryImage) return
 
-  const matchedVariantIndex = variants.value.findIndex((v: any) => {
-    const images = v.images ?? (v.image ? [v.image] : [])
-    return images.includes(queryImage) || v.image === queryImage
-  })
+  const matchedVariantIndex = variants.value.findIndex(v => v.image === queryImage)
 
   if (matchedVariantIndex !== -1) {
     selectedVariant.value = matchedVariantIndex
@@ -249,15 +164,32 @@ function selectMainView(i: string | number) { const idx = Number(i); mainViewInd
 function previewMainView(i: string | number) { const idx = Number(i); mainImageOverride.value = leftPreviews.value[idx] ?? null }
 function clearPreview() { mainImageOverride.value = null }
 
-const sizes = ['W 5 / M 3.5', 'W 5.5 / M 4', 'W 6 / M 4.5', 'W 6.5 / M 5', 'W 7 / M 5.5', 'W 7.5 / M 6', 'W 8 / M 6.5', 'W 8.5 / M 7', 'W 9 / M 7.5', 'W 9.5 / M 8', 'W 10 / M 8.5', 'W 10.5 / M 9', 'W 11 / M 9.5']
+// unique tallas from the inventory, sorted by the leading W value
+const sizes = computed(() => {
+  const p = product.value
+  if (!p) return []
+  const seen = new Set<string>()
+  for (const entry of p.inventario) seen.add(entry.talla)
+  return [...seen].sort(
+    (a, b) => parseFloat(a.replace(/^W\s*/, '')) - parseFloat(b.replace(/^W\s*/, '')),
+  )
+})
 
 const selectedSize = ref<string | null>(null)
 
-const showCartModal = ref(false)
-const addedProduct = ref<any>(null)
+// inventory entry for the chosen color + size (carries inventoryId and stock for the cart)
+const selectedEntry = computed(() => {
+  const p = product.value
+  if (!p || !selectedSize.value) return null
+  const color = variants.value[selectedVariant.value]?.name || null
+  return p.inventario.find(e => (e.color ?? null) === color && e.talla === selectedSize.value) ?? null
+})
 
-function handleProductAdded(product: any) {
-  addedProduct.value = product
+const showCartModal = ref(false)
+const addedProduct = ref<CartItem | null>(null)
+
+function handleProductAdded(item: CartItem) {
+  addedProduct.value = item
   showCartModal.value = true
 }
 
@@ -267,10 +199,15 @@ function chooseSize(s: string) {
 
 onMounted(() => {
   globalThis.scrollTo({ top: 0, behavior: 'auto' })
-  applyInitialImage()
+  void loadProduct()
 })
 
+watch(() => route.params.id, () => {
   globalThis.scrollTo({ top: 0, behavior: 'auto' })
+  void loadProduct()
+})
+
+watch(() => route.query.image, () => {
   applyInitialImage()
 })
 
@@ -297,6 +234,24 @@ onBeforeUnmount(() => {
 .product-page {
   min-height: calc(100vh - 80px);
   overflow-y: auto
+}
+
+.state-msg {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.state-msg h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.state-msg .cta {
+  display: inline-block;
+  margin-top: 1rem;
 }
 
 .container {
