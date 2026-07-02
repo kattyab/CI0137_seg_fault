@@ -3,7 +3,8 @@ import { reactive, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
-import { userService } from '@/services/userService'
+import { register } from '@/services/authService'
+import { ApiError } from '@/services/api'
 import { useRegistroStore } from '@/stores/useRegistroStore'
 
 const router = useRouter()
@@ -49,11 +50,6 @@ const validateEmail = () => {
 
   if (!emailPattern.test(form.email)) {
     errors.email = 'Ingresa un correo electrónico válido.'
-    return false
-  }
-
-  if (userService.getUserByEmail(form.email)) {
-    errors.email = 'El correo electrónico ya está registrado.'
     return false
   }
 
@@ -136,17 +132,16 @@ const handleSubmit = async () => {
     return
   }
 
-  const result = await userService.createUser({
-    nombre: form.nombre,
-    email: form.email,
-    telefono: form.telefono,
-    password: form.password,
-    terminos: form.terminos,
-  })
-
-  if (typeof result === 'object' && result !== null && 'error' in result) {
-    const message = (result as { error: string }).error
-    errors.email = message
+  try {
+    await register({
+      nombre: form.nombre,
+      email: form.email,
+      telefono: form.telefono,
+      password: form.password,
+    })
+  } catch (error) {
+    errors.email =
+      error instanceof ApiError ? error.message : 'No se pudo conectar con el servidor.'
     return
   }
 

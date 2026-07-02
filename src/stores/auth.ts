@@ -6,6 +6,9 @@ export type AuthUser = {
   nombre: string
   email: string
   telefono: string
+  // Opcionales: sesiones persistidas antes de la integración con el API no los tienen
+  createdDate?: string
+  token?: string
 }
 
 const AUTH_USER_STORAGE_KEY = STORAGE_KEYS.AUTH_USER

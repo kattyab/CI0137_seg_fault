@@ -3,7 +3,8 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
-import { userService } from '@/services/userService'
+import { login } from '@/services/authService'
+import { ApiError } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
 import { initSession } from '@/composables/useSessionTimeout'
 
@@ -53,10 +54,12 @@ const handleSubmit = async () => {
 
   if (!isEmailValid || !isPasswordValid) return
 
-  const user = await userService.validateCredentials(form.email, form.password)
-
-  if (!user) {
-    errors.password = 'Correo o contraseña incorrectos.'
+  let user
+  try {
+    user = await login({ email: form.email, password: form.password })
+  } catch (error) {
+    errors.password =
+      error instanceof ApiError ? error.message : 'No se pudo conectar con el servidor.'
     return
   }
 
@@ -65,6 +68,8 @@ const handleSubmit = async () => {
     nombre: user.nombre,
     email: user.email,
     telefono: user.telefono,
+    createdDate: user.createdDate,
+    token: user.token,
   })
 
   // Iniciar sesión y timers JUSTO después de autenticar al usuario
