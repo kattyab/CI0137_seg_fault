@@ -108,7 +108,7 @@ const handleSubmit = () => {
     return
   }
 
-  window.alert('Mensaje enviado correctamente.')
+  globalThis.alert('Mensaje enviado correctamente.')
 }
 </script>
 

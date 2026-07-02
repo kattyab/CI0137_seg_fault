@@ -161,7 +161,7 @@ function pay() {
   touched.cvc = true
 
   if (!auth.user) {
-    window.alert('Debes iniciar sesión para completar la compra.')
+    globalThis.alert('Debes iniciar sesión para completar la compra.')
     router.push({ name: 'login' })
     return
   }

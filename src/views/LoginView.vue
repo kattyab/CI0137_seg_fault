@@ -72,7 +72,7 @@ const handleSubmit = async () => {
   // después de una autenticación exitosa
   initSession(router)
 
-  window.alert(`¡Bienvenido ${user.nombre}!`)
+  globalThis.alert(`¡Bienvenido ${user.nombre}!`)
 
   form.email = ''
   form.password = ''

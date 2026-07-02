@@ -86,7 +86,7 @@ const validatePassword = () => {
   const hasLowercase = /[a-z]/.test(form.password)
   const hasUppercase = /[A-Z]/.test(form.password)
   const hasNumber = /[0-9]/.test(form.password)
-  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(form.password)
+  const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(form.password)
 
   if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber || !hasSpecialChar) {
     errors.password = 'La contraseña debe tener al menos 16 caracteres, número, mayúscula, minúscula y carácter especial (!@#$%^&*).'
@@ -150,8 +150,8 @@ const handleSubmit = async () => {
     return
   }
 
-  window.alert('Cuenta creada correctamente. ¡Bienvenido!')
-  
+  globalThis.alert('Cuenta creada correctamente. ¡Bienvenido!')
+
   // Limpiar formulario
   registroStore.clearForm()
   form.terminos = false
@@ -251,8 +251,8 @@ const handleSubmit = async () => {
                 "
                 :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
               >
-                <img 
-                  :src="showPassword ? openEye : closedEye" 
+                <img
+                  :src="showPassword ? openEye : closedEye"
                   :alt="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
                   style="width: 1.2rem; height: 1.2rem"
                 />
@@ -291,8 +291,8 @@ const handleSubmit = async () => {
                 "
                 :aria-label="showPasswordConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
               >
-                <img 
-                  :src="showPasswordConfirm ? openEye : closedEye" 
+                <img
+                  :src="showPasswordConfirm ? openEye : closedEye"
                   :alt="showPasswordConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
                   style="width: 1.2rem; height: 1.2rem"
                 />

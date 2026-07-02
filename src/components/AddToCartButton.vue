@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useCartStore } from '@/stores/cart'
+import { useCartStore, type CartItem } from '@/stores/cart'
 
 const props = defineProps<{
   id: string
@@ -18,6 +18,8 @@ const props = defineProps<{
   size?: string | null
   color?: string | null
   image?: string | null
+  inventoryId?: number
+  stock?: number
   requireSize?: boolean
 }>()
 
@@ -32,7 +34,7 @@ function add() {
 
   adding.value = true
 
-  const item: any = {
+  const item: CartItem = {
     id: props.id,
     nombre: props.nombre,
     precio: props.precio,
@@ -42,6 +44,8 @@ function add() {
   if (props.size) item.size = props.size
   if (props.color) item.color = props.color
   if (props.image) item.image = props.image
+  if (props.inventoryId != null) item.inventoryId = props.inventoryId
+  if (props.stock != null) item.stock = props.stock
 
   cart.addItem(item)
 

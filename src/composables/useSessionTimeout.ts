@@ -36,7 +36,7 @@ const expireSession = (message: string) => {
   const auth = useAuthStore()
   auth.logout() // limpia localStorage + estado Pinia
 
-  window.alert(message)
+  globalThis.alert(message)
   routerInstance?.push('/login')
 }
 
@@ -47,7 +47,7 @@ const onUserActivity = () => {
 
   if (inactivityTimerId) clearTimeout(inactivityTimerId)
 
-  inactivityTimerId = window.setTimeout(() => {
+  inactivityTimerId = globalThis.setTimeout(() => {
     expireSession('Tu sesión ha expirado por inactividad.')
   }, INACTIVITY_TIMEOUT)
 }
@@ -83,7 +83,7 @@ const startMaxSessionTimer = () => {
 
   if (maxSessionTimerId) clearTimeout(maxSessionTimerId)
 
-  maxSessionTimerId = window.setTimeout(() => {
+  maxSessionTimerId = globalThis.setTimeout(() => {
     expireSession('Tu sesión ha alcanzado el tiempo máximo.')
   }, remaining)
 }
