@@ -6,6 +6,10 @@ const route = useRoute()
 
 const formatCRC = (amount: number) => `₡${amount.toLocaleString('es-CR')}`
 const total = computed(() => Number(route.query.total ?? 0))
+const orderId = computed(() => {
+  const raw = route.query.orderId
+  return typeof raw === 'string' ? raw.replace('ord_', '') : ''
+})
 </script>
 
 <template>
@@ -14,6 +18,10 @@ const total = computed(() => Number(route.query.total ?? 0))
       <div class="success-icon">✓</div>
       <h1>Pago confirmado</h1>
       <p>Tu compra se realizó correctamente.</p>
+      <div v-if="orderId" class="success-summary">
+        <span>Orden</span>
+        <strong>#{{ orderId }}</strong>
+      </div>
       <div class="success-summary">
         <span>Monto pagado</span>
         <strong>{{ formatCRC(total) }}</strong>

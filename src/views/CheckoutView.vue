@@ -3,7 +3,8 @@ import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
-import { purchaseService } from '@/services/purchaseService'
+import { checkout } from '@/services/checkoutService'
+import { ApiError } from '@/services/api'
 
 const router = useRouter()
 const cart = useCartStore()
@@ -24,6 +25,8 @@ const payment = reactive({
 
 const cvcError = ref('')
 const submitAttempted = ref(false)
+const submitting = ref(false)
+const submitError = ref('')
 const touched = reactive({
   name: false,
   cardNumber: false,
@@ -153,7 +156,7 @@ const canPay = computed(
   () => cart.items.length > 0 && nameIsValid.value && cardNumberIsValid.value && expiryIsValid.value && cvcIsValid.value,
 )
 
-function pay() {
+async function pay() {
   submitAttempted.value = true
   touched.name = true
   touched.cardNumber = true
@@ -166,28 +169,53 @@ function pay() {
     return
   }
 
-  if (!canPay.value) return
+  if (!canPay.value || submitting.value) return
 
-  const paidSubtotal = subtotal.value
-  const paidShipping = shipping.value
-  const paidTotal = total.value
+  // Líneas agregadas antes de la integración con el backend no traen inventoryId;
+  // no se pueden cobrar sin él y descartarlas cobraría menos de lo que muestra el botón.
+  const legacyLines = cart.items.filter((item) => typeof item.inventoryId !== 'number')
+  if (legacyLines.length > 0) {
+    submitError.value =
+      'Algunos artículos del carrito son de una versión anterior. Elimínalos y agrégalos de nuevo desde la página del producto.'
+    return
+  }
 
-  purchaseService.createPurchase({
-    userId: auth.user.id,
-    items: cart.items,
-    subtotal: paidSubtotal,
-    shipping: paidShipping,
-    total: paidTotal,
-  })
+  const [expMonth, expYear] = normalizeExpiry(payment.expiry).split('/')
 
-  cart.clearCart()
+  submitting.value = true
+  submitError.value = ''
 
-  router.push({
-    name: 'checkout-confirmado',
-    query: {
-      total: String(paidTotal),
-    },
-  })
+  try {
+    const result = await checkout({
+      userId: auth.user.id,
+      items: cart.items.map((item) => ({
+        inventoryId: item.inventoryId as number,
+        quantity: item.quantity,
+      })),
+      payment: {
+        cardholderName: payment.name.trim(),
+        cardNumber: payment.cardNumber.replace(/\s/g, ''),
+        expMonth: Number(expMonth),
+        expYear: Number(expYear),
+        cvc: payment.cvc.trim(),
+      },
+    })
+
+    cart.clearCart()
+
+    router.push({
+      name: 'checkout-confirmado',
+      query: {
+        total: String(result.total),
+        orderId: result.orderId,
+      },
+    })
+  } catch (error) {
+    submitError.value =
+      error instanceof ApiError ? error.message : 'No se pudo conectar con el servidor. Intenta de nuevo.'
+  } finally {
+    submitting.value = false
+  }
 }
 
 </script>
@@ -272,9 +300,11 @@ function pay() {
             </label>
           </div>
 
-          <button class="pay-btn" type="submit" :disabled="!canPay">
-            Pagar {{ formatCRC(total) }}
+          <button class="pay-btn" type="submit" :disabled="!canPay || submitting">
+            {{ submitting ? 'Procesando…' : `Pagar ${formatCRC(total)}` }}
           </button>
+
+          <p v-if="submitError" class="field-error" role="alert">{{ submitError }}</p>
         </form>
 
         <aside class="summary-card">
