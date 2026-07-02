@@ -11,8 +11,12 @@ export type CartItem = {
   image?: string
   size?: string
   color?: string
+  inventoryId?: number
+  stock?: number
   [key: string]: unknown
 }
+
+const MAX_QTY = 99
 
 const STORAGE_PREFIX = 'cart:'
 
@@ -85,6 +89,7 @@ export const useCartStore = defineStore('cart', () => {
     delete clone.nombre
     delete clone.precio
     delete clone._key
+    delete clone.stock
     // normalize string attributes to avoid mismatches from whitespace
     for (const k of Object.keys(clone)) {
       if (typeof clone[k] === 'string') {
@@ -145,8 +150,17 @@ export const useCartStore = defineStore('cart', () => {
     if (idx === -1) idx = items.value.findIndex(i => i.id === idOrKey)
     if (idx === -1) return
     const existing = items.value[idx]!
-    if (qty <= 0) removeItem(existing._key ?? existing.id)
-    else existing.quantity = qty
+    // clamp instead of removing: deleting a line is removeLine's job (with confirmation)
+    const max = typeof existing.stock === 'number' ? existing.stock : MAX_QTY
+    existing.quantity = Math.min(Math.max(Math.trunc(qty) || 1, 1), max)
+  }
+
+  function removeLine(idOrKey: string) {
+    // remove the entire line (all units), regardless of quantity
+    let idx = items.value.findIndex(i => i._key === idOrKey)
+    if (idx === -1) idx = items.value.findIndex(i => i.id === idOrKey)
+    if (idx === -1) return
+    items.value.splice(idx, 1)
   }
 
   function clearCart() {
@@ -156,5 +170,5 @@ export const useCartStore = defineStore('cart', () => {
   const totalItems = computed(() => items.value.reduce((s, i) => s + (i.quantity || 0), 0))
   const subtotal = computed(() => items.value.reduce((s, i) => s + (i.precio || 0) * (i.quantity || 0), 0))
 
-  return { items, addItem, removeItem, setQuantity, clearCart, totalItems, subtotal, load, save }
+  return { items, addItem, removeItem, removeLine, setQuantity, clearCart, totalItems, subtotal, load, save }
 })
