@@ -19,6 +19,9 @@ builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<PaymentValidationService>();
 builder.Services.AddScoped<PaymentGatewayService>();
