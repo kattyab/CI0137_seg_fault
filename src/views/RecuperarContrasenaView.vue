@@ -31,7 +31,7 @@ const handleSubmit = () => {
     return
   }
 
-  window.alert('Solicitud de recuperación validada correctamente.')
+  globalThis.alert('Solicitud de recuperación validada correctamente.')
 }
 </script>
 

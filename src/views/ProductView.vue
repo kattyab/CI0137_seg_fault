@@ -266,12 +266,11 @@ function chooseSize(s: string) {
 }
 
 onMounted(() => {
-  window.scrollTo({ top: 0, behavior: 'auto' })
+  globalThis.scrollTo({ top: 0, behavior: 'auto' })
   applyInitialImage()
 })
 
-watch(() => [route.params.id, route.query.image], () => {
-  window.scrollTo({ top: 0, behavior: 'auto' })
+  globalThis.scrollTo({ top: 0, behavior: 'auto' })
   applyInitialImage()
 })
 
@@ -286,11 +285,11 @@ function onKeyDown(e: KeyboardEvent) {
 }
 
 onMounted(() => {
-  window.addEventListener('keydown', onKeyDown)
+  globalThis.addEventListener('keydown', onKeyDown)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onKeyDown)
+  globalThis.removeEventListener('keydown', onKeyDown)
 })
 </script>
 
