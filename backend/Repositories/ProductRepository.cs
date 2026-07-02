@@ -18,6 +18,7 @@ public class ProductRepository : IProductRepository
     {
         return await _context.Sneakers
             .Include(s => s.IdCategoriaNavigation)
+            .Include(s => s.Inventarios)
             .OrderBy(s => s.Nombre)
             .ToListAsync();
     }

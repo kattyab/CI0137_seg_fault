@@ -17,4 +17,5 @@ public class InventoryOptionDto
     public string? Color { get; set; }
     public string Talla { get; set; } = string.Empty;
     public int Stock { get; set; }
+    public string? ImagenUrl { get; set; }
 }

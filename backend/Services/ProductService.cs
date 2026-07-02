@@ -24,7 +24,10 @@ public class ProductService : IProductService
             Nombre = p.Nombre,
             Categoria = p.IdCategoriaNavigation.Nombre,
             Precio = p.Precio,
-            ImagenUrl = null
+            ImagenUrl = p.Inventarios
+                .OrderBy(i => i.Id)
+                .Select(i => i.ImagenUrl)
+                .FirstOrDefault(u => u != null)
         }).ToList();
 
         return ServiceResult<List<ProductListItemDto>>.Ok(response);
@@ -44,13 +47,17 @@ public class ProductService : IProductService
             Categoria = product.IdCategoriaNavigation.Nombre,
             Precio = product.Precio,
             Descripcion = product.Descripcion,
-            ImagenUrl = null,
+            ImagenUrl = product.Inventarios
+                .OrderBy(i => i.Id)
+                .Select(i => i.ImagenUrl)
+                .FirstOrDefault(u => u != null),
             Inventario = product.Inventarios.Select(i => new InventoryOptionDto
             {
                 InventoryId = i.Id,
                 Color = i.IdColorNavigation?.Nombre,
                 Talla = i.IdTallaNavigation.Nombre,
-                Stock = i.Stock
+                Stock = i.Stock,
+                ImagenUrl = i.ImagenUrl
             }).ToList()
         };
 
