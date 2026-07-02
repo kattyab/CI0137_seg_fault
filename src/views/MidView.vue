@@ -1,7 +1,10 @@
 <script setup lang="ts">
-const mid1Main = new URL('@/assets/images/mid/1mid/white-black-red.png', import.meta.url).href
-const mid2Main = new URL('@/assets/images/mid/1midSE/light green.png', import.meta.url).href
-const mid3Main = new URL('@/assets/images/mid/1midSEEdge/pink-light brown-black.png', import.meta.url).href
+import { useProducts } from '@/composables/useProducts'
+import { productImage, variantImages } from '@/services/productImages'
+
+const { products, loading, error } = useProducts('Mid')
+
+const fmt = (n: number) => `₡${n.toLocaleString('es-CR')}`
 </script>
 
 <template>
@@ -13,88 +16,29 @@ const mid3Main = new URL('@/assets/images/mid/1midSEEdge/pink-light brown-black.
 
     <section class="categorias">
       <h2>Modelos Disponibles</h2>
-      <div class="grid">
-        <div class="card">
+      <p v-if="loading" style="text-align: center">Cargando modelos…</p>
+      <p v-else-if="error" style="text-align: center">{{ error }}</p>
+      <div v-else class="grid">
+        <div v-for="p in products" :key="p.id" class="card">
           <router-link
-            :to="{ name: 'product', params: { id: 'air-jordan-1-mid' }, query: { image: mid1Main } }"
+            :to="{ name: 'product', params: { id: p.id }, query: { image: productImage(p.nombre, null, p.imagenUrl) } }"
             class="product-detail card-link"
           >
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
-                  <img src="@/assets/images/mid/1mid/white-black-red.png" alt="Color 1" />
+                  <img :src="productImage(p.nombre, null, p.imagenUrl)" :alt="p.nombre" />
                 </div>
               </div>
             </div>
-            <div class="thumbs">
-              <label for="1mid-1" class="thumb">
-                <img src="@/assets/images/mid/1mid/white-black-red.png" alt="1" />
-              </label>
-              <label for="1mid-2" class="thumb">
-                <img src="@/assets/images/mid/1mid/white-black-light blue.png" alt="2" />
-              </label>
-              <label for="1mid-3" class="thumb">
-                <img src="@/assets/images/mid/1mid/green.png" alt="3" />
-              </label>
+            <div v-if="variantImages(p.nombre).length > 1" class="thumbs">
+              <span v-for="v in variantImages(p.nombre)" :key="v.color" class="thumb">
+                <img :src="v.url" :alt="v.color" />
+              </span>
             </div>
             <div class="card-content">
-              <h3>Air Jordan 1 Mid</h3>
-              <p>₡70,000</p>
-            </div>
-          </router-link>
-        </div>
-
-        <div class="card">
-          <router-link
-            :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se' }, query: { image: mid2Main } }"
-            class="product-detail card-link"
-          >
-            <div class="color-slider">
-              <div class="slides" style="height: 250px">
-                <div class="slide">
-                  <img src="@/assets/images/mid/1midSE/light green.png" alt="Color 1" />
-                </div>
-              </div>
-            </div>
-            <div class="thumbs">
-              <label for="1midSE-1" class="thumb">
-                <img src="@/assets/images/mid/1midSE/light green.png" alt="1" />
-              </label>
-              <label for="1midSE-2" class="thumb">
-                <img src="@/assets/images/mid/1midSE/brown.png" alt="2" />
-              </label>
-              <label for="1midSE-3" class="thumb">
-                <img src="@/assets/images/mid/1midSE/wine.png" alt="3" />
-              </label>
-              <label for="1midSE-4" class="thumb">
-                <img src="@/assets/images/mid/1midSE/blue.png" alt="4" />
-              </label>
-            </div>
-            <div class="card-content">
-              <h3>Air Jordan 1 Mid SE</h3>
-              <p>₡85,000</p>
-            </div>
-          </router-link>
-        </div>
-
-        <div class="card">
-          <router-link
-            :to="{ name: 'product', params: { id: 'air-jordan-1-mid-se-edge' }, query: { image: mid3Main } }"
-            class="product-detail card-link"
-          >
-            <div class="color-slider">
-              <div class="slides" style="height: 250px">
-                <div class="slide">
-                  <img
-                    src="@/assets/images/mid/1midSEEdge/pink-light brown-black.png"
-                    alt="Color 1"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="card-content">
-              <h3>Air Jordan 1 Mid SE Edge</h3>
-              <p>₡80,000</p>
+              <h3>{{ p.nombre }}</h3>
+              <p>{{ fmt(p.precio) }}</p>
             </div>
           </router-link>
         </div>

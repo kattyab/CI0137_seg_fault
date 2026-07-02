@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import { useProducts } from '@/composables/useProducts'
+import { productImage, variantImages } from '@/services/productImages'
+
+const { products, loading, error } = useProducts('Collection')
+
+const fmt = (n: number) => `₡${n.toLocaleString('es-CR')}`
+</script>
+
 <template>
   <main>
     <section class="hero" style="height: 30vh">
@@ -7,107 +16,29 @@
 
     <section class="categorias">
       <h2>Ediciones Limitadas</h2>
-      <div class="grid">
-        <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-3-retro-sail-jade-aura' } }" class="product-detail card-link">
+      <p v-if="loading" style="text-align: center">Cargando modelos…</p>
+      <p v-else-if="error" style="text-align: center">{{ error }}</p>
+      <div v-else class="grid">
+        <div v-for="p in products" :key="p.id" class="card">
+          <router-link
+            :to="{ name: 'product', params: { id: p.id }, query: { image: productImage(p.nombre, null, p.imagenUrl) } }"
+            class="product-detail card-link"
+          >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
-                  <img
-                    src="@/assets/images/collection/3retroSailandJadeAura/image.png"
-                    alt="Air Jordan 3 Retro Sail and Jade Aura"
-                  />
+                  <img :src="productImage(p.nombre, null, p.imagenUrl)" :alt="p.nombre" />
                 </div>
               </div>
             </div>
-            <div class="card-content">
-              <h3>Air Jordan 3 Retro Sail and Jade Aura</h3>
-              <p>₡120,000</p>
-              <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-            </div>
-          </router-link>
-        </div>
-
-        <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-9-retro-flit-grey-french-blue' } }" class="product-detail card-link">
-            <div class="color-slider">
-              <div class="slides">
-                <div class="slide">
-                  <img
-                    src="@/assets/images/collection/9retroFlitGreyandFrenchBlue/image.png"
-                    alt="Air Jordan 9 Retro Flit Grey and French Blue"
-                  />
-                </div>
-              </div>
+            <div v-if="variantImages(p.nombre).length > 1" class="thumbs">
+              <span v-for="v in variantImages(p.nombre)" :key="v.color" class="thumb">
+                <img :src="v.url" :alt="v.color" />
+              </span>
             </div>
             <div class="card-content">
-              <h3>Air Jordan 9 Retro Flit Grey and French Blue</h3>
-              <p>₡150,000</p>
-              <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-            </div>
-          </router-link>
-        </div>
-
-        <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-mvp-92' } }" class="product-detail card-link">
-            <div class="color-slider">
-              <div class="slides">
-                <div class="slide">
-                  <img
-                    src="@/assets/images/collection/MVP92/black-light%20blue.png"
-                    alt="Air Jordan MVP 92 - Black/Light Blue"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="thumbs">
-              <label for="mvp92-1" class="thumb">
-                <img
-                  src="@/assets/images/collection/MVP92/black-light%20blue.png"
-                  alt="Black/Light Blue"
-                />
-              </label>
-              <label for="mvp92-2" class="thumb">
-                <img src="@/assets/images/collection/MVP92/multi-color.png" alt="Multi-color" />
-              </label>
-              <label for="mvp92-3" class="thumb">
-                <img src="@/assets/images/collection/MVP92/red.png" alt="Red" />
-              </label>
-            </div>
-            <div class="card-content">
-              <h3>Air Jordan MVP 92</h3>
-              <p>₡110,000</p>
-              <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
-            </div>
-          </router-link>
-        </div>
-
-        <div class="card">
-          <router-link :to="{ name: 'product', params: { id: 'air-jordan-spizike' } }" class="product-detail card-link">
-            <div class="color-slider">
-              <div class="slides">
-                <div class="slide">
-                  <img
-                    src="@/assets/images/collection/spizikeG/gray.png"
-                    alt="Air Jordan Spizike - Gray"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="thumbs">
-              <label for="spizikeg-1" class="thumb">
-                <img src="@/assets/images/collection/spizikeG/gray.png" alt="Gray" />
-              </label>
-              <label for="spizikeg-2" class="thumb">
-                <img
-                  src="@/assets/images/collection/spizikeG/white-red-green.png"
-                  alt="White Red Green"
-                />
-              </label>
-            </div>
-            <div class="card-content">
-              <h3>Air Jordan Spizike</h3>
-              <p>₡105,000</p>
+              <h3>{{ p.nombre }}</h3>
+              <p>{{ fmt(p.precio) }}</p>
               <p style="font-size: 0.9rem; color: #ff6b35">Edición Limitada</p>
             </div>
           </router-link>
