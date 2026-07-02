@@ -1,27 +1,19 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { userService } from '@/services/userService'
-import { purchaseService } from '@/services/purchaseService'
+import { getOrdersByUser, type OrderHistory } from '@/services/orderService'
+import { productImage } from '@/services/productImages'
 
 const auth = useAuthStore()
 
 const user = computed(() => auth.user)
 
-const fullUser = computed(() => {
-  if (!auth.user) {
-    return undefined
-  }
-
-  return userService.getUserByEmail(auth.user.email)
-})
-
 const createdAtText = computed(() => {
-  if (!fullUser.value?.createdAt) {
+  if (!auth.user?.createdDate) {
     return 'No disponible'
   }
 
-  return new Date(fullUser.value.createdAt).toLocaleDateString('es-CR', {
+  return new Date(auth.user.createdDate).toLocaleDateString('es-CR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -34,13 +26,29 @@ const togglePurchaseHistory = () => {
   showPurchaseHistory.value = !showPurchaseHistory.value
 }
 
-const purchases = computed(() => {
-  if (!auth.user) {
-    return []
-  }
+const orders = ref<OrderHistory[]>([])
+const ordersLoading = ref(false)
+const ordersError = ref('')
 
-  return purchaseService.getPurchasesByUserId(auth.user.id)
-})
+async function loadOrders() {
+  if (!auth.user) return
+
+  ordersLoading.value = true
+  ordersError.value = ''
+
+  try {
+    orders.value = await getOrdersByUser(auth.user.id)
+  } catch {
+    ordersError.value = 'No se pudo cargar el historial de compras. Intenta de nuevo más tarde.'
+  } finally {
+    ordersLoading.value = false
+  }
+}
+
+onMounted(loadOrders)
+
+const orderSubtotal = (order: OrderHistory) =>
+  order.items.reduce((sum, item) => sum + item.precioUnit * item.cantidad, 0)
 
 const formatCRC = (amount: number) => `₡${amount.toLocaleString('es-CR')}`
 
@@ -118,65 +126,72 @@ const formatDate = (date: string) => {
             id="purchase-history-content"
             class="purchase-history-content"
           >
-            <div v-if="purchases.length === 0" class="purchase-empty">
+            <div v-if="ordersLoading" class="purchase-empty">
+              <p>Cargando historial…</p>
+            </div>
+
+            <div v-else-if="ordersError" class="purchase-empty">
+              <p>{{ ordersError }}</p>
+            </div>
+
+            <div v-else-if="orders.length === 0" class="purchase-empty">
               <p>Aún no tienes compras registradas.</p>
               <p>Cuando completes una compra, aparecerá aquí.</p>
             </div>
 
             <div v-else class="purchase-list">
               <article
-                v-for="purchase in purchases"
-                :key="purchase.id"
+                v-for="order in orders"
+                :key="order.id"
                 class="purchase-card"
               >
                 <div class="purchase-header">
                   <div>
-                    <h4>Compra #{{ purchase.id.replace('purchase_', '') }}</h4>
-                    <p>{{ formatDate(purchase.createdAt) }}</p>
+                    <h4>Compra #{{ order.id.replace('ord_', '') }}</h4>
+                    <p>{{ formatDate(order.fecha) }}</p>
                   </div>
 
                   <span class="purchase-status">
-                    {{ purchase.status }}
+                    {{ order.estado }}
                   </span>
                 </div>
 
                 <div class="purchase-products">
                   <div
-                    v-for="item in purchase.items"
-                    :key="`${purchase.id}-${item.lineKey}`"
+                    v-for="(item, idx) in order.items"
+                    :key="`${order.id}-${idx}`"
                     class="purchase-product"
                   >
                     <img
-                      v-if="item.image"
-                      :src="item.image"
+                      :src="productImage(item.nombre, item.color, item.imagenUrl)"
                       :alt="item.nombre"
                       class="purchase-product-image"
                     />
 
                     <div>
                       <strong>{{ item.nombre }}</strong>
-                      <p v-if="item.size">Talla: {{ item.size }}</p>
+                      <p>Talla: {{ item.talla }}</p>
                       <p v-if="item.color">Color: {{ item.color }}</p>
-                      <p>Cantidad: {{ item.quantity }}</p>
-                      <p>Precio unitario: {{ formatCRC(item.precio) }}</p>
-                      <p>Importe: {{ formatCRC(item.precio * item.quantity) }}</p>
+                      <p>Cantidad: {{ item.cantidad }}</p>
+                      <p>Precio unitario: {{ formatCRC(item.precioUnit) }}</p>
+                      <p>Importe: {{ formatCRC(item.precioUnit * item.cantidad) }}</p>
                     </div>
                   </div>
                 </div>
 
                 <div class="purchase-total">
                   <span>Subtotal:</span>
-                  <strong>{{ formatCRC(purchase.subtotal) }}</strong>
+                  <strong>{{ formatCRC(orderSubtotal(order)) }}</strong>
                 </div>
 
                 <div class="purchase-total">
                   <span>Envío:</span>
-                  <strong>{{ formatCRC(purchase.shipping) }}</strong>
+                  <strong>{{ formatCRC(order.total - orderSubtotal(order)) }}</strong>
                 </div>
 
                 <div class="purchase-total purchase-total-final">
                   <span>Total:</span>
-                  <strong>{{ formatCRC(purchase.total) }}</strong>
+                  <strong>{{ formatCRC(order.total) }}</strong>
                 </div>
               </article>
             </div>

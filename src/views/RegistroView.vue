@@ -3,7 +3,8 @@ import { reactive, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import openEye from '@/assets/images/password/open_eye.png'
 import closedEye from '@/assets/images/password/closed_eye.png'
-import { userService } from '@/services/userService'
+import { register } from '@/services/authService'
+import { ApiError } from '@/services/api'
 import { useRegistroStore } from '@/stores/useRegistroStore'
 
 const router = useRouter()
@@ -52,11 +53,6 @@ const validateEmail = () => {
     return false
   }
 
-  if (userService.getUserByEmail(form.email)) {
-    errors.email = 'El correo electrónico ya está registrado.'
-    return false
-  }
-
   errors.email = ''
   return true
 }
@@ -86,7 +82,7 @@ const validatePassword = () => {
   const hasLowercase = /[a-z]/.test(form.password)
   const hasUppercase = /[A-Z]/.test(form.password)
   const hasNumber = /[0-9]/.test(form.password)
-  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(form.password)
+  const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(form.password)
 
   if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber || !hasSpecialChar) {
     errors.password = 'La contraseña debe tener al menos 16 caracteres, número, mayúscula, minúscula y carácter especial (!@#$%^&*).'
@@ -136,22 +132,21 @@ const handleSubmit = async () => {
     return
   }
 
-  const result = await userService.createUser({
-    nombre: form.nombre,
-    email: form.email,
-    telefono: form.telefono,
-    password: form.password,
-    terminos: form.terminos,
-  })
-
-  if (typeof result === 'object' && result !== null && 'error' in result) {
-    const message = (result as { error: string }).error
-    errors.email = message
+  try {
+    await register({
+      nombre: form.nombre,
+      email: form.email,
+      telefono: form.telefono,
+      password: form.password,
+    })
+  } catch (error) {
+    errors.email =
+      error instanceof ApiError ? error.message : 'No se pudo conectar con el servidor.'
     return
   }
 
-  window.alert('Cuenta creada correctamente. ¡Bienvenido!')
-  
+  globalThis.alert('Cuenta creada correctamente. ¡Bienvenido!')
+
   // Limpiar formulario
   registroStore.clearForm()
   form.terminos = false
@@ -251,8 +246,8 @@ const handleSubmit = async () => {
                 "
                 :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
               >
-                <img 
-                  :src="showPassword ? openEye : closedEye" 
+                <img
+                  :src="showPassword ? openEye : closedEye"
                   :alt="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
                   style="width: 1.2rem; height: 1.2rem"
                 />
@@ -291,8 +286,8 @@ const handleSubmit = async () => {
                 "
                 :aria-label="showPasswordConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
               >
-                <img 
-                  :src="showPasswordConfirm ? openEye : closedEye" 
+                <img
+                  :src="showPasswordConfirm ? openEye : closedEye"
                   :alt="showPasswordConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
                   style="width: 1.2rem; height: 1.2rem"
                 />

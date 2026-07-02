@@ -4,10 +4,10 @@ import { RouterLink } from 'vue-router'
 import { Carousel, Slide, Navigation, Pagination } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 
-import lowImage from '@/assets/images/low/1lowG/gray.png'
-import midImage from '@/assets/images/mid/1midSEEdge/pink-light brown-black.png'
-import highImage from '@/assets/images/high/1retroHighOG/light blue-light brown.png'
-import collectionImage from '@/assets/images/collection/3retroSailandJadeAura/image.png'
+import lowImage from '@/assets/images/low/1lowG/mediumGray-tintBlue-white/right.png'
+import midImage from '@/assets/images/mid/1midSEEdge/paleIvory-black-muslin-carreraPink/right.png'
+import highImage from '@/assets/images/high/1retroHighOG/coolGrey-sail-gameRoyal-black/right.png'
+import collectionImage from '@/assets/images/collection/airJordan4RetroSEWeAreEternal/right.png'
 
 const commentForm = reactive({
   nombre: '',
@@ -67,7 +67,7 @@ const carouselItems = [
     alt: 'Air Jordan Low',
     title: 'Air Jordan Low',
     subtitle: 'Ligero y versatil para uso diario.',
-    price: 'Desde ₡60,000',
+    price: 'Desde ₡65,000',
     models: '4 modelos disponibles',
   },
   {
@@ -153,10 +153,10 @@ const carouselItems = [
       <div class="grid">
         <div class="card">
           <RouterLink to="/low" class="card-link">
-            <img src="@/assets/images/low/1lowG/gray.png" alt="Air Jordan Low" />
+            <img src="@/assets/images/low/1lowG/mediumGray-tintBlue-white/right.png" alt="Air Jordan Low" />
             <div class="card-content">
               <h3>Air Jordan Low</h3>
-              <p>Desde ₡60,000</p>
+              <p>Desde ₡65,000</p>
               <span>Ver 4 Modelos</span>
             </div>
           </RouterLink>
@@ -164,7 +164,7 @@ const carouselItems = [
         <div class="card">
           <RouterLink to="/mid" class="card-link">
             <img
-              src="@/assets/images/mid/1midSEEdge/pink-light brown-black.png"
+              src="@/assets/images/mid/1midSEEdge/paleIvory-black-muslin-carreraPink/right.png"
               alt="Air Jordan Mid"
             />
             <div class="card-content">
@@ -177,7 +177,7 @@ const carouselItems = [
         <div class="card">
           <RouterLink to="/high" class="card-link">
             <img
-              src="@/assets/images/high/1retroHighOG/light blue-light brown.png"
+              src="@/assets/images/high/1retroHighOG/coolGrey-sail-gameRoyal-black/right.png"
               alt="Air Jordan High"
             />
             <div class="card-content">
@@ -189,7 +189,7 @@ const carouselItems = [
         </div>
         <div class="card">
           <RouterLink to="/coleccion" class="card-link">
-            <img src="@/assets/images/collection/3retroSailandJadeAura/image.png" alt="Colección" />
+            <img src="@/assets/images/collection/airJordan4RetroSEWeAreEternal/right.png" alt="Colección" />
             <div class="card-content">
               <h3>Colección Especial</h3>
               <p>Ediciones limitadas</p>

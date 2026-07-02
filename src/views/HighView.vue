@@ -1,6 +1,10 @@
 <script setup lang="ts">
-const high1Main = new URL('@/assets/images/high/1retroHighOG/gray.png', import.meta.url).href
-const high2Main = new URL('@/assets/images/high/9retro/black.png', import.meta.url).href
+import { useProducts } from '@/composables/useProducts'
+import { productImage, variantImages } from '@/services/productImages'
+
+const { products, loading, error } = useProducts('High')
+
+const fmt = (n: number) => `₡${n.toLocaleString('es-CR')}`
 </script>
 
 <template>
@@ -12,58 +16,29 @@ const high2Main = new URL('@/assets/images/high/9retro/black.png', import.meta.u
 
     <section class="categorias">
       <h2>Modelos Disponibles</h2>
-      <div class="grid">
-        <div class="card">
+      <p v-if="loading" style="text-align: center">Cargando modelos…</p>
+      <p v-else-if="error" style="text-align: center">{{ error }}</p>
+      <div v-else class="grid">
+        <div v-for="p in products" :key="p.id" class="card">
           <router-link
-            :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-og' }, query: { image: high1Main } }"
+            :to="{ name: 'product', params: { id: p.id }, query: { image: productImage(p.nombre, null, p.imagenUrl) } }"
             class="product-detail card-link"
           >
             <div class="color-slider">
               <div class="slides">
                 <div class="slide">
-                  <img src="@/assets/images/high/1retroHighOG/gray.png" alt="Color 1" />
+                  <img :src="productImage(p.nombre, null, p.imagenUrl)" :alt="p.nombre" />
                 </div>
               </div>
             </div>
-            <div class="thumbs">
-              <label for="1retroHighOG-1" class="thumb">
-                <img src="@/assets/images/high/1retroHighOG/gray.png" alt="1" />
-              </label>
-              <label for="1retroHighOG-2" class="thumb">
-                <img
-                  src="@/assets/images/high/1retroHighOG/light blue-light brown.png"
-                  alt="2"
-                />
-              </label>
+            <div v-if="variantImages(p.nombre).length > 1" class="thumbs">
+              <span v-for="v in variantImages(p.nombre)" :key="v.color" class="thumb">
+                <img :src="v.url" :alt="v.color" />
+              </span>
             </div>
             <div class="card-content">
-              <h3>Air Jordan 1 Retro High OG</h3>
-              <p>₡80,000</p>
-            </div>
-          </router-link>
-        </div>
-
-        <div class="card">
-          <router-link
-            :to="{ name: 'product', params: { id: 'air-jordan-1-retro-high-9' }, query: { image: high2Main } }"
-            class="product-detail card-link"
-          >
-            <div class="color-slider">
-              <div class="slides">
-                <div class="slide"><img src="@/assets/images/high/9retro/black.png" alt="Color 1"/></div>
-              </div>
-            </div>
-            <div class="thumbs">
-              <label for="9retro-1" class="thumb">
-                <img src="@/assets/images/high/9retro/black.png" alt="1" />
-              </label>
-              <label for="9retro-2" class="thumb">
-                <img src="@/assets/images/high/9retro/brown.png" alt="2" />
-              </label>
-            </div>
-            <div class="card-content">
-              <h3>Air Jordan 1 Retro High 9</h3>
-              <p>₡85,000</p>
+              <h3>{{ p.nombre }}</h3>
+              <p>{{ fmt(p.precio) }}</p>
             </div>
           </router-link>
         </div>
