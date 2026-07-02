@@ -62,7 +62,8 @@ public class AuthService : IAuthService
             Nombre = usuario.Nombre,
             Email = usuario.Email,
             Telefono = usuario.Telefono,
-            Token = $"session_{Guid.NewGuid()}"
+            Token = $"session_{Guid.NewGuid()}",
+            CreatedDate = DateTime.SpecifyKind(usuario.CreatedDate, DateTimeKind.Utc)
         };
 
         return ServiceResult<AuthResponseDto>.Ok(response);
@@ -98,7 +99,8 @@ public class AuthService : IAuthService
             Nombre = usuario.Nombre,
             Email = usuario.Email,
             Telefono = usuario.Telefono,
-            Token = $"session_{Guid.NewGuid()}"
+            Token = $"session_{Guid.NewGuid()}",
+            CreatedDate = DateTime.SpecifyKind(usuario.CreatedDate, DateTimeKind.Utc)
         };
 
         return ServiceResult<AuthResponseDto>.Ok(response);
