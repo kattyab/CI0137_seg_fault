@@ -61,6 +61,8 @@ public class CheckoutService : ICheckoutService
             total += inventory.IdSneakerNavigation.Precio * item.Quantity;
         }
 
+        total += CheckoutConstants.FlatShippingFee;
+
         var gatewayResult = _paymentGatewayService.Authorize(
             request.Payment.CardNumber,
             total
