@@ -1,27 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { userService } from '@/services/userService'
 import { purchaseService } from '@/services/purchaseService'
 
 const auth = useAuthStore()
 
 const user = computed(() => auth.user)
 
-const fullUser = computed(() => {
-  if (!auth.user) {
-    return undefined
-  }
-
-  return userService.getUserByEmail(auth.user.email)
-})
-
 const createdAtText = computed(() => {
-  if (!fullUser.value?.createdAt) {
+  if (!auth.user?.createdDate) {
     return 'No disponible'
   }
 
-  return new Date(fullUser.value.createdAt).toLocaleDateString('es-CR', {
+  return new Date(auth.user.createdDate).toLocaleDateString('es-CR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
