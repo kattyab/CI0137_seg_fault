@@ -26,8 +26,6 @@ public static class PaymentConstants
 
     public const int AuthorizationCodeLength = 8;
 
-    public const string DeclinedCardSuffix = "0000";
-
     public const string VisaPrefix = "4";
     public const string MastercardPrefix = "5";
     public const string AmericanExpressPrefix34 = "34";
