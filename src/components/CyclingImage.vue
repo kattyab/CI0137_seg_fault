@@ -7,7 +7,7 @@ const props = withDefaults(
     alt: string
     interval?: number
   }>(),
-  { interval: 3000 },
+  { interval: 10 * 1000 }, // In milliseconds
 )
 
 const index = ref(0)
