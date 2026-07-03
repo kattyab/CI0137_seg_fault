@@ -21,6 +21,17 @@ public class PaymentValidationService
         if (!Regex.IsMatch(payment.Cvc, PaymentConstants.CvcRegexPattern))
             return PaymentValidationResult.Fail("El CVC debe tener 3 o 4 dígitos.");
 
+        int expectedCvcLength = cardResult.Brand == PaymentConstants.AmericanExpressBrand
+            ? PaymentConstants.MaxCvcLength
+            : PaymentConstants.MinCvcLength;
+
+        if (payment.Cvc.Length != expectedCvcLength)
+        {
+            return PaymentValidationResult.Fail(
+                $"El CVC de {cardResult.Brand} debe tener {expectedCvcLength} dígitos."
+            );
+        }
+
         return cardResult;
     }
 
