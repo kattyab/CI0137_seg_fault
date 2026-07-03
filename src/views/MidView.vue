@@ -1,17 +1,29 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import CyclingImage from '@/components/CyclingImage.vue'
 import { useProducts } from '@/composables/useProducts'
 import { productImage, variantImages } from '@/services/productImages'
+import type { ProductListItem } from '@/services/productService'
 
 const { products, loading, error } = useProducts('Mid')
 
 const fmt = (n: number) => `₡${n.toLocaleString('es-CR')}`
+
+const minPrice = computed(() =>
+  products.value.length > 0 ? Math.min(...products.value.map((p) => p.precio)) : null,
+)
+
+const cardImages = (p: ProductListItem) => {
+  const urls = variantImages(p.nombre).map((v) => v.url)
+  return urls.length > 0 ? urls : [productImage(p.nombre, null, p.imagenUrl)]
+}
 </script>
 
 <template>
   <main>
     <section class="hero" style="height: 30vh">
       <h1>Air Jordan Mid</h1>
-      <p>El balance perfecto entre estilo y comodidad, desde ₡70,000</p>
+      <p>El balance perfecto entre estilo y comodidad<template v-if="minPrice !== null">, desde {{ fmt(minPrice) }}</template></p>
     </section>
 
     <section class="categorias">
@@ -27,7 +39,7 @@ const fmt = (n: number) => `₡${n.toLocaleString('es-CR')}`
             <div class="color-slider">
               <div class="slides" style="height: 250px">
                 <div class="slide">
-                  <img :src="productImage(p.nombre, null, p.imagenUrl)" :alt="p.nombre" />
+                  <CyclingImage :images="cardImages(p)" :alt="p.nombre" />
                 </div>
               </div>
             </div>
