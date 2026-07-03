@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend_api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=backend_mssql,1433;Database=web-development-26;User=sa;Password=Password1;TrustServerCertificate=True;
+      Cors__AllowedOrigins__0: https://kattyab.github.io
+    depends_on:
+      - mssql
+
+  caddy:
+    image: caddy:alpine
+    container_name: 'backend_reverse_proxy'
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data/caddy
+    restart: unless-stopped
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: backend_mssql
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: Password1
+    volumes:
+      - mssql_data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+    caddy_data:
+    mssql_data:
