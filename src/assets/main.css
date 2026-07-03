@@ -329,7 +329,6 @@ nav a.router-link-exact-active::after {
   font-size: 1.2rem;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 1rem;
 }
 
 .cta:hover {
@@ -371,7 +370,9 @@ nav a.router-link-exact-active::after {
 
 /* CARRUSEL */
 .carousel {
-  margin-top: 2rem;
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .carousel h2 {
@@ -666,6 +667,7 @@ nav a.router-link-exact-active::after {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+  padding: 0.5rem 0;
 }
 
 .forum-list {

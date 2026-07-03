@@ -26,7 +26,7 @@
           </p>
 
           <p class="price">
-            ₡{{ new Intl.NumberFormat('en-US').format(product.precio) }}
+            ₡{{ product.precio.toLocaleString('es-CR') }}
           </p>
         </div>
       </div>

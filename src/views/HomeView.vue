@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Carousel, Slide, Navigation, Pagination } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 
-import lowImage from '@/assets/images/low/1lowG/mediumGray-tintBlue-white/right.png'
-import midImage from '@/assets/images/mid/1midSEEdge/paleIvory-black-muslin-carreraPink/right.png'
-import highImage from '@/assets/images/high/1retroHighOG/coolGrey-sail-gameRoyal-black/right.png'
-import collectionImage from '@/assets/images/collection/airJordan4RetroSEWeAreEternal/right.png'
+import CyclingImage from '@/components/CyclingImage.vue'
+import { useProducts } from '@/composables/useProducts'
+import { productImage } from '@/services/productImages'
+
+const { products } = useProducts()
+
+const fmt = (n: number) => `₡${n.toLocaleString('es-CR')}`
 
 const commentForm = reactive({
   nombre: '',
@@ -60,44 +63,105 @@ const handleSubmit = () => {
   globalThis.alert('Comentario validado correctamente.')
 }
 
-const carouselItems = [
+const FEATURED = [
   {
-    to: '/low',
-    image: lowImage,
-    alt: 'Air Jordan Low',
-    title: 'Air Jordan Low',
+    nombre: 'Air Jordan 1 Low G',
+    kicker: 'Air Jordan Low',
     subtitle: 'Ligero y versatil para uso diario.',
-    price: 'Desde ₡65,000',
-    models: '4 modelos disponibles',
+    fallbackTo: '/low',
+    fallbackPrice: 'Desde ₡65,000',
   },
   {
-    to: '/mid',
-    image: midImage,
-    alt: 'Air Jordan Mid',
-    title: 'Air Jordan Mid',
+    nombre: 'Air Jordan 1 Mid SE Edge',
+    kicker: 'Air Jordan Mid',
     subtitle: 'Balance ideal entre soporte y estilo urbano.',
-    price: 'Desde ₡70,000',
-    models: '3 modelos disponibles',
+    fallbackTo: '/mid',
+    fallbackPrice: 'Desde ₡70,000',
   },
   {
-    to: '/high',
-    image: highImage,
-    alt: 'Air Jordan High',
-    title: 'Air Jordan High',
+    nombre: 'Air Jordan 1 Retro High OG',
+    kicker: 'Air Jordan High',
     subtitle: 'Silueta clásica con presencia premium.',
-    price: 'Desde ₡80,000',
-    models: '2 modelos disponibles',
+    fallbackTo: '/high',
+    fallbackPrice: 'Desde ₡80,000',
   },
   {
-    to: '/coleccion',
-    image: collectionImage,
-    alt: 'Colección',
-    title: 'Colección Especial',
-    subtitle: 'Lanzamientos limitados para coleccionistas.',
-    price: 'Ediciones limitadas',
-    models: '4 modelos disponibles',
+    nombre: 'Air Jordan 4 Retro SE We Are Eternal',
+    kicker: 'Colección Especial',
+    subtitle: 'Lanzamiento limitado para coleccionistas.',
+    fallbackTo: '/coleccion',
+    fallbackPrice: 'Edición limitada',
   },
 ]
+
+const carouselItems = computed(() =>
+  FEATURED.map((f) => {
+    const p = products.value.find((x) => x.nombre === f.nombre)
+    const image = productImage(f.nombre, null, p?.imagenUrl)
+    return {
+      key: f.nombre,
+      to: p ? { name: 'product', params: { id: p.id }, query: { image } } : f.fallbackTo,
+      image,
+      title: f.nombre,
+      kicker: f.kicker,
+      subtitle: f.subtitle,
+      price: p ? fmt(p.precio) : f.fallbackPrice,
+    }
+  }),
+)
+
+const CATEGORY_CARDS = [
+  {
+    categoria: 'Low',
+    to: '/low',
+    title: 'Air Jordan Low',
+    price: 'Desde ₡65,000',
+    models: 'Ver 4 Modelos',
+    fallbackNombre: 'Air Jordan 1 Low G',
+  },
+  {
+    categoria: 'Mid',
+    to: '/mid',
+    title: 'Air Jordan Mid',
+    price: 'Desde ₡70,000',
+    models: 'Ver 3 Modelos',
+    fallbackNombre: 'Air Jordan 1 Mid SE Edge',
+  },
+  {
+    categoria: 'High',
+    to: '/high',
+    title: 'Air Jordan High',
+    price: 'Desde ₡80,000',
+    models: 'Ver 2 Modelos',
+    fallbackNombre: 'Air Jordan 1 Retro High OG',
+  },
+  {
+    categoria: 'Collection',
+    to: '/coleccion',
+    title: 'Colección Especial',
+    price: 'Ediciones limitadas',
+    models: 'Ver 4 Modelos',
+    fallbackNombre: 'Air Jordan 4 Retro SE We Are Eternal',
+  },
+]
+
+// price/models fall back to the static strings until products load; the
+// Collection card keeps its "Ediciones limitadas" label instead of a price
+const categoryCards = computed(() =>
+  CATEGORY_CARDS.map((c) => {
+    const inCategory = products.value.filter((p) => p.categoria === c.categoria)
+    const minPrice = inCategory.length > 0 ? Math.min(...inCategory.map((p) => p.precio)) : null
+    return {
+      ...c,
+      images:
+        inCategory.length > 0
+          ? inCategory.map((p) => productImage(p.nombre, null, p.imagenUrl))
+          : [productImage(c.fallbackNombre)],
+      price: c.categoria !== 'Collection' && minPrice !== null ? `Desde ${fmt(minPrice)}` : c.price,
+      models: inCategory.length > 0 ? `Ver ${inCategory.length} Modelos` : c.models,
+    }
+  }),
+)
 </script>
 
 <template>
@@ -118,23 +182,22 @@ const carouselItems = [
     </section>
 
     <section class="carousel carousel-home">
-      <h2>Lanzamientos Recientes</h2>
+      <h2>Lanzamientos Destacados</h2>
       <div class="carousel-container">
         <Carousel :autoplay="4000" :wrap-around="true">
-          <Slide v-for="item in carouselItems" :key="item.to">
+          <Slide v-for="item in carouselItems" :key="item.key">
             <RouterLink
               :to="item.to"
               class="carousel-item"
             >
               <div class="carousel-media">
-                <img :src="item.image" :alt="item.alt" />
+                <img :src="item.image" :alt="item.title" />
               </div>
               <div class="carousel-content">
-                <p class="carousel-kicker">Lanzamiento destacado</p>
+                <p class="carousel-kicker">{{ item.kicker }}</p>
                 <h3>{{ item.title }}</h3>
                 <p class="carousel-subtitle">{{ item.subtitle }}</p>
                 <p class="carousel-price">{{ item.price }}</p>
-                <p class="carousel-models">{{ item.models }}</p>
                 <span class="carousel-cta">Ver detalles</span>
               </div>
             </RouterLink>
@@ -149,51 +212,15 @@ const carouselItems = [
     </section>
 
     <section class="categorias">
-      <h2 style="text-align: center; margin-bottom: 2rem">Categorías Destacadas</h2>
+      <h2 style="text-align: center; margin-bottom: 2rem">Categorías Disponibles</h2>
       <div class="grid">
-        <div class="card">
-          <RouterLink to="/low" class="card-link">
-            <img src="@/assets/images/low/1lowG/mediumGray-tintBlue-white/right.png" alt="Air Jordan Low" />
+        <div v-for="c in categoryCards" :key="c.categoria" class="card">
+          <RouterLink :to="c.to" class="card-link">
+            <CyclingImage :images="c.images" :alt="c.title" />
             <div class="card-content">
-              <h3>Air Jordan Low</h3>
-              <p>Desde ₡65,000</p>
-              <span>Ver 4 Modelos</span>
-            </div>
-          </RouterLink>
-        </div>
-        <div class="card">
-          <RouterLink to="/mid" class="card-link">
-            <img
-              src="@/assets/images/mid/1midSEEdge/paleIvory-black-muslin-carreraPink/right.png"
-              alt="Air Jordan Mid"
-            />
-            <div class="card-content">
-              <h3>Air Jordan Mid</h3>
-              <p>Desde ₡70,000</p>
-              <span>Ver 3 Modelos</span>
-            </div>
-          </RouterLink>
-        </div>
-        <div class="card">
-          <RouterLink to="/high" class="card-link">
-            <img
-              src="@/assets/images/high/1retroHighOG/coolGrey-sail-gameRoyal-black/right.png"
-              alt="Air Jordan High"
-            />
-            <div class="card-content">
-              <h3>Air Jordan High</h3>
-              <p>Desde ₡80,000</p>
-              <span>Ver 2 Modelos</span>
-            </div>
-          </RouterLink>
-        </div>
-        <div class="card">
-          <RouterLink to="/coleccion" class="card-link">
-            <img src="@/assets/images/collection/airJordan4RetroSEWeAreEternal/right.png" alt="Colección" />
-            <div class="card-content">
-              <h3>Colección Especial</h3>
-              <p>Ediciones limitadas</p>
-              <span>Ver 4 Modelos</span>
+              <h3>{{ c.title }}</h3>
+              <p>{{ c.price }}</p>
+              <span>{{ c.models }}</span>
             </div>
           </RouterLink>
         </div>
@@ -296,6 +323,12 @@ const carouselItems = [
 </template>
 
 <style scoped>
+/* narrower than the site-wide 1200px so the featured cards feel more compact;
+   percentage so it tracks the screen size at every breakpoint */
+.carousel-container {
+  max-width: min(80%, 1200px);
+}
+
 .carousel-item {
   position: relative !important;
   inset: auto !important;
@@ -304,6 +337,11 @@ const carouselItems = [
   pointer-events: auto !important;
   display: grid !important;
   text-align: left;
+  width: 100%;
+  height: 100%;
+  min-height: 390px;
+  box-shadow: none !important;
+  border-radius: 0;
 }
 
 /* On mobile/tablet (768px and below) */
@@ -311,6 +349,7 @@ const carouselItems = [
   .carousel-item {
     display: grid !important;
     pointer-events: auto !important;
+    min-height: 0;
   }
 }
 
@@ -321,6 +360,7 @@ const carouselItems = [
 :deep(.carousel__viewport) {
   border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
 }
 
 :deep(.carousel__slide) {
@@ -350,12 +390,14 @@ const carouselItems = [
   color: var(--card-and-section-background) !important;
 }
 
+/* negative offsets sit the arrows just outside the card, in the space
+   reserved by the container's side padding */
 :deep(.carousel__prev) {
-  left: 0.75rem;
+  left: -3.25rem;
 }
 
 :deep(.carousel__next) {
-  right: 0.75rem;
+  right: -3.25rem;
 }
 
 @media (max-width: 768px) {
@@ -366,11 +408,11 @@ const carouselItems = [
   }
   
   :deep(.carousel__prev) {
-    left: 0.25rem;
+    left: -2.75rem;
   }
 
   :deep(.carousel__next) {
-    right: 0.25rem;
+    right: -2.75rem;
   }
 }
 
