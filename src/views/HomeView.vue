@@ -182,7 +182,7 @@ const categoryCards = computed(() =>
     </section>
 
     <section class="carousel carousel-home">
-      <h2>Lanzamientos Recientes</h2>
+      <h2>Lanzamientos Destacados</h2>
       <div class="carousel-container">
         <Carousel :autoplay="4000" :wrap-around="true">
           <Slide v-for="item in carouselItems" :key="item.key">
@@ -212,7 +212,7 @@ const categoryCards = computed(() =>
     </section>
 
     <section class="categorias">
-      <h2 style="text-align: center; margin-bottom: 2rem">Categorías Destacadas</h2>
+      <h2 style="text-align: center; margin-bottom: 2rem">Categorías Disponibles</h2>
       <div class="grid">
         <div v-for="c in categoryCards" :key="c.categoria" class="card">
           <RouterLink :to="c.to" class="card-link">
