@@ -30,3 +30,14 @@ export interface CheckoutResponse {
 
 export const checkout = (request: CheckoutRequest) =>
   apiPost<CheckoutRequest, CheckoutResponse>('/api/payments/checkout', request)
+
+export interface CardValidationResponse {
+  valid: boolean
+  error: string | null
+  brand: string | null
+  issuerBank: string | null
+  last4: string | null
+}
+
+export const validateCard = (cardNumber: string) =>
+  apiPost<{ cardNumber: string }, CardValidationResponse>('/api/payments/validate-card', { cardNumber })

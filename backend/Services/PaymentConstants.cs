@@ -73,6 +73,10 @@ public static class PaymentConstants
             { "438098", new PaymentBinInfo("BANCO DE COSTA RICA", "Visa") },
             { "441576", new PaymentBinInfo("BANCO POPULAR Y DE DESARROLLO COMUNAL", "Visa") },
             { "441577", new PaymentBinInfo("BANCO POPULAR Y DE DESARROLLO COMUNAL", "Visa") },
-            { "441578", new PaymentBinInfo("BANCO POPULAR Y DE DESARROLLO COMUNAL", "Visa") }
+            { "441578", new PaymentBinInfo("BANCO POPULAR Y DE DESARROLLO COMUNAL", "Visa") },
+            { "510209", new PaymentBinInfo("BANCO DE COSTA RICA", "Mastercard") },
+            { "518541", new PaymentBinInfo("BANCO NACIONAL DE COSTA RICA", "Mastercard") },
+            { "377712", new PaymentBinInfo("CREDOMATIC", "American Express") },
+            { "377713", new PaymentBinInfo("CREDOMATIC", "American Express") }
         };
 }
