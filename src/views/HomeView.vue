@@ -63,8 +63,6 @@ const handleSubmit = () => {
   globalThis.alert('Comentario validado correctamente.')
 }
 
-// One featured sneaker per category; id/price resolve from the API and the
-// slide falls back to the category page while products are unavailable.
 const FEATURED = [
   {
     nombre: 'Air Jordan 1 Low G',
@@ -325,6 +323,12 @@ const categoryCards = computed(() =>
 </template>
 
 <style scoped>
+/* narrower than the site-wide 1200px so the featured cards feel more compact;
+   percentage so it tracks the screen size at every breakpoint */
+.carousel-container {
+  max-width: min(80%, 1200px);
+}
+
 .carousel-item {
   position: relative !important;
   inset: auto !important;
@@ -333,6 +337,11 @@ const categoryCards = computed(() =>
   pointer-events: auto !important;
   display: grid !important;
   text-align: left;
+  width: 100%;
+  height: 100%;
+  min-height: 390px;
+  box-shadow: none !important;
+  border-radius: 0;
 }
 
 /* On mobile/tablet (768px and below) */
@@ -340,6 +349,7 @@ const categoryCards = computed(() =>
   .carousel-item {
     display: grid !important;
     pointer-events: auto !important;
+    min-height: 0;
   }
 }
 
@@ -350,6 +360,7 @@ const categoryCards = computed(() =>
 :deep(.carousel__viewport) {
   border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
 }
 
 :deep(.carousel__slide) {
@@ -379,12 +390,14 @@ const categoryCards = computed(() =>
   color: var(--card-and-section-background) !important;
 }
 
+/* negative offsets sit the arrows just outside the card, in the space
+   reserved by the container's side padding */
 :deep(.carousel__prev) {
-  left: 0.75rem;
+  left: -3.25rem;
 }
 
 :deep(.carousel__next) {
-  right: 0.75rem;
+  right: -3.25rem;
 }
 
 @media (max-width: 768px) {
@@ -395,11 +408,11 @@ const categoryCards = computed(() =>
   }
   
   :deep(.carousel__prev) {
-    left: 0.25rem;
+    left: -2.75rem;
   }
 
   :deep(.carousel__next) {
-    right: 0.25rem;
+    right: -2.75rem;
   }
 }
 
