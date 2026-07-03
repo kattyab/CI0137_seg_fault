@@ -23,7 +23,6 @@ const payment = reactive({
   cvc: '',
 })
 
-const cvcError = ref('')
 const submitAttempted = ref(false)
 const submitting = ref(false)
 const submitError = ref('')
@@ -114,21 +113,7 @@ function onExpiryInput(e: Event) {
 
 function onCvcInput(e: Event) {
   const el = e.target as HTMLInputElement
-  const rawValue = el.value || ''
-  const digits = onlyDigits(rawValue).slice(0, 4)
-  payment.cvc = rawValue
-
-  if (!rawValue.trim()) {
-    cvcError.value = ''
-    return
-  }
-
-  if (/\D/.test(rawValue)) {
-    cvcError.value = 'Ingresa un código CVC válido.'
-    return
-  }
-
-  cvcError.value = digits.length === 3 || digits.length === 4 ? '' : 'Ingresa un código CVC válido.'
+  payment.cvc = el.value || ''
 }
 
 function markTouched(field: keyof typeof touched) {
@@ -188,16 +173,37 @@ function isNameValid(value: string) {
   return normalized.length >= 3 && namePattern.test(normalized)
 }
 
-function isCvcValid(value: string) {
-  const digits = onlyDigits(value)
-  return digits.length === 3 || digits.length === 4
-}
-
 const expiryIsValid = computed(() => isExpiryValid(payment.expiry))
 const cardLengthIsValid = computed(() => isCardLengthValid(payment.cardNumber))
 const cardNumberIsValid = computed(() => cardLengthIsValid.value && cardCheck.status !== 'invalid')
 const nameIsValid = computed(() => isNameValid(payment.name))
-const cvcIsValid = computed(() => isCvcValid(payment.cvc))
+
+// Amex usa CVC de 4 dígitos; Visa y Mastercard de 3. Sin marca confirmada aceptamos ambos.
+const expectedCvcLength = computed(() => {
+  if (cardCheck.brand === 'American Express') return 4
+  if (cardCheck.brand === 'Visa' || cardCheck.brand === 'Mastercard') return 3
+  return null
+})
+
+const cvcIsValid = computed(() => {
+  const value = payment.cvc.trim()
+  if (!value || /\D/.test(value)) return false
+
+  const expected = expectedCvcLength.value
+  return expected !== null ? value.length === expected : value.length === 3 || value.length === 4
+})
+
+const cvcError = computed(() => {
+  const value = payment.cvc.trim()
+  if (!value || cvcIsValid.value) return ''
+
+  if (/\D/.test(value)) return 'Ingresa un código CVC válido.'
+
+  const expected = expectedCvcLength.value
+  return expected !== null
+    ? `El CVC de ${cardCheck.brand} debe tener ${expected} dígitos.`
+    : 'Ingresa un CVC de 3 o 4 dígitos.'
+})
 const canPay = computed(
   () => cart.items.length > 0 && nameIsValid.value && cardNumberIsValid.value && expiryIsValid.value && cvcIsValid.value,
 )
@@ -335,8 +341,8 @@ async function pay() {
                 :value="payment.cvc"
                 autocomplete="cc-csc"
                 inputmode="numeric"
-                maxlength="4"
-                placeholder="123"
+                :maxlength="expectedCvcLength ?? 4"
+                :placeholder="expectedCvcLength === 4 ? '1234' : '123'"
                 required
                 type="password"
                 @input="onCvcInput"
@@ -344,7 +350,6 @@ async function pay() {
                 @blur="markBlurred('cvc')"
               />
               <small v-if="(touched.cvc || submitAttempted) && !focused.cvc && cvcError" class="field-error">{{ cvcError }}</small>
-              <small v-else-if="(touched.cvc || submitAttempted) && !focused.cvc && payment.cvc && !cvcIsValid" class="field-error">Ingresa un CVC de 3 o 4 dígitos.</small>
             </label>
           </div>
 

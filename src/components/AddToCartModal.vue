@@ -32,20 +32,19 @@
       </div>
 
       <div class="actions">
+        <button
+          class="continue-shopping-btn"
+          @click="$emit('close')"
+        >
+          Continuar comprando
+        </button>
+
         <RouterLink
           to="/carrito"
           class="view-cart-btn"
           @click="$emit('close')"
         >
           Ver carrito
-        </RouterLink>
-
-        <RouterLink
-          to="/checkout"
-          class="checkout-btn"
-          @click="$emit('close')"
-        >
-          Finalizar compra
         </RouterLink>
       </div>
     </div>
@@ -137,7 +136,7 @@ defineProps<{
 }
 
 .view-cart-btn,
-.checkout-btn {
+.continue-shopping-btn {
   text-align: center;
   padding: 0.9rem;
   border-radius: 999px;
@@ -146,21 +145,21 @@ defineProps<{
   transition: 0.2s ease;
 }
 
-.view-cart-btn {
+.continue-shopping-btn {
   border: 1px solid #ddd;
   color: black;
 }
 
-.view-cart-btn:hover {
+.continue-shopping-btn:hover {
   background: #f5f5f5;
 }
 
-.checkout-btn {
+.view-cart-btn {
   background: black;
   color: white;
 }
 
-.checkout-btn:hover {
+.view-cart-btn:hover {
   background: #222;
 }
 </style>
