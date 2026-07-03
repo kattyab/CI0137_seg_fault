@@ -3,7 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
-import { checkout } from '@/services/checkoutService'
+import { checkout, validateCard } from '@/services/checkoutService'
 import { ApiError } from '@/services/api'
 
 const router = useRouter()
@@ -42,14 +42,58 @@ const focused = reactive({
 
 const namePattern = /^[\p{L}\s'-]+$/u
 
+const cardCheck = reactive({
+  status: 'idle' as 'idle' | 'checking' | 'valid' | 'invalid',
+  error: '',
+  brand: '',
+  issuerBank: '',
+})
+
+function resetCardCheck() {
+  cardCheck.status = 'idle'
+  cardCheck.error = ''
+  cardCheck.brand = ''
+  cardCheck.issuerBank = ''
+}
+
 function onlyDigits(value: string) {
   return value.replace(/\D/g, '')
 }
 
 function onCardInput(e: Event) {
   const el = e.target as HTMLInputElement
-  const digits = onlyDigits(el.value || '').slice(0, 16)
+  const digits = onlyDigits(el.value || '').slice(0, 19)
   payment.cardNumber = digits.replace(/(.{4})/g, '$1 ').trim()
+  resetCardCheck()
+}
+
+async function onCardBlur() {
+  markBlurred('cardNumber')
+
+  const digits = onlyDigits(payment.cardNumber)
+  if (!isCardLengthValid(payment.cardNumber)) return
+
+  cardCheck.status = 'checking'
+
+  try {
+    const result = await validateCard(digits)
+
+    // El número pudo cambiar mientras esperábamos la respuesta
+    if (onlyDigits(payment.cardNumber) !== digits) return
+
+    if (result.valid) {
+      cardCheck.status = 'valid'
+      cardCheck.brand = result.brand ?? ''
+      cardCheck.issuerBank = result.issuerBank ?? ''
+      cardCheck.error = ''
+    } else {
+      cardCheck.status = 'invalid'
+      cardCheck.error = result.error ?? 'El número de tarjeta no es válido.'
+    }
+  } catch {
+    // Sin verdicto del servidor no bloqueamos el pago; el checkout revalida todo
+    if (onlyDigits(payment.cardNumber) === digits) resetCardCheck()
+  }
 }
 
 function onNameInput(e: Event) {
@@ -134,8 +178,9 @@ function getExpiryError(value: string) {
   return isExpiryValid(normalized) ? '' : 'La tarjeta está vencida. Revisa la fecha de vencimiento.'
 }
 
-function isCardNumberValid(value: string) {
-  return onlyDigits(value).length === 16
+function isCardLengthValid(value: string) {
+  const length = onlyDigits(value).length
+  return length >= 13 && length <= 19
 }
 
 function isNameValid(value: string) {
@@ -149,7 +194,8 @@ function isCvcValid(value: string) {
 }
 
 const expiryIsValid = computed(() => isExpiryValid(payment.expiry))
-const cardNumberIsValid = computed(() => isCardNumberValid(payment.cardNumber))
+const cardLengthIsValid = computed(() => isCardLengthValid(payment.cardNumber))
+const cardNumberIsValid = computed(() => cardLengthIsValid.value && cardCheck.status !== 'invalid')
 const nameIsValid = computed(() => isNameValid(payment.name))
 const cvcIsValid = computed(() => isCvcValid(payment.cvc))
 const canPay = computed(
@@ -252,15 +298,17 @@ async function pay() {
               :value="payment.cardNumber"
               autocomplete="cc-number"
               inputmode="numeric"
-              maxlength="19"
+              maxlength="23"
               placeholder="1234 5678 9012 3456"
               required
               type="text"
               @input="onCardInput"
               @focus="markFocused('cardNumber')"
-              @blur="markBlurred('cardNumber')"
+              @blur="onCardBlur"
             />
-            <small v-if="(touched.cardNumber || submitAttempted) && !focused.cardNumber && !cardNumberIsValid" class="field-error">Ingresa un número de tarjeta de 16 dígitos.</small>
+            <small v-if="(touched.cardNumber || submitAttempted) && !focused.cardNumber && !cardLengthIsValid" class="field-error">Ingresa un número de tarjeta de 13 a 19 dígitos.</small>
+            <small v-else-if="(touched.cardNumber || submitAttempted) && !focused.cardNumber && cardCheck.status === 'invalid'" class="field-error">{{ cardCheck.error }}</small>
+            <small v-else-if="cardCheck.status === 'valid' && cardCheck.brand" class="field-hint">{{ cardCheck.brand }} · {{ cardCheck.issuerBank }}</small>
           </label>
 
           <div class="two-cols">
@@ -381,6 +429,11 @@ async function pay() {
 
 .field-error {
   color: #c62828;
+  font-weight: 600;
+}
+
+.field-hint {
+  color: #2e7d32;
   font-weight: 600;
 }
 

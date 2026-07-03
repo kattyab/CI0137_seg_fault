@@ -7,14 +7,30 @@ public class PaymentValidationService
 {
     public PaymentValidationResult Validate(PaymentRequestDto payment)
     {
+        if (string.IsNullOrWhiteSpace(payment.CardholderName))
+            return PaymentValidationResult.Fail("El nombre del titular es obligatorio.");
+
+        var cardResult = ValidateCardNumber(payment.CardNumber);
+
+        if (!cardResult.Success)
+            return cardResult;
+
+        if (!IsExpiryValid(payment.ExpMonth, payment.ExpYear))
+            return PaymentValidationResult.Fail("La tarjeta está vencida o la fecha no es válida.");
+
+        if (!Regex.IsMatch(payment.Cvc, PaymentConstants.CvcRegexPattern))
+            return PaymentValidationResult.Fail("El CVC debe tener 3 o 4 dígitos.");
+
+        return cardResult;
+    }
+
+    public PaymentValidationResult ValidateCardNumber(string cardNumber)
+    {
         string digits = Regex.Replace(
-            payment.CardNumber,
+            cardNumber,
             PaymentConstants.NonDigitRegexPattern,
             string.Empty
         );
-
-        if (string.IsNullOrWhiteSpace(payment.CardholderName))
-            return PaymentValidationResult.Fail("El nombre del titular es obligatorio.");
 
         if (digits.Length < PaymentConstants.MinCardNumberLength ||
             digits.Length > PaymentConstants.MaxCardNumberLength)
@@ -22,12 +38,6 @@ public class PaymentValidationService
 
         if (!PassesLuhn(digits))
             return PaymentValidationResult.Fail("El número de tarjeta no es válido.");
-
-        if (!IsExpiryValid(payment.ExpMonth, payment.ExpYear))
-            return PaymentValidationResult.Fail("La tarjeta está vencida o la fecha no es válida.");
-
-        if (!Regex.IsMatch(payment.Cvc, PaymentConstants.CvcRegexPattern))
-            return PaymentValidationResult.Fail("El CVC debe tener 3 o 4 dígitos.");
 
         string bin = digits[..PaymentConstants.CardBinLength];
 
